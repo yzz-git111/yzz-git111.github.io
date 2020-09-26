@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>Union Find算法1 // 个人学习总结</title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.74.3" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="John Doe" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://yzz-git111.github.io/css/main.min.88e7083eff65effb7485b6e6f38d10afbec25093a6fac42d734ce9024d3defbd.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Union Find算法1"/>
+<meta name="twitter:description" content="union-find|并查集 问题引入 假设给定一个数组A[0..n]。将它的每个点都看作一个独立的，每个点都可以用来表示任何一种数据类型。 现在把每个点都当作一个集合。对于给定的一对整数对，可以判断是否属于同一个集合。 若不属于同一个集合，则将两者所在的集合并为同一个集合。 参考《算法(第四版)》第1.5节的内容，将对象成为触点，将整数对称为连接，将等价类称为连通分量。  引入算法的目的 可以用于计算机网络，假设每个点都是一台计算机。 对于想要通信的两台计算机可以抽象为输入的一个整数对。算法可以判断两台计算机之间是否可以有连接能够通信。若没有连接则需要建立连接。 同时假设有一个十分庞大的人际关系网，使用算法可以很快的判断出对于输入的两人是否相识。并查集是一种简单有效的算法。   API 首先给出算法的API  UF（） //构造方法 初始化N个触点 void union(int p,int q) //将p和q连接到一个连通分量里 int find(int p) //返回p所在的连通分量的表示符(称为id) boolean connected(int p,int q) //判断p和q是否处于同一个连通分量 int getCount() //返回总的连通分量的个数 想法 有一个直观的想法：判断是否在同一连通分量只要看两者的连通分量的id是否相同。因为一个连通分量的所有触点的id都是一样的。 所有对于给定的一个整数对，先用find()找出两者所在的连通分量的id。 若id相同即说明二者在同一连通分量内，无需union 若id不同，则说明二者处在不同的连通分量内。调用union()。 循环遍历整个触点的数组 将id与触点p的id相同的所有触点该称q所在的连通分量的id，这就保证了将p所在的连通分量连接到q的连通分量上。 union()的最后不能忘记将count-- 说明整个连通分量的数目减1.  实现 UF() class UF { private int[]id; //以触点作为索引 private int count; public UF(int N) //构造方法 用于初始化触点 { count = N; id = new int[N]; for(int i=0;i&lt;N;i&#43;&#43;) { id[i] = i; } } getCount()  public int getCount() //用于返回private成员count 即连通分量的数目 { return count; } find()  public int find(int p) //返回p的连通分量 { return id[p]; } union  public void union(int p,int q) //将触点p和q连接到统一连通分量 { int pID = find(p); int qID = find(q); if(pID == qID) //p,q已经统一连通分量 空操作 { return; } for(int i=0;i&lt;id."/>
+
+    <meta property="og:title" content="Union Find算法1" />
+<meta property="og:description" content="union-find|并查集 问题引入 假设给定一个数组A[0..n]。将它的每个点都看作一个独立的，每个点都可以用来表示任何一种数据类型。 现在把每个点都当作一个集合。对于给定的一对整数对，可以判断是否属于同一个集合。 若不属于同一个集合，则将两者所在的集合并为同一个集合。 参考《算法(第四版)》第1.5节的内容，将对象成为触点，将整数对称为连接，将等价类称为连通分量。  引入算法的目的 可以用于计算机网络，假设每个点都是一台计算机。 对于想要通信的两台计算机可以抽象为输入的一个整数对。算法可以判断两台计算机之间是否可以有连接能够通信。若没有连接则需要建立连接。 同时假设有一个十分庞大的人际关系网，使用算法可以很快的判断出对于输入的两人是否相识。并查集是一种简单有效的算法。   API 首先给出算法的API  UF（） //构造方法 初始化N个触点 void union(int p,int q) //将p和q连接到一个连通分量里 int find(int p) //返回p所在的连通分量的表示符(称为id) boolean connected(int p,int q) //判断p和q是否处于同一个连通分量 int getCount() //返回总的连通分量的个数 想法 有一个直观的想法：判断是否在同一连通分量只要看两者的连通分量的id是否相同。因为一个连通分量的所有触点的id都是一样的。 所有对于给定的一个整数对，先用find()找出两者所在的连通分量的id。 若id相同即说明二者在同一连通分量内，无需union 若id不同，则说明二者处在不同的连通分量内。调用union()。 循环遍历整个触点的数组 将id与触点p的id相同的所有触点该称q所在的连通分量的id，这就保证了将p所在的连通分量连接到q的连通分量上。 union()的最后不能忘记将count-- 说明整个连通分量的数目减1.  实现 UF() class UF { private int[]id; //以触点作为索引 private int count; public UF(int N) //构造方法 用于初始化触点 { count = N; id = new int[N]; for(int i=0;i&lt;N;i&#43;&#43;) { id[i] = i; } } getCount()  public int getCount() //用于返回private成员count 即连通分量的数目 { return count; } find()  public int find(int p) //返回p的连通分量 { return id[p]; } union  public void union(int p,int q) //将触点p和q连接到统一连通分量 { int pID = find(p); int qID = find(q); if(pID == qID) //p,q已经统一连通分量 空操作 { return; } for(int i=0;i&lt;id." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yzz-git111.github.io/post/union-find%E7%AE%97%E6%B3%951/" />
+<meta property="article:published_time" content="2020-09-26T18:26:44+08:00" />
+<meta property="article:modified_time" content="2020-09-26T18:26:44+08:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://yzz-git111.github.io/"><img class="app-header-avatar" src="/avatar.jpg" alt="John Doe" /></a>
+      <h1>个人学习总结</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vehicula turpis sit amet elit pretium.</p>
+      <div class="app-header-social">
+        
+          <a target="_blank" href="#ZgotmplZ" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-link">
+  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+</svg></a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">Union Find算法1</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Sep 26, 2020
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          2 min read
+        </div></div>
+    </header>
+    <div class="post-content">
+      <h1 id="union-find并查集">union-find|并查集</h1>
+<h2 id="问题引入">问题引入</h2>
+<pre><code>假设给定一个数组A[0..n]。将它的每个点都看作一个独立的，每个点都可以用来表示任何一种数据类型。
+现在把每个点都当作一个集合。对于给定的一对整数对，可以判断是否属于同一个集合。
+若不属于同一个集合，则将两者所在的集合并为同一个集合。
+参考《算法(第四版)》第1.5节的内容，将对象成为触点，将整数对称为连接，将等价类称为连通分量。
+</code></pre>
+<h2 id="引入算法的目的">引入算法的目的</h2>
+<pre><code>可以用于计算机网络，假设每个点都是一台计算机。
+对于想要通信的两台计算机可以抽象为输入的一个整数对。算法可以判断两台计算机之间是否可以有连接能够通信。若没有连接则需要建立连接。
+
+同时假设有一个十分庞大的人际关系网，使用算法可以很快的判断出对于输入的两人是否相识。并查集是一种简单有效的算法。
+</code></pre>
+<hr>
+<h2 id="api">API</h2>
+<pre><code>首先给出算法的API
+</code></pre>
+<pre><code>UF（）                          //构造方法 初始化N个触点
+void union(int p,int q)         //将p和q连接到一个连通分量里
+int find(int p)                 //返回p所在的连通分量的表示符(称为id)
+boolean connected(int p,int q)  //判断p和q是否处于同一个连通分量
+int getCount()                  //返回总的连通分量的个数
+</code></pre><h2 id="想法">想法</h2>
+<pre><code>有一个直观的想法：判断是否在同一连通分量只要看两者的连通分量的id是否相同。因为一个连通分量的所有触点的id都是一样的。
+
+所有对于给定的一个整数对，先用find()找出两者所在的连通分量的id。
+若id相同即说明二者在同一连通分量内，无需union
+若id不同，则说明二者处在不同的连通分量内。调用union()。
+循环遍历整个触点的数组 将id与触点p的id相同的所有触点该称q所在的连通分量的id，这就保证了将p所在的连通分量连接到q的连通分量上。
+union()的最后不能忘记将count--  说明整个连通分量的数目减1.
+</code></pre>
+<h2 id="实现">实现</h2>
+<h3 id="uf">UF()</h3>
+<pre><code>class UF
+{
+    private int[]id;    //以触点作为索引
+    private int count;
+
+    public UF(int N)   //构造方法 用于初始化触点
+    {
+        count = N;
+        id = new int[N];
+        for(int i=0;i&lt;N;i++)
+        {
+            id[i] = i;
+        }
+    }
+</code></pre><h3 id="getcount">getCount()</h3>
+<pre><code>    public int getCount()  //用于返回private成员count 即连通分量的数目
+    {
+        return count;
+    }
+</code></pre><h3 id="find">find()</h3>
+<pre><code>    public int find(int p)  //返回p的连通分量
+    {
+        return id[p];
+    }
+</code></pre><h3 id="union">union</h3>
+<pre><code>    public void union(int p,int q)  //将触点p和q连接到统一连通分量
+    {
+        int pID = find(p);
+        int qID = find(q);
+        if(pID == qID)  //p,q已经统一连通分量  空操作
+        {
+            return;
+        }
+        for(int i=0;i&lt;id.length;i++)   
+         //遍历数组  将p所在的连通分量的触点都归并到q所在的连通分量内
+        {
+            if(id[i] == pID)
+            {
+                id[i] = id[q];
+            }
+        }
+        count--;    //一次union  count自减1
+    }
+</code></pre><h2 id="main函数">main函数</h2>
+<pre><code>    public static void main(String args[]) throws IOException
+    {
+        method1_quickfind.shuchu();
+        sumfile(&quot;D:\\JAVA_CODE\\AlgorithmsByBook\\DataForTest\\tinyUF.txt&quot;);
+    }
+
+
+    static void sumfile(String filename) throws IOException
+    {
+        int p=0,q=0,N=0;
+        FileReader file = new FileReader(filename);
+        Reader reader = new BufferedReader(file);
+        StreamTokenizer stok = new StreamTokenizer(reader);
+        stok.parseNumbers();
+        stok.nextToken();
+        //stok.nextToken();
+        N = (int)stok.nval;
+        UF1 uf1 = new UF1(N);
+        while (stok.ttype != StreamTokenizer.TT_EOF)
+        {
+            if (stok.ttype == StreamTokenizer.TT_NUMBER)
+            {
+                stok.nextToken();
+                p = (int)stok.nval;
+
+                stok.nextToken();
+                q = (int)stok.nval;
+            }
+            System.out.println(&quot;p = &quot;+p+&quot; q = &quot;+q);
+            uf1.union(p,q);
+            uf1.draw();
+        }
+    }
+    //这里将UF定义为了抽象类  并且用txt文件进行了测试
+</code></pre><hr>
+<h2 id="算法分析">算法分析</h2>
+<pre><code>对于union()操作是最耗费时间的。每一次union的要遍历一次数组。
+假设目的将一组离散的点都合并和一个大的连通分量。则需要的运行时间是O(n^2)量级的 
+对于大规模的问题 这并不算是一个好的算法
+</code></pre>
+<h3 id="参考">参考</h3>
+<p>《算法(第四版)》</p>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

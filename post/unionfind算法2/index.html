@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>Unionfind算法2,3 // yzz也想变成学霸</title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.74.3" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="John Doe" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://yzz-git111.github.io/css/main.min.88e7083eff65effb7485b6e6f38d10afbec25093a6fac42d734ce9024d3defbd.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Unionfind算法2,3"/>
+<meta name="twitter:description" content="quickfind算法反思 对于quickfind算法，其影响时间复杂度的主要是union()方法。 union遍历整个触点数组，将一个触点所在的连通分量的所有触点的id都换位另一个连通分量的值 即union(int p,int q) {id[i] = qID}  quickunion算法想法 初始状态下，每个触点都看作一个独立的连通分量，而每个连通分量又可以抽象成为一棵树，虽然此时只有根节点。 显然，根触点满足id[i] = i这一条件 假若一个触点p与另一个触点q进行union。只要将p连接到q的树（q所在连通分量）上。即将p的id改为q的id； 对于普通情况，假如将p连接到q上 因为p，q分别在两棵不同的树上(属于不同的连通分量)， 此时就要找到q所在的连通分量的根触点的id值qRoot，同时找到p所在的连通分量的根触点pRoot。只要将id[pRoot]赋值为qRoot即可 将根节点q所在的树作为子树连接到p所在的树上。  find()  public int find(int p) //返回p的连通分量 { while(p != id[p]) //满足p == id[p]的才是根结点 { p = id[p]; } return p; } union()  int pRoot = find(p); int qRoot = find(q); if(pRoot == qRoot) //p,q已经统一连通分量 空操作 { return; } id[pRoot] = qRoot; //直接连接到根触点下 count--; //一次union count自减1 实例 假设union(5,9) i | 0 1 2 3 4 5 6 7 8 9 id| 1 1 1 8 3 0 5 1 8 8 find(5)：触点5的id是0（触点5在连通分量0中）所以5不是根触点，向上找根触点，触点0的id是1，1不是根触点。 继续向上找，触点1的id为1(触点1在连通分量1（初始的连通分量）中) 所有连通分量1就是触点5所在的连通分量，且1就是根触点 find(9):同理找到触点9所在的连通分量的根触点 为8 （根触点的连通分量就是本身，即id[8]=8） 此时只要 id[1]=8即可 union(5,9)的结果为 i | 0 1 2 3 4 5 6 7 8 9 id| 1 8 1 8 3 0 5 1 8 8  算法分析 在最坏情况下，每次都是union(p,q)的p都是只有一个触点的连通分量，q是另一个连通分量的最末尾的触点 每次find()都要遍历整个连通分量所抽象出来的树才能找到根触点。 因此处理n对整数所需的所有的find()操作访问数组的总次数为3&#43;5&#43;7&#43;."/>
+
+    <meta property="og:title" content="Unionfind算法2,3" />
+<meta property="og:description" content="quickfind算法反思 对于quickfind算法，其影响时间复杂度的主要是union()方法。 union遍历整个触点数组，将一个触点所在的连通分量的所有触点的id都换位另一个连通分量的值 即union(int p,int q) {id[i] = qID}  quickunion算法想法 初始状态下，每个触点都看作一个独立的连通分量，而每个连通分量又可以抽象成为一棵树，虽然此时只有根节点。 显然，根触点满足id[i] = i这一条件 假若一个触点p与另一个触点q进行union。只要将p连接到q的树（q所在连通分量）上。即将p的id改为q的id； 对于普通情况，假如将p连接到q上 因为p，q分别在两棵不同的树上(属于不同的连通分量)， 此时就要找到q所在的连通分量的根触点的id值qRoot，同时找到p所在的连通分量的根触点pRoot。只要将id[pRoot]赋值为qRoot即可 将根节点q所在的树作为子树连接到p所在的树上。  find()  public int find(int p) //返回p的连通分量 { while(p != id[p]) //满足p == id[p]的才是根结点 { p = id[p]; } return p; } union()  int pRoot = find(p); int qRoot = find(q); if(pRoot == qRoot) //p,q已经统一连通分量 空操作 { return; } id[pRoot] = qRoot; //直接连接到根触点下 count--; //一次union count自减1 实例 假设union(5,9) i | 0 1 2 3 4 5 6 7 8 9 id| 1 1 1 8 3 0 5 1 8 8 find(5)：触点5的id是0（触点5在连通分量0中）所以5不是根触点，向上找根触点，触点0的id是1，1不是根触点。 继续向上找，触点1的id为1(触点1在连通分量1（初始的连通分量）中) 所有连通分量1就是触点5所在的连通分量，且1就是根触点 find(9):同理找到触点9所在的连通分量的根触点 为8 （根触点的连通分量就是本身，即id[8]=8） 此时只要 id[1]=8即可 union(5,9)的结果为 i | 0 1 2 3 4 5 6 7 8 9 id| 1 8 1 8 3 0 5 1 8 8  算法分析 在最坏情况下，每次都是union(p,q)的p都是只有一个触点的连通分量，q是另一个连通分量的最末尾的触点 每次find()都要遍历整个连通分量所抽象出来的树才能找到根触点。 因此处理n对整数所需的所有的find()操作访问数组的总次数为3&#43;5&#43;7&#43;." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yzz-git111.github.io/post/unionfind%E7%AE%97%E6%B3%952/" />
+<meta property="article:published_time" content="2020-09-27T12:27:58+08:00" />
+<meta property="article:modified_time" content="2020-09-27T12:27:58+08:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://yzz-git111.github.io/"><img class="app-header-avatar" src="/avatar.jpg" alt="John Doe" /></a>
+      <h1>yzz也想变成学霸</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vehicula turpis sit amet elit pretium.</p>
+      <div class="app-header-social">
+        
+          <a target="_blank" href="#ZgotmplZ" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-link">
+  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+</svg></a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">Unionfind算法2,3</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Sep 27, 2020
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          2 min read
+        </div></div>
+    </header>
+    <div class="post-content">
+      <h2 id="quickfind算法反思">quickfind算法反思</h2>
+<pre><code>对于quickfind算法，其影响时间复杂度的主要是union()方法。
+union遍历整个触点数组，将一个触点所在的连通分量的所有触点的id都换位另一个连通分量的值
+即union(int p,int q) {id[i] = qID}
+</code></pre>
+<h2 id="quickunion算法想法">quickunion算法想法</h2>
+<pre><code>初始状态下，每个触点都看作一个独立的连通分量，而每个连通分量又可以抽象成为一棵树，虽然此时只有根节点。
+显然，根触点满足id[i] = i这一条件
+假若一个触点p与另一个触点q进行union。只要将p连接到q的树（q所在连通分量）上。即将p的id改为q的id；
+对于普通情况，假如将p连接到q上 因为p，q分别在两棵不同的树上(属于不同的连通分量)，
+此时就要找到q所在的连通分量的根触点的id值qRoot，同时找到p所在的连通分量的根触点pRoot。只要将id[pRoot]赋值为qRoot即可
+将根节点q所在的树作为子树连接到p所在的树上。
+</code></pre>
+<h2 id="find">find()</h2>
+<pre><code>    public int find(int p)  //返回p的连通分量
+    {
+        while(p != id[p])   //满足p == id[p]的才是根结点
+        {
+            p = id[p];
+        }
+        return p;
+    }
+</code></pre><h2 id="union">union()</h2>
+<pre><code>    int pRoot = find(p);
+    int qRoot = find(q);
+    if(pRoot == qRoot)  //p,q已经统一连通分量  空操作
+    {
+        return;
+    }
+    id[pRoot] = qRoot;  //直接连接到根触点下
+    count--;    //一次union  count自减1
+</code></pre><h3 id="实例">实例</h3>
+<pre><code>假设union(5,9)
+i | 0 1 2 3 4 5 6 7 8 9
+id| 1 1 1 8 3 0 5 1 8 8
+
+find(5)：触点5的id是0（触点5在连通分量0中）所以5不是根触点，向上找根触点，触点0的id是1，1不是根触点。
+        继续向上找，触点1的id为1(触点1在连通分量1（初始的连通分量）中) 所有连通分量1就是触点5所在的连通分量，且1就是根触点
+find(9):同理找到触点9所在的连通分量的根触点 为8 （根触点的连通分量就是本身，即id[8]=8）
+此时只要 id[1]=8即可
+
+union(5,9)的结果为
+i | 0 1 2 3 4 5 6 7 8 9
+id| 1 8 1 8 3 0 5 1 8 8
+</code></pre>
+<h2 id="算法分析">算法分析</h2>
+<pre><code>在最坏情况下，每次都是union(p,q)的p都是只有一个触点的连通分量，q是另一个连通分量的最末尾的触点
+每次find()都要遍历整个连通分量所抽象出来的树才能找到根触点。
+因此处理n对整数所需的所有的find()操作访问数组的总次数为3+5+7+...+(2n-1)  时间复杂度最坏还是O(n^2)
+</code></pre>
+<hr>
+<h1 id="加权quick-union算法union-find算法">加权quick-union算法(union-find算法)</h1>
+<pre><code>加权quick-union算法在quick-union上进一步的进行了优化，避免了每次find都从叶子遍历到根触点的最坏情况。
+通过增加了size成员来记录连通分量的大小，每次保证了将小的连通分量连接到大的上面。
+最坏情况下的时间复杂度也控制在了对数级别下
+</code></pre>
+<h2 id="部分源码">部分源码</h2>
+<pre><code>class WeightedQuickUnionUF extends UF
+{
+    private int[]id;    //以触点作为索引
+    private int[]size;   //根节点对应的分量的大小
+    private int count;
+
+    public WeightedQuickUnionUF(int N)   //构造方法 用于初始化触点
+    {
+        count = N;
+        id = new int[N];
+        for(int i=0;i&lt;N;i++)
+        {
+            id[i] = i;  //初始化每个触点都是根节点
+        }
+        size = new int[N];
+        for(int j=0;j&lt;N;j++)
+        {
+            size[j] = 1;    //初始化每个根节点对应的连通分量大小都是1
+        }
+    }
+
+    public int getCount()  //用于返回private成员count 即连通分量的数目
+    {
+        return count;
+    }
+
+    public boolean connected(int p,int q)   //判断触点p和q是否在同一连通分量内
+    {
+        return find(p)==find(q);
+    }
+
+    public int find(int p)  //返回p的连通分量
+    {
+        while(p != id[p])
+        {
+            p = id[p];
+        }
+        return p;
+    }
+
+    public void union(int p,int q)  //将触点p和q连接到统一连通分量
+    {
+        int pRoot = find(p);
+        int qRoot = find(q);
+        if(pRoot == qRoot)  //p,q已经统一连通分量  空操作
+        {
+            return;
+        }
+        if(size[pRoot]&lt;size[qRoot]) //将小的树连接到大的树上
+        {
+            id[pRoot] = qRoot;
+            size[qRoot] += size[pRoot]; //大的树的size增大
+        }
+        else
+        {
+            id[qRoot] = pRoot;
+            size[pRoot] += size[qRoot];
+        }
+        count--;    //一次union  count自减1
+    }
+}
+</code></pre><hr>
+<pre><code>参考《算法(第四版)》1.5节</code></pre>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

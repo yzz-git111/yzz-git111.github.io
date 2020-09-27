@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>个人学习总结</title>
+    <title>yzz也想变成学霸</title>
     <link>https://yzz-git111.github.io/</link>
-    <description>Recent content on 个人学习总结</description>
+    <description>Recent content on yzz也想变成学霸</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 26 Sep 2020 18:26:44 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 27 Sep 2020 12:27:58 +0800</lastBuildDate>
     
 	<atom:link href="https://yzz-git111.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Union Find算法1</title>
+      <title>Unionfind算法2,3</title>
+      <link>https://yzz-git111.github.io/post/unionfind%E7%AE%97%E6%B3%952/</link>
+      <pubDate>Sun, 27 Sep 2020 12:27:58 +0800</pubDate>
+      
+      <guid>https://yzz-git111.github.io/post/unionfind%E7%AE%97%E6%B3%952/</guid>
+      <description>quickfind算法反思 对于quickfind算法，其影响时间复杂度的主要是union()方法。 union遍历整个触点数组，将一个触点所在的连通分量的所有触点的id都换位另一个连通分量的值 即union(int p,int q) {id[i] = qID}  quickunion算法想法 初始状态下，每个触点都看作一个独立的连通分量，而每个连通分量又可以抽象成为一棵树，虽然此时只有根节点。 显然，根触点满足id[i] = i这一条件 假若一个触点p与另一个触点q进行union。只要将p连接到q的树（q所在连通分量）上。即将p的id改为q的id； 对于普通情况，假如将p连接到q上 因为p，q分别在两棵不同的树上(属于不同的连通分量)， 此时就要找到q所在的连通分量的根触点的id值qRoot，同时找到p所在的连通分量的根触点pRoot。只要将id[pRoot]赋值为qRoot即可 将根节点q所在的树作为子树连接到p所在的树上。  find()  public int find(int p) //返回p的连通分量 { while(p != id[p]) //满足p == id[p]的才是根结点 { p = id[p]; } return p; } union()  int pRoot = find(p); int qRoot = find(q); if(pRoot == qRoot) //p,q已经统一连通分量 空操作 { return; } id[pRoot] = qRoot; //直接连接到根触点下 count--; //一次union count自减1 实例 假设union(5,9) i | 0 1 2 3 4 5 6 7 8 9 id| 1 1 1 8 3 0 5 1 8 8 find(5)：触点5的id是0（触点5在连通分量0中）所以5不是根触点，向上找根触点，触点0的id是1，1不是根触点。 继续向上找，触点1的id为1(触点1在连通分量1（初始的连通分量）中) 所有连通分量1就是触点5所在的连通分量，且1就是根触点 find(9):同理找到触点9所在的连通分量的根触点 为8 （根触点的连通分量就是本身，即id[8]=8） 此时只要 id[1]=8即可 union(5,9)的结果为 i | 0 1 2 3 4 5 6 7 8 9 id| 1 8 1 8 3 0 5 1 8 8  算法分析 在最坏情况下，每次都是union(p,q)的p都是只有一个触点的连通分量，q是另一个连通分量的最末尾的触点 每次find()都要遍历整个连通分量所抽象出来的树才能找到根触点。 因此处理n对整数所需的所有的find()操作访问数组的总次数为3+5+7+.</description>
+    </item>
+    
+    <item>
+      <title>Union Find算法1(quick-find算法)</title>
       <link>https://yzz-git111.github.io/post/union-find%E7%AE%97%E6%B3%951/</link>
       <pubDate>Sat, 26 Sep 2020 18:26:44 +0800</pubDate>
       

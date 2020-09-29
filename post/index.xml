@@ -6,10 +6,21 @@
     <description>Recent content in Posts on yzz也想变成学霸</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 27 Sep 2020 12:27:58 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 29 Sep 2020 16:23:45 +0800</lastBuildDate>
     
 	<atom:link href="https://yzz-git111.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>进程的软件同步算法</title>
+      <link>https://yzz-git111.github.io/post/%E8%BF%9B%E7%A8%8B%E7%9A%84%E8%BD%AF%E4%BB%B6%E5%90%8C%E6%AD%A5%E7%AE%97%E6%B3%95/</link>
+      <pubDate>Tue, 29 Sep 2020 16:23:45 +0800</pubDate>
+      
+      <guid>https://yzz-git111.github.io/post/%E8%BF%9B%E7%A8%8B%E7%9A%84%E8%BD%AF%E4%BB%B6%E5%90%8C%E6%AD%A5%E7%AE%97%E6%B3%95/</guid>
+      <description>Dekker算法 算法1 共享变量 想法 对于两个进程Pi，Pj，给定一个共享变量turn。当turn==i时，表示允许Pi进入临界区。  算法实现 while(1) while(1) { { while(turn != i) while(turn != j) ; //空操作 ; //空操作 临界区 临界区 turn = j; turn = i; 剩余区 剩余区 } } 这里满足了同步机制的规则之一：忙则等待 但是未满足“空闲让进”规则
+考虑如下情况： 情况一：某一时刻turn == i;Pi进入了临界区后，由于某种情况Pi进程直接退出，不能执行下面的turn = j;语句。 那么turn一直为i，Pj始终不能进入临界区。
+情况二：在Pi执行完一次后，turn == j;此时Pj可以进入临界区，但是Pj不需要执行，Pi需要再次执行。 但是由于Pj始终没执行，turn一直是j。Pi也一直不能执行。即Pi和Pj必须交替执行。   算法2 增加标志 想法 设置一个标志位表明临界区是否为被占用。一旦有进程进入，就将标志位置为忙碌。 用ture表示临界区被占用，false表示临界区空闲。flag[x]表示进程Px对临界区的操作。  增加标志方法1 while(1) while(1) { { while(flag[j]) while(flag[i]) ; ; flag[i] = true; flag[j] = true; 临界区 临界区 flag[i] = false; flag[j] = false; 剩余区 剩余区 } } 实例化理解 借助在网上看到的一个很好的例子。假设Pi和Pj进程是两个人，临界区是每次只有一个人的公共厕所。 厕所有一个灯，当有人进去就将灯打开告诉外面里面有人。当灯亮了外面的人就要等待。 在某一时刻，i和j同时想要进去。他们观察到里面灯没亮，即while语句的flag[i,j]都是false。 于是两人都想进去后将灯点亮来占有厕所。于是出现了两人一起进到厕所的情况。 抽象来看：由于多道程序的走走停停的特性。 可能先执行while(flag[j])，flag[j]是false，表示Pj没占用临界区。于是Pi准备进入。 此时执行while(flag[i])。同样的Pj认为Pi没占有临界区，也准备进入。 然后执行flag[i] = ture; 和 flag[j] = ture; 出现了Pi，Pj同时进入临界区的bug 即未能保证进程互斥的访问临界区的原则。   增加标志方法2 交换 while(flag[j]) while(flag[i]) 这两条语句的位置。 ; ; flag[i] = true; flag[j] = true;  即在while前先将flag[]置为1，表示将要占用临界区;</description>
+    </item>
     
     <item>
       <title>Unionfind算法2,3</title>

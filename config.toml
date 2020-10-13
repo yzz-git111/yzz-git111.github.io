@@ -6,7 +6,7 @@ paginate = 5
 
 [params]
   author = "John Doe"
-  description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vehicula turpis sit amet elit pretium."
+  description = "Stay hungry,Stay foolish"
   [[params.social]]
     name = "github"
     url = "https://github.com/gohugoio"

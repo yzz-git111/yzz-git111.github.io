@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>初级排序算法 // yzz也想变成学霸</title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.74.3" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="John Doe" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://yzz-git111.github.io/css/main.min.88e7083eff65effb7485b6e6f38d10afbec25093a6fac42d734ce9024d3defbd.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="初级排序算法"/>
+<meta name="twitter:description" content="选择排序（SelectSort） 算法思想  结合现实中的例子，每次都从一堆数据中找出最小的数，将他放在第一位。为了将一堆数据排序，需要进行n次（从0到n-1，n为数据个数） 抽象来看，将待排序数据存放到一个数组中。外循环执行n次(遍历整个数组)。每次外循环都实现取未排序的最小的元素。 为了在一堆数据中找到最小的元素，当然需要再用一个内循环来遍历数组。初始时，对于未排序的元素都将第一个作为最小元素min。 循环从i到n，若第j个元素小于现在的min，则min=j；内循环最后只要将a[min]与a[j]交换就满足了将一个数据排序好。  算法特点 运行时间和输入无关：即使给定的数据已经有序，选择排序任然要遍历数组。 减缓次数和数组大小是线性关系：每次外循环都只会交换两个数。而其他算法数据的移动都比这个多。  源码实现 public static void SelectSort(Comparable[] a) { int N = a.length; for(int i=0;i&lt;N;i&#43;&#43;) { int min = i; for(int j=i&#43;1;j&lt;N;j&#43;&#43;) { if(template.less(a[j],a[min])) //自己在template类实现 Comparable接口的less方法  { min = j; } } template.exchange(a,i,min); //自己在template类实现exchange方法  } } 复杂度 命题：对于长度为N的数组，选择排序大约需要(N^2)/2次比较和N次交换 时间复杂度： 外循环O(n),内循环O(n),数据交换O(1) T(n) = O(n)*(O(n)&#43;O(1)) =O(n^2); 最好最坏情况都为O(n^2) 空间复杂度： 只需要在交换a[min]与a[j]时申请一个变量temp 所以S(n) = O(1) 相对来说 选择排序算法时间复杂度太高，不适合处理大规模问题。但是其实现简单。   插入排序（InsertSort） 算法思想 插入排序类似于平时打扑克牌，对于每张牌都按顺序插入到适当位置。 对于给定的数组，将其看作三部分组成。其中a[0..i-1]为已经有序部分（初始时仅将a[0]看作有序）； a[i]为待排元素；a[i&#43;1."/>
+
+    <meta property="og:title" content="初级排序算法" />
+<meta property="og:description" content="选择排序（SelectSort） 算法思想  结合现实中的例子，每次都从一堆数据中找出最小的数，将他放在第一位。为了将一堆数据排序，需要进行n次（从0到n-1，n为数据个数） 抽象来看，将待排序数据存放到一个数组中。外循环执行n次(遍历整个数组)。每次外循环都实现取未排序的最小的元素。 为了在一堆数据中找到最小的元素，当然需要再用一个内循环来遍历数组。初始时，对于未排序的元素都将第一个作为最小元素min。 循环从i到n，若第j个元素小于现在的min，则min=j；内循环最后只要将a[min]与a[j]交换就满足了将一个数据排序好。  算法特点 运行时间和输入无关：即使给定的数据已经有序，选择排序任然要遍历数组。 减缓次数和数组大小是线性关系：每次外循环都只会交换两个数。而其他算法数据的移动都比这个多。  源码实现 public static void SelectSort(Comparable[] a) { int N = a.length; for(int i=0;i&lt;N;i&#43;&#43;) { int min = i; for(int j=i&#43;1;j&lt;N;j&#43;&#43;) { if(template.less(a[j],a[min])) //自己在template类实现 Comparable接口的less方法  { min = j; } } template.exchange(a,i,min); //自己在template类实现exchange方法  } } 复杂度 命题：对于长度为N的数组，选择排序大约需要(N^2)/2次比较和N次交换 时间复杂度： 外循环O(n),内循环O(n),数据交换O(1) T(n) = O(n)*(O(n)&#43;O(1)) =O(n^2); 最好最坏情况都为O(n^2) 空间复杂度： 只需要在交换a[min]与a[j]时申请一个变量temp 所以S(n) = O(1) 相对来说 选择排序算法时间复杂度太高，不适合处理大规模问题。但是其实现简单。   插入排序（InsertSort） 算法思想 插入排序类似于平时打扑克牌，对于每张牌都按顺序插入到适当位置。 对于给定的数组，将其看作三部分组成。其中a[0..i-1]为已经有序部分（初始时仅将a[0]看作有序）； a[i]为待排元素；a[i&#43;1." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yzz-git111.github.io/post/%E5%88%9D%E7%BA%A7%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" />
+<meta property="article:published_time" content="2020-10-12T20:10:17+08:00" />
+<meta property="article:modified_time" content="2020-10-12T20:10:17+08:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://yzz-git111.github.io/"><img class="app-header-avatar" src="/avatar.jpg" alt="John Doe" /></a>
+      <h1>yzz也想变成学霸</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vehicula turpis sit amet elit pretium.</p>
+      <div class="app-header-social">
+        
+          <a target="_blank" href="#ZgotmplZ" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-link">
+  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+</svg></a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">初级排序算法</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Oct 12, 2020
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          1 min read
+        </div></div>
+    </header>
+    <div class="post-content">
+      <h1 id="选择排序selectsort">选择排序（SelectSort）</h1>
+<h2 id="算法思想">算法思想</h2>
+<pre><code>  结合现实中的例子，每次都从一堆数据中找出最小的数，将他放在第一位。为了将一堆数据排序，需要进行n次（从0到n-1，n为数据个数）
+  抽象来看，将待排序数据存放到一个数组中。外循环执行n次(遍历整个数组)。每次外循环都实现取未排序的最小的元素。
+为了在一堆数据中找到最小的元素，当然需要再用一个内循环来遍历数组。初始时，对于未排序的元素都将第一个作为最小元素min。
+循环从i到n，若第j个元素小于现在的min，则min=j；内循环最后只要将a[min]与a[j]交换就满足了将一个数据排序好。
+</code></pre>
+<h2 id="算法特点">算法特点</h2>
+<pre><code>运行时间和输入无关：即使给定的数据已经有序，选择排序任然要遍历数组。
+减缓次数和数组大小是线性关系：每次外循环都只会交换两个数。而其他算法数据的移动都比这个多。
+</code></pre>
+<h2 id="源码实现">源码实现</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">SelectSort</span><span style="color:#f92672">(</span>Comparable<span style="color:#f92672">[]</span> a<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> N <span style="color:#f92672">=</span> a<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span>0<span style="color:#f92672">;</span>i<span style="color:#f92672">&lt;</span>N<span style="color:#f92672">;</span>i<span style="color:#f92672">++)</span>
+        <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> min <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">for</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j<span style="color:#f92672">=</span>i<span style="color:#f92672">+</span>1<span style="color:#f92672">;</span>j<span style="color:#f92672">&lt;</span>N<span style="color:#f92672">;</span>j<span style="color:#f92672">++)</span>
+            <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>template<span style="color:#f92672">.</span><span style="color:#a6e22e">less</span><span style="color:#f92672">(</span>a<span style="color:#f92672">[</span>j<span style="color:#f92672">],</span>a<span style="color:#f92672">[</span>min<span style="color:#f92672">]))</span>  
+                <span style="color:#75715e">//自己在template类实现      Comparable接口的less方法
+</span><span style="color:#75715e"></span>                <span style="color:#f92672">{</span>
+                    min <span style="color:#f92672">=</span> j<span style="color:#f92672">;</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+            template<span style="color:#f92672">.</span><span style="color:#a6e22e">exchange</span><span style="color:#f92672">(</span>a<span style="color:#f92672">,</span>i<span style="color:#f92672">,</span>min<span style="color:#f92672">);</span>     <span style="color:#75715e">//自己在template类实现exchange方法
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><h2 id="复杂度">复杂度</h2>
+<pre><code>命题：对于长度为N的数组，选择排序大约需要(N^2)/2次比较和N次交换
+时间复杂度：
+    外循环O(n),内循环O(n),数据交换O(1)  T(n) = O(n)*(O(n)+O(1)) =O(n^2);
+    最好最坏情况都为O(n^2)
+空间复杂度：
+    只需要在交换a[min]与a[j]时申请一个变量temp 所以S(n) = O(1)
+相对来说 选择排序算法时间复杂度太高，不适合处理大规模问题。但是其实现简单。
+</code></pre>
+<hr>
+<h1 id="插入排序insertsort">插入排序（InsertSort）</h1>
+<h2 id="算法思想-1">算法思想</h2>
+<pre><code>插入排序类似于平时打扑克牌，对于每张牌都按顺序插入到适当位置。
+对于给定的数组，将其看作三部分组成。其中a[0..i-1]为已经有序部分（初始时仅将a[0]看作有序）；
+a[i]为待排元素；a[i+1..n-1]为无序部分。现遍历整个数组，每次循环将待排序元素插入到已经有序部分中。
+
+那么在数组中怎么实现将某个待排序数插入到适当位置？
+  首先每次循环将待排序的元素保存到某个变量temp中(严蔚敏版的数据结构中采用将数组下标为0的位置用于存放待排序变量，有几点好处)
+为了找到自己待插入的位置，需要一个循环向前遍历。如果元素大于这个待排序元素，就将这个元素后移一位。直至找到第一个小于
+待排序元素的数。那么这个数的后一个位置就是插入位置。
+</code></pre>
+<h2 id="算法特点-1">算法特点</h2>
+<pre><code>与排序算法不同，插入排序时间复杂度依赖于输入元素的初始顺序。
+事实上，插入排序对于部分有序的数组很高效，也适合小规模数组
+</code></pre>
+<h2 id="源码实现-1">源码实现</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">sort2</span><span style="color:#f92672">(</span>Comparable<span style="color:#f92672">[]</span> a<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        Comparable temp<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span> N<span style="color:#f92672">=</span>a<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span>1<span style="color:#f92672">;</span>i<span style="color:#f92672">&lt;</span>N<span style="color:#f92672">;</span>i<span style="color:#f92672">++)</span>
+        <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> j<span style="color:#f92672">=</span>i<span style="color:#f92672">;</span>
+            temp <span style="color:#f92672">=</span> a<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
+            <span style="color:#66d9ef">while</span><span style="color:#f92672">(</span>j<span style="color:#f92672">&gt;</span>0 <span style="color:#f92672">&amp;&amp;</span> template<span style="color:#f92672">.</span><span style="color:#a6e22e">less</span><span style="color:#f92672">(</span>temp<span style="color:#f92672">,</span>a<span style="color:#f92672">[</span>j<span style="color:#f92672">-</span>1<span style="color:#f92672">]))</span>
+            <span style="color:#f92672">{</span>
+                a<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> a<span style="color:#f92672">[</span>j<span style="color:#f92672">-</span>1<span style="color:#f92672">];</span>
+                j<span style="color:#f92672">--;</span>
+            <span style="color:#f92672">}</span>
+            a<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span>temp<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><h2 id="复杂度-1">复杂度</h2>
+<pre><code>命题：对于随机排列的长度为N且主键不重复的数组，最坏情况(逆序)要交换和比较(N^2)/2
+     最好情况下(本身有序)仅需要N-1次比较和0次交换。
+平均情况下:T(n)=O(n^2);
+            S(n)=O(1)  
+            因此也不是很好
+插入排序对于实际应用中某些类型的 非随机数组 很有效。
+</code></pre>
+<h2 id="改进">改进</h2>
+<pre><code>改进主要针对于寻找插入位置(也就变成了查找的算法)，对最坏情况下的优化很微小
+由于前部分元素已经有序，可以借用著名的二分查找，迅速确定位置。（即折半插入算法）
+</code></pre>
+<hr>
+<h1 id="希尔排序shellsort">希尔排序（ShellSort）</h1>
+<h2 id="算法思想-2">算法思想</h2>
+<pre><code>反思插入排序，其效率不高主要时因为插入排序只交换相邻的元素，元素只能一个个的移动。
+而希尔排序则是使数组中任意间隔h的元素都保证有序。并且每次缩小h的取值，当h缩小至1时，就是保证数组完全有序。
+对于保证间隔h的元素组成的序列有序，可以使用插入排序。
+采用插入排序而不采用选择排序的原因是插入排序在部分有序时比选择排序更优。
+所以可以将希尔排序看作直接插入排序的改进算法。
+</code></pre>
+<h2 id="算法特点-2">算法特点</h2>
+<pre><code>希尔排序比插入排序高效的原因是它权衡了子数组的规模和有序性。
+排序之初，各个子数组都很短，且排序后的子数组都是部分有序的，这两种情况都适合插入排序。
+希尔排序可以看作步长为h的插入排序。每次步长h逐渐缩小，直至h==1。
+</code></pre>
+<h2 id="源码实现-2">源码实现</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span>  <span style="color:#66d9ef">static</span>  <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>Comparable<span style="color:#f92672">[]</span> a<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> N <span style="color:#f92672">=</span> a<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span> h<span style="color:#f92672">=</span>1<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">while</span><span style="color:#f92672">(</span>h<span style="color:#f92672">&lt;</span>N<span style="color:#f92672">/</span>3<span style="color:#f92672">)</span>
+        <span style="color:#f92672">{</span>
+            h <span style="color:#f92672">=</span> h<span style="color:#f92672">*</span>3 <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>    <span style="color:#75715e">//确定第一次的步长
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">while</span><span style="color:#f92672">(</span>h<span style="color:#f92672">&gt;=</span>1<span style="color:#f92672">)</span>
+        <span style="color:#f92672">{</span>
+            Comparable temp<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">for</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span>h<span style="color:#f92672">;</span>i<span style="color:#f92672">&lt;</span>N<span style="color:#f92672">;</span>i<span style="color:#f92672">++)</span>    <span style="color:#75715e">//每次对于步长为h的子数组用插入排序
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>
+                temp <span style="color:#f92672">=</span> a<span style="color:#f92672">[</span>j<span style="color:#f92672">];</span>
+                <span style="color:#66d9ef">while</span><span style="color:#f92672">(</span>j<span style="color:#f92672">&gt;=</span>h <span style="color:#f92672">&amp;&amp;</span> template<span style="color:#f92672">.</span><span style="color:#a6e22e">less</span><span style="color:#f92672">(</span>temp<span style="color:#f92672">,</span>a<span style="color:#f92672">[</span>j<span style="color:#f92672">-</span>h<span style="color:#f92672">]))</span>
+                <span style="color:#f92672">{</span>
+                    a<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> a<span style="color:#f92672">[</span>j<span style="color:#f92672">-</span>h<span style="color:#f92672">];</span>
+                    j<span style="color:#f92672">=</span>j<span style="color:#f92672">-</span>h<span style="color:#f92672">;</span>
+                <span style="color:#f92672">}</span>
+                a<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span>temp<span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            h <span style="color:#f92672">=</span> h<span style="color:#f92672">/</span>3<span style="color:#f92672">;</span>    <span style="color:#75715e">//缩短步长直至为1
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+
+</code></pre></div><h2 id="复杂度-2">复杂度</h2>
+<pre><code>希尔排序较之前的插入排序和选择排序要快很多，并且数组越大优势越为明显。
+T(n)约为N的1.5次方  突破了O(N^2)
+S(n)=O(1)
+</code></pre>
+<h1 id="总结">总结</h1>
+<pre><code>在今后的学习中，如果需要解决排序问题而又没有系统排序函数可用，那我会优先考虑希尔排序。
+希尔排序综合其时间复杂度和代码复杂度，可以作为做基础的排序算法。然后在考虑替换成更加复杂的排序算法。
+</code></pre>
+<p>初级排序算法实现很简单，对于一些较小数据集处理可以采用。但是复杂度在众多算法并不出色。
+相较于著名的归并排序和快速排序显得太慢了。</p>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

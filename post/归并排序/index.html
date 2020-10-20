@@ -12,10 +12,10 @@
     
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="归并排序"/>
-<meta name="twitter:description" content=""/>
+<meta name="twitter:description" content="基础 考虑这样一种情况：对于两个已经有序的子序列，如何实现将这两个子序列排序。(重点：带归并的子序列已经有序) 这就相当于对于两个有序链表合并为一个大的有序链表的问题。 方法：用两个“指针”分别指向子序列的第一个元素。先比较两个子序列的第一个元素哪个小，把小的放到另一个数组（从数组第一个位置开始放）。 然后将较小元素的指针往后移动一个，指向下一个元素。再次比较这两个指针所指元素的大小，每次把较小的元素放到另一个数组。 若有一个子序列的所有元素已经放完（指针移动到了最后一个元素之后）。由于子序列都有序，这时只要将另一个子序列的元素依次放入即可。 实例：1 3 5 | 2 4 6 8 新的数组 1 3 5 | 2 4 6 8 新的数组 1 2 3 5 | 4 6 8 新的数组 1 2 3 5 | 4 6 8 新的数组 1 2 3 4 5 | 6 8 新的数组 1 2 3 4 5 | 6 8 //这时一个子序列已经没了 新的数组 1 2 3 4 5 6 新的数组 1 2 3 4 5 6 8   merge源码 public static void merge(Comparable[] a,int low, int mid,int high) { int i=low; int j=mid&#43;1; for(int k=low;k&lt;=high;k&#43;&#43;) //赋值到辅助数组中  { aux[k] = a[k]; } for(int k=low;k&lt;=high;k&#43;&#43;) { if(i&gt;mid) //左半边归并光了  { a[k] = aux[j&#43;&#43;]; } else if(j&gt;high) //右半边归并光了  { a[k] = aux[i&#43;&#43;]; } else if(template."/>
 
     <meta property="og:title" content="归并排序" />
-<meta property="og:description" content="" />
+<meta property="og:description" content="基础 考虑这样一种情况：对于两个已经有序的子序列，如何实现将这两个子序列排序。(重点：带归并的子序列已经有序) 这就相当于对于两个有序链表合并为一个大的有序链表的问题。 方法：用两个“指针”分别指向子序列的第一个元素。先比较两个子序列的第一个元素哪个小，把小的放到另一个数组（从数组第一个位置开始放）。 然后将较小元素的指针往后移动一个，指向下一个元素。再次比较这两个指针所指元素的大小，每次把较小的元素放到另一个数组。 若有一个子序列的所有元素已经放完（指针移动到了最后一个元素之后）。由于子序列都有序，这时只要将另一个子序列的元素依次放入即可。 实例：1 3 5 | 2 4 6 8 新的数组 1 3 5 | 2 4 6 8 新的数组 1 2 3 5 | 4 6 8 新的数组 1 2 3 5 | 4 6 8 新的数组 1 2 3 4 5 | 6 8 新的数组 1 2 3 4 5 | 6 8 //这时一个子序列已经没了 新的数组 1 2 3 4 5 6 新的数组 1 2 3 4 5 6 8   merge源码 public static void merge(Comparable[] a,int low, int mid,int high) { int i=low; int j=mid&#43;1; for(int k=low;k&lt;=high;k&#43;&#43;) //赋值到辅助数组中  { aux[k] = a[k]; } for(int k=low;k&lt;=high;k&#43;&#43;) { if(i&gt;mid) //左半边归并光了  { a[k] = aux[j&#43;&#43;]; } else if(j&gt;high) //右半边归并光了  { a[k] = aux[i&#43;&#43;]; } else if(template." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://yzz-git111.github.io/post/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F/" />
 <meta property="article:published_time" content="2020-10-18T21:28:01+08:00" />
@@ -55,11 +55,209 @@
   <title>clock</title>
   <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
 </svg>
-          0 min read
+          3 min read
         </div></div>
     </header>
     <div class="post-content">
-      
+      <h1 id="基础">基础</h1>
+<pre><code>考虑这样一种情况：对于两个已经有序的子序列，如何实现将这两个子序列排序。(重点：带归并的子序列已经有序)
+这就相当于对于两个有序链表合并为一个大的有序链表的问题。
+方法：用两个“指针”分别指向子序列的第一个元素。先比较两个子序列的第一个元素哪个小，把小的放到另一个数组（从数组第一个位置开始放）。
+     然后将较小元素的指针往后移动一个，指向下一个元素。再次比较这两个指针所指元素的大小，每次把较小的元素放到另一个数组。
+     若有一个子序列的所有元素已经放完（指针移动到了最后一个元素之后）。由于子序列都有序，这时只要将另一个子序列的元素依次放入即可。
+实例：1 3 5 | 2 4 6 8
+新的数组 1                3 5 | 2 4 6 8
+新的数组 1 2              3 5 | 4 6 8
+新的数组 1 2 3              5 | 4 6 8
+新的数组 1 2 3 4            5 | 6 8
+新的数组 1 2 3 4 5            | 6 8   //这时一个子序列已经没了
+新的数组 1 2 3 4 5 6
+新的数组 1 2 3 4 5 6 8
+</code></pre>
+<hr>
+<h2 id="merge源码">merge源码</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">merge</span><span style="color:#f92672">(</span>Comparable<span style="color:#f92672">[]</span> a<span style="color:#f92672">,</span><span style="color:#66d9ef">int</span> low<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> mid<span style="color:#f92672">,</span><span style="color:#66d9ef">int</span> high<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span>low<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span> j<span style="color:#f92672">=</span>mid<span style="color:#f92672">+</span>1<span style="color:#f92672">;</span>
+
+        <span style="color:#66d9ef">for</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> k<span style="color:#f92672">=</span>low<span style="color:#f92672">;</span>k<span style="color:#f92672">&lt;=</span>high<span style="color:#f92672">;</span>k<span style="color:#f92672">++)</span>          <span style="color:#75715e">//赋值到辅助数组中
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">{</span>
+            aux<span style="color:#f92672">[</span>k<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> a<span style="color:#f92672">[</span>k<span style="color:#f92672">];</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#66d9ef">for</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> k<span style="color:#f92672">=</span>low<span style="color:#f92672">;</span>k<span style="color:#f92672">&lt;=</span>high<span style="color:#f92672">;</span>k<span style="color:#f92672">++)</span>
+        <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>i<span style="color:#f92672">&gt;</span>mid<span style="color:#f92672">)</span>                               <span style="color:#75715e">//左半边归并光了
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">{</span>
+                a<span style="color:#f92672">[</span>k<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> aux<span style="color:#f92672">[</span>j<span style="color:#f92672">++];</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>j<span style="color:#f92672">&gt;</span>high<span style="color:#f92672">)</span>                         <span style="color:#75715e">//右半边归并光了
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">{</span>
+                a<span style="color:#f92672">[</span>k<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> aux<span style="color:#f92672">[</span>i<span style="color:#f92672">++];</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>template<span style="color:#f92672">.</span><span style="color:#a6e22e">less</span><span style="color:#f92672">(</span>aux<span style="color:#f92672">[</span>i<span style="color:#f92672">],</span>aux<span style="color:#f92672">[</span>j<span style="color:#f92672">]))</span>   <span style="color:#75715e">//左边元素小，左边归并
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">{</span>
+                a<span style="color:#f92672">[</span>k<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> aux<span style="color:#f92672">[</span>i<span style="color:#f92672">++];</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">else</span>                                    <span style="color:#75715e">//右边元素小于等于左边，右边归并
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">{</span>
+                a<span style="color:#f92672">[</span>k<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> aux<span style="color:#f92672">[</span>j<span style="color:#f92672">++];</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    我经常错的几个注意点<span style="color:#960050;background-color:#1e0010">：</span>
+    1<span style="color:#f92672">.</span><span style="color:#a6e22e">在将两个已经有序的子序列归并前需要先将他们赋值到一个大的辅助数组</span><span style="color:#960050;background-color:#1e0010">。</span>
+    因为如果不赋值到辅助数组<span style="color:#960050;background-color:#1e0010">，</span>就会在排序时改变原来序列的值<span style="color:#960050;background-color:#1e0010">，</span>而导致排序出错误<span style="color:#960050;background-color:#1e0010">。</span>
+    <span style="color:#960050;background-color:#1e0010">（</span>相当于在归并两个有序链表时总会输出一个新的链表<span style="color:#960050;background-color:#1e0010">，</span>或者利用其中一个的头结点而构造一个新的链表<span style="color:#960050;background-color:#1e0010">）</span>
+
+    2<span style="color:#f92672">.(</span>template<span style="color:#f92672">.</span><span style="color:#a6e22e">less</span><span style="color:#f92672">(</span>aux<span style="color:#f92672">[</span>i<span style="color:#f92672">],</span>aux<span style="color:#f92672">[</span>j<span style="color:#f92672">]))</span> 比较的是辅助数组的数<span style="color:#960050;background-color:#1e0010">。</span>
+    这里的想法是把原始的数组赋值到新的辅助数组<span style="color:#960050;background-color:#1e0010">，</span>然后依次比较大小<span style="color:#960050;background-color:#1e0010">，</span><span style="color:#f92672">(</span>还是按原来已经有序的子序列依次比较<span style="color:#f92672">)</span><span style="color:#960050;background-color:#1e0010">。</span>如果比较a<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>和a<span style="color:#f92672">[</span>j<span style="color:#f92672">],</span>那么比较过程a<span style="color:#f92672">[]</span>是改变的<span style="color:#960050;background-color:#1e0010">，</span>所有结果一定有问题
+
+    3<span style="color:#f92672">.</span><span style="color:#a6e22e">输入的参数是low</span><span style="color:#960050;background-color:#1e0010">，</span>mid和high
+    这是因为对于一个数组<span style="color:#960050;background-color:#1e0010">，</span>归并排序是一部分一部分的排序<span style="color:#960050;background-color:#1e0010">。</span>在将每部分都排序了<span style="color:#960050;background-color:#1e0010">，</span>这时最后就变为了将两个大的子序列排序<span style="color:#960050;background-color:#1e0010">。</span>
+    如果参数是0<span style="color:#f92672">,</span>mid<span style="color:#f92672">,</span>N<span style="color:#f92672">-</span>1<span style="color:#f92672">.</span><span style="color:#a6e22e">那就只是最后一次归并</span><span style="color:#960050;background-color:#1e0010">。</span>对于最后一次归并要先进行若干次小规模的归并<span style="color:#960050;background-color:#1e0010">，</span>来保证待归并的两个大的子序列都已经有序<span style="color:#960050;background-color:#1e0010">。</span>
+</code></pre></div><hr>
+<h2 id="自顶向下的归并">自顶向下的归并</h2>
+<h2 id="思想">思想</h2>
+<pre><code>分而治之的思想
+首先对于一个大的子序列a[0..N-1],首先从中间分隔，分成a[0..mid],a[mid+1..N-1]的两部分。用递归分别将这两部分都排序成有序序列，最后用一次merge即可。
+对于子序列个数大于2的继续递归地划分。当子序列只有一个元素的时候，这是这个子序列已经有序了，就可以用merge先将两个只有一个元素的子序列归并。
+接着归并两个含有两个元素的子序列，到最后归并两个含有N/2元素的子序列。
+</code></pre>
+<h2 id="源码">源码</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Merge</span>
+<span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> Comparable<span style="color:#f92672">[]</span> aux<span style="color:#f92672">;</span>    <span style="color:#75715e">//辅助数组
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>Comparable<span style="color:#f92672">[]</span> a<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        aux <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Comparable<span style="color:#f92672">[</span>a<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">];</span>
+        sort<span style="color:#f92672">(</span>a<span style="color:#f92672">,</span>0<span style="color:#f92672">,</span>a<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">-</span>1<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>Comparable<span style="color:#f92672">[]</span> a<span style="color:#f92672">,</span><span style="color:#66d9ef">int</span> low<span style="color:#f92672">,</span><span style="color:#66d9ef">int</span> high<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>low <span style="color:#f92672">&gt;=</span> high<span style="color:#f92672">)</span>
+            <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span> mid <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>low <span style="color:#f92672">+</span> high<span style="color:#f92672">)/</span>2<span style="color:#f92672">;</span>
+        sort<span style="color:#f92672">(</span>a<span style="color:#f92672">,</span>low<span style="color:#f92672">,</span>mid<span style="color:#f92672">);</span>
+        sort<span style="color:#f92672">(</span>a<span style="color:#f92672">,</span>mid<span style="color:#f92672">+</span>1<span style="color:#f92672">,</span>high<span style="color:#f92672">);</span>
+        merge<span style="color:#f92672">(</span>a<span style="color:#f92672">,</span>low<span style="color:#f92672">,</span>mid<span style="color:#f92672">,</span>high<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+    <span style="color:#75715e">/*关于源码的几个注意点：
+</span><span style="color:#75715e">    1.  private static Comparable[] aux;    //辅助数组
+</span><span style="color:#75715e">        aux = new Comparable[a.length];
+</span><span style="color:#75715e">        在sort一开始就直接定义一个数组aux，大小与待排序的a一样，这样就可以避免每次归并不同子序列时都要申请。如果每次都要申请，那么创建新数组将增加复杂度
+</span><span style="color:#75715e">        这里aux的作用范围一直到排序最后。
+</span><span style="color:#75715e">        更好的方法是将aux[]变成sort的局部变量传递到merge()
+</span><span style="color:#75715e">        保证了只要O(N)的空间
+</span><span style="color:#75715e">    2.  java的特性：静态方法（类方法）
+</span><span style="color:#75715e">        用static修饰的方法可以直接通过类名调用，但只可以使用静态变量（被static修饰的变量）
+</span><span style="color:#75715e">    */</span>
+</code></pre></div><h3 id="执行过程">执行过程</h3>
+<pre><code>                index : 0 1 2 3 4 5 6 7 8 9
+                a[]   : B C A D E G F H A C
+merge(a,0,0,1)          B C
+merge(a,0,1,2)          A B C
+merge(a,3,3,4)                D E
+merge(a,0,2,4)          A B C D E
+merge(a,5,5,6)                    F G
+merge(a,7,7,7)                        H         //一个元素 直接有序（平凡情况 直接return）
+merge(a,5,6,7)                    F G H
+merge(a,8,8,9)                          A C
+merge(a,5,7,9)                    A C F G H
+merge(a,0,4,9)          A A B C C D E F G H
+</code></pre>
+<h2 id="复杂度">复杂度</h2>
+<pre><code>用递归树表示，假设有N层，则2^n == N,解得n = logN. 而每层都是2^n即N次比较，所以总的比较次数NlogN
+命题：对于长度为N的数组，自顶向下的归并排序需要(NlogN)/2到NlogN此比较
+所以自顶向下的归并排序T(N)=O(NlogN),对比初级排序，将复杂度下降到线性对数级别！
+</code></pre>
+<h2 id="改进">改进</h2>
+<pre><code>1.对于规模较小的问题，用插入排序效果可能比归并好。这是因为归并排序的递归会使小规模问题的调用过于频繁，增加了复杂度。
+2.增加一个判断条件：如果a[mid]&lt;=a[mid+1],则认为已经有序并且跳过merge()。
+  因为a[mid]是第一个子序列的最后一个元素，也是最大的元素。a[mid+1]是第二个子序列的第一个元素，也是最小的元素。
+  如果第一个子序列的最大的元素都小于第二个子序列的最小的元素，那么第二子序列都大于第一个，而子序列本身都是有序的。
+3.将aux[]变为sort()方法的局部变量，并且作为参数传递给merge()方法。
+</code></pre>
+<hr>
+<h2 id="自底向上的归并排序">自底向上的归并排序</h2>
+<pre><code>自顶向下的归并是由大的数组分为一个个小的问题，对于只有一个元素的数组默认已经有序。然后在将这几个小问题合为大的问题。
+自底向上的归并则是先归并小的数组，将小的数组都变为有序的，在利用merge()一步步合并为最大的有序的数组。
+首先归并大小为1的子序列，然后将得到的大小为2的子序列进行两两归并，在四四归并......
+                        0 1 2 3 4 5 6 7 8 9 10
+                   a[]  D A C E G H B Z F I K
+(size=1)merge(a,0,0,1)  A D
+        merge(a,2,2,3)      C E
+        merge(a,4,4,5)          G H
+        merge(a,6,6,7)              B Z
+        merge(a,8,8,9)                  F I
+        merge(a,10,10,10)                   K   //只有一个元素的平凡情况 直接默认已经有序了
+
+(size=2)merge(a,0,1,3)  A C D E
+        merge(a,4,5,7)          B G H Z
+        merge(a,8,9,10)                 F I K   //对于最后一次归并 第二个数组的大小为1 比第一个数组小，但是merge能解决
+
+(size=4)merge(a,0,3,7)  A B C D E G H Z
+        merge(a,8,10,10)                F I K   //对于最后一次归并 第二个数组的大小为0 比第一个数组小，但是merge能解决
+
+(size=8)merge(a,0,7,10) A B C D E F G H I K Z   //对于最后一次归并 第二个数组的大小为3 比第一个数组小，但是merge能解决
+
+对比：自顶而下的归并是将大的分为两个小的，直到小的规模为平凡问题，在依次合并，使得第一个子问题已经有序，然后同样使第二个子问题有序。
+      最后合并两个大的子问题即可。（采用了递归的方式，先递归使第一个子问题有序，在递归求第二个子问题）
+      自底向上的归并是从头遍历整个数组，第一次将相邻的两个最小规模的子问题归并，然后将归并后的子问题归并，最后归并两个大的子问题即可。
+      （直接一步步的将每个子问题有序）
+</code></pre>
+<h2 id="源码-1">源码</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MergeBU</span>
+<span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> Comparable<span style="color:#f92672">[]</span> aux<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>Comparable <span style="color:#f92672">[]</span> a<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> N <span style="color:#f92672">=</span> a<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+        aux <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Comparable<span style="color:#f92672">[</span>N<span style="color:#f92672">];</span>
+        <span style="color:#66d9ef">for</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> sz <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>sz<span style="color:#f92672">&lt;</span>N<span style="color:#f92672">;</span>sz <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>sz <span style="color:#f92672">+</span> sz<span style="color:#f92672">))</span>
+        <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">for</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> low <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> low <span style="color:#f92672">&lt;</span>N <span style="color:#f92672">-</span> sz<span style="color:#f92672">;</span>low <span style="color:#f92672">=</span> low<span style="color:#f92672">+</span> <span style="color:#f92672">(</span>sz <span style="color:#f92672">+</span> sz<span style="color:#f92672">))</span>
+            <span style="color:#f92672">{</span>
+                merge<span style="color:#f92672">(</span>a <span style="color:#f92672">,</span> low <span style="color:#f92672">,</span>low <span style="color:#f92672">+</span> sz <span style="color:#f92672">-</span> 1<span style="color:#f92672">,</span>Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>low<span style="color:#f92672">+</span>sz<span style="color:#f92672">+</span>sz<span style="color:#f92672">-</span>1<span style="color:#f92672">,</span>N<span style="color:#f92672">-</span>1<span style="color:#f92672">));</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="复杂度-1">复杂度</h2>
+<pre><code>自底向上的归并会多次访问整个数组。子问题大小size从1开始，每次加倍。最后一个子数组的大小只有在数组大小为size的偶数倍时才等于size，否则比size小
+（merge(a,0,7,10) size==8 数组大小为11，不是8的整数倍 所有最后一个子数组比size小）
+命题：对于长度为N的任意数组，自底向上的归并排序需要(NlogN)/2到NlogN次比较
+所有自底向上的归并排序T(N)=O(NlogN) 与自顶向下的归并复杂度一样。
+当数组的长度为2的幂时，两种归并排序算法的比较次数一样。只是顺序不同而已。
+自底向上的归并适合链表组织的数据。
+</code></pre>
+<hr>
+<h1 id="总结">总结</h1>
+<pre><code>1. 排序算法的复杂度：基于比较的排序算法的时间复杂度至少为O(lg(N!))或者O(NlogN)      //斯特林公式能证明二者同阶
+所有说归并排序是一种渐进最优的基于比较排序的算法。可能只是常系数比较大。
+但是归并排序需要的空间复杂度为O(N),需要一个和原问题同样规模的辅助数组来进行merge().
+总的来说归并排序是一个很好的基于比较排序的算法。
+常见的基于比较的排序算法：选择排序，冒泡排序，插入排序，希尔排序，归并排序，快速排序，堆排序。
+常见的非基于比较的排序算法：桶排序，基数排序，计数排序。
+
+2.分而治之(divide &amp; conquer)算法思想
+为解决一个大的问题，我们可以将他们分为几个小的子问题。假设子问题已经得到了解决，那么只要将几个子问题合并为一个大的问题就可以。
+对于子问题，一般将他分解为很轻易可以求解为止，即平凡问题。
+分治算法通常与递归相结合，有很好的效果。
+下面的快速排序(QuickSort)也采用了分治的思想。
+
+3.递归式的计算。
+归并排序满足递推式：f(N) = 2f(N/2) + N 利用递归树或者主定理都能够很容易计算出时间复杂度O(NlogN). 
+
+4.归并排序与希尔排序：书中提到在实际应用中二者相差的很小。
+</code></pre>
+
     </div>
     <div class="post-footer">
       

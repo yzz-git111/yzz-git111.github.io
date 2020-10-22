@@ -5,10 +5,22 @@
     <link>https://yzz-git111.github.io/post/</link>
     <description>Recent content in Posts on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 18 Oct 2020 21:28:01 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 21 Oct 2020 16:39:25 +0800</lastBuildDate>
     
 	<atom:link href="https://yzz-git111.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>快速排序</title>
+      <link>https://yzz-git111.github.io/post/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/</link>
+      <pubDate>Wed, 21 Oct 2020 16:39:25 +0800</pubDate>
+      
+      <guid>https://yzz-git111.github.io/post/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/</guid>
+      <description>思想 考虑这样的一个情况：如果给定你一个方法partition(),此方法能够实现将一个序列进行划分。 以序列的第一个元素a[low]作为划分的依据，将原序列划分成为(小于a[low])(a[low])(大于a[low]).
+那么将可以怎么利用这个方法对序列进行排序呢？ 运用分而治之（Divid &amp;amp; conquer）的思想：首先对于原始的大的序列，取第一个元素进行划分，将原问题划分为两个小的子问题。 要使得整个序列都有序，且因为这个划分的元素已经处于其对应的有序序列的位置，所以只要保证两个子问题有序即可。 对于划分的两个子问题，其中一个子问题是所有小于划分元素的，另一个子问题是所有大于划分元素的。再递归的对这两个子问题进行划分， 直至将问题划分到只有一个元素，这就是平凡问题（一个元素的序列已经有序）。 这时由于每个子问题都已经有序，且所有的划分元素都在其对应的有序序列的位置，所以整个序列都保证有序。
+那么如何实现对问题的划分呢？ 我们可以总是以序列的首元素进行划分元素。从左往右直至选到一个大于等于划分元素的，同时从右往左直至选到一个小于等于比划分元素的。 这时交换两个元素。如此继续下去，就可以保证左指针i左侧的所有元素都不大于切分元素，右指针j右侧的所有元素都不小于切分元素。 最后当两个指针相遇时，就说明遍历完了数组，此时只要将切分元素（序列的首元素）与左子序列最右侧的元素（a[j]）交换并返回j。 其中返回j时为了下面进行更小子序列的划分。直到子序列只有一个元素，就可以直接返回。
+源码 public class QuickSort { public static void sort(Comparable[] a) { StdRandom.shuffle(a); //对初始序列进行随机打乱  sort(a,0,a.length-1); } public static void sort(Comparable[] a,int low ,int high) { if(high&amp;lt;=low) return; int j = partition(a,low,high); sort(a,low,j-1); sort(a,j+1,high); //划分成三分 小于j的 j 大于j的  } public static int partition(Comparable[] a,int low,int high) { int i=low; // low是切分元素 low+1是第一个扫描的元素  int j=high+1; // high+1 是数组最后一个元素的后一个 high才是第一个扫描的元素  Comparable v=a[low]; //第一个元素为切分元素  while(true) { while(template.</description>
+    </item>
     
     <item>
       <title>归并排序</title>

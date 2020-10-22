@@ -107,17 +107,18 @@
         <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
 
-    我经常错的几个注意点<span style="color:#960050;background-color:#1e0010">：</span>
-    1<span style="color:#f92672">.</span><span style="color:#a6e22e">在将两个已经有序的子序列归并前需要先将他们赋值到一个大的辅助数组</span><span style="color:#960050;background-color:#1e0010">。</span>
-    因为如果不赋值到辅助数组<span style="color:#960050;background-color:#1e0010">，</span>就会在排序时改变原来序列的值<span style="color:#960050;background-color:#1e0010">，</span>而导致排序出错误<span style="color:#960050;background-color:#1e0010">。</span>
-    <span style="color:#960050;background-color:#1e0010">（</span>相当于在归并两个有序链表时总会输出一个新的链表<span style="color:#960050;background-color:#1e0010">，</span>或者利用其中一个的头结点而构造一个新的链表<span style="color:#960050;background-color:#1e0010">）</span>
-
-    2<span style="color:#f92672">.(</span>template<span style="color:#f92672">.</span><span style="color:#a6e22e">less</span><span style="color:#f92672">(</span>aux<span style="color:#f92672">[</span>i<span style="color:#f92672">],</span>aux<span style="color:#f92672">[</span>j<span style="color:#f92672">]))</span> 比较的是辅助数组的数<span style="color:#960050;background-color:#1e0010">。</span>
-    这里的想法是把原始的数组赋值到新的辅助数组<span style="color:#960050;background-color:#1e0010">，</span>然后依次比较大小<span style="color:#960050;background-color:#1e0010">，</span><span style="color:#f92672">(</span>还是按原来已经有序的子序列依次比较<span style="color:#f92672">)</span><span style="color:#960050;background-color:#1e0010">。</span>如果比较a<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>和a<span style="color:#f92672">[</span>j<span style="color:#f92672">],</span>那么比较过程a<span style="color:#f92672">[]</span>是改变的<span style="color:#960050;background-color:#1e0010">，</span>所有结果一定有问题
-
-    3<span style="color:#f92672">.</span><span style="color:#a6e22e">输入的参数是low</span><span style="color:#960050;background-color:#1e0010">，</span>mid和high
-    这是因为对于一个数组<span style="color:#960050;background-color:#1e0010">，</span>归并排序是一部分一部分的排序<span style="color:#960050;background-color:#1e0010">。</span>在将每部分都排序了<span style="color:#960050;background-color:#1e0010">，</span>这时最后就变为了将两个大的子序列排序<span style="color:#960050;background-color:#1e0010">。</span>
-    如果参数是0<span style="color:#f92672">,</span>mid<span style="color:#f92672">,</span>N<span style="color:#f92672">-</span>1<span style="color:#f92672">.</span><span style="color:#a6e22e">那就只是最后一次归并</span><span style="color:#960050;background-color:#1e0010">。</span>对于最后一次归并要先进行若干次小规模的归并<span style="color:#960050;background-color:#1e0010">，</span>来保证待归并的两个大的子序列都已经有序<span style="color:#960050;background-color:#1e0010">。</span>
+    <span style="color:#75715e">/*我经常错的几个注意点：
+</span><span style="color:#75715e">    1.在将两个已经有序的子序列归并前需要先将他们赋值到一个大的辅助数组。
+</span><span style="color:#75715e">    因为如果不赋值到辅助数组，就会在排序时改变原来序列的值，而导致排序出错误。
+</span><span style="color:#75715e">    （相当于在归并两个有序链表时总会输出一个新的链表，或者利用其中一个的头结点而构造一个新的链表）
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">    2.(template.less(aux[i],aux[j])) 比较的是辅助数组的数。
+</span><span style="color:#75715e">    这里的想法是把原始的数组赋值到新的辅助数组，然后依次比较大小，(还是按原来已经有序的子序列依次比较)。如果比较a[i]和a[j],那么比较过程a[]是改变的，所以结果一定有问题
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">    3.输入的参数是low，mid和high
+</span><span style="color:#75715e">    这是因为对于一个数组，归并排序是一部分一部分的排序。在将每部分都排序了，这时最后就变为了将两个大的子序列排序。
+</span><span style="color:#75715e">    如果参数是0,mid,N-1.那就只是最后一次归并。对于最后一次归并要先进行若干次小规模的归并，来保证待归并的两个大的子序列都已经有序。
+</span><span style="color:#75715e">    */</span>
 </code></pre></div><hr>
 <h2 id="自顶向下的归并">自顶向下的归并</h2>
 <h2 id="思想">思想</h2>

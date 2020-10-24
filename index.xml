@@ -5,10 +5,28 @@
     <link>https://yzz-git111.github.io/</link>
     <description>Recent content on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 21 Oct 2020 16:39:25 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 22 Oct 2020 23:08:46 +0800</lastBuildDate>
     
 	<atom:link href="https://yzz-git111.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>快速排序补充</title>
+      <link>https://yzz-git111.github.io/post/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F%E8%A1%A5%E5%85%85/</link>
+      <pubDate>Thu, 22 Oct 2020 23:08:46 +0800</pubDate>
+      
+      <guid>https://yzz-git111.github.io/post/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F%E8%A1%A5%E5%85%85/</guid>
+      <description>鉴于快速排序的优异性 有必要对快速排序进一步讨论   1.循坏停止条件 public static int partition(Comparable[] a,int low,int high) { while(true) { while(template.less(a[++i],v)) //a[++i]&amp;gt;v时跳出循坏//从左往右找第一个比v大的元素  { if(i==high) break; //如果找第一个比v大的元素一直到了数组末尾 则说明数组都比v小  } while(template.less(v,a[--j])) { if(j==low) break; //如果找第一个比v小的元素一直到了数组开头 则说明数组都比v大  } if(i&amp;gt;=j) //如果i和j碰到一起 就说明找完了 对数组的划分完成了  break; template.exchange(a,i,j); } template.exchange(a,low,j); //最后将划分元素给到适当位置j  return j; //j就是划分元素的最终位置  } 这里从左往右找第一个满足 不小于(&amp;gt;=)v 的元素，以及从右往左找第一个满足 不大于(&amp;lt;=)v的元素。 至于为什么有等于情况，是因为如果遇到和切分元素相同的元素时我们继续扫描而不停下，可能运行时间会退化为平方量级。
+考虑一个极端的情况：aaaaaaa 这样的话i(从左往右找的)会停留在high,而j(从右往左找的)会停留在low。最后交换low和j（template.exchange(a,low,j);） 这样只使得第一个元素被划分，子数组变成了除第一个元素剩下的元素。每次划分规模减小1，循环n次，每次都O(n)，所以复杂度退化到平方量级。
+但如果等于情况也停下，i会停留在第二个a，j会停留在最后一个a，这样交换第一个a（用于划分的）和中间的a（mid）。后来的子问题规模就只有一般，和一般情况复杂度一样。 虽然这样会有一些无用的交换，但是可以避免在重复元素多的时候时间复杂度退化到平方量级。
+  2.最佳情况 问题：试着编写一段程序来生成使得快速排序表现最佳的数组。
+思考：快速排序的最好情况：无重复的元素，且每次切分后的两个子数组的大小最多相差1. 无重复的元素很容易实现，只要控制输入即可。
+考察快速排序的过程，先选取第一个元素为切分元素，最后切分结束就把第一个元素和j交换。为了保证每次切分后的两个子数组大小最多差1，就要保证每次划分元素正好是原数组排序后的中间的元素。
+反过来，为了找到最好的情况，就相当于是一个逆过程。此时的输入是一个已经有序的序列。每次都将第一个元素与中间元素交换即可。这就相当于partation().
+采用分治算法：假如现在a[low..mid-1],a[mid+1..high]都已经是最优解，这时只要将第一个元素与中间元素交换。而为了得到子问题的最优解，以中间元素为界限，将原问题分解为a[low..mid-1],a[mid+1..high]两个子问题，只要保证子问题最优，原问题也最优。继续的递归划分，对于只有一个元素的平凡问题，由于第一个元素==中间元素，不必交换直接返回。
+举一个实例，假设对abcdefg进行最好情况的构造。先对原问题进行切割，分成abc和efg。接着处理子问题abc，继续切分，切分成a和c，都是平凡问题，不用处理。返回到子问题abc，交换a(第一个元素/切分元素)和b(中间元素)，得到bac，这样子问题abc已经处理完。处理完abc再处理子问题efg，重复上述步骤，子问题efg的解应该为feg。最后返回到原问题，此时的原问题数组已经变成了bacdfeg。进行最后一次交换，得到最终的结果dacbfeg。
+参考代码:</description>
+    </item>
     
     <item>
       <title>快速排序</title>

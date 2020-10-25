@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>优先队列(堆)及堆排序 // </title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.74.3" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="yzz帅的一匹" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://yzz-git111.github.io/css/main.min.88e7083eff65effb7485b6e6f38d10afbec25093a6fac42d734ce9024d3defbd.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="优先队列(堆)及堆排序"/>
+<meta name="twitter:description" content="优先队列(堆) 我们经常遇到这样的问题：要求一个很大的数组中最小/最大的前几个数。对于数组个数较小的情况，我们可以将数组排序，然后按序输出几个数。但是当数组元素个数很大的时候，先将整个数组都排序就会很浪费时间。我们的注意只要求其中最大/最小的几个数，所以可以构造一个新的数据结构，它适用于返回最大/最小的数以及插入新的元素。而（优先队列）堆就是很好的这样一个新的数据结构。
+以大顶堆（最大元素的优先队列）为例。堆最重要的操作就是删除最大元素和插入新的元素。回顾之前定义栈，队列时的想法。我们可以利用两者最基本的数据结构：数组和链表来实现。并且数组实现的栈和队列适用于查找很平凡，插入删除很少的情况。而链表实现适用于查找很少，插入和删除频繁的情况。同样的，对于堆的实现，我们也可以借助最基本的数据结构。
+1.利用数组实现。为了返回最大的元素，我们可以在每次插入时候都按顺序插入，这样返回最大元素可以直接返回数组的最后一个元素。为了插入元素的方便，我们又可以每次插入都将新元素放在原始数组的后面。这就又使数组实现分为有序数组和无序数组。对于有序数组，插入元素的复杂度为O(N),返回最大元素为O(1);对于无序数组,插入元素复杂度为O(1),返回最大元素为O(N)。这显然达不到我们的要求。
+2.利用链表实现。链表的优势在于插入和删除元素的复杂度为O(1)。但对于堆的基本操作来说，为了删除最大元素，可以将链表排序为有序链表，也可以每次返回最大元素时遍历整个链表。插入新元素时，若要按顺序插入，复杂度也会变为O(N),与数组的实现基本一致，效果依旧不好。
+引入 仿照二叉树的基本结构可以很好的实现堆。我们定义：当一棵二叉树的每个结点大于等于它的两个子节点时，这是一个大顶堆。(小顶堆类似定义)。 大顶堆的根节点就是最大元素，小顶堆的根节点就是最小元素。
+ 1 7 2 3 6 5 4 5 6 7 //小顶堆 4 3 2 1 //大顶堆  如果我们使用结点以及指针的方式实现，每个结点需要3个指针（左右子树各一个 父节点一个）。但是通过观察，堆是一棵完全二叉树，对于完全二叉树， 我们通常用数组来存储。即按照层次遍历的方法，将各个元素的值放入一个数组中。 为了表示方便，不使用a[0]。那么第k个结点的左右孩子结点（如果存在） 那么他们在数组中的位置就是2k和2k&#43;1.第k个结点的父节点（如果存在），就是k/2.
+由于一颗大小为N的完全二叉树的高度为logN取下整，所以保证了这样实现的堆插入和返回最大元素的复杂度都控制在了O(logN).
+堆的算法 以大顶堆为例。为了保证每个结点大于等于它的两个子节点，当有一个元素的值大于父节点时，我们就需要将它与父节点交换(交换a[k]和a[k/2])。但交换后这个结点还可能比父节点大，那么继续交换直至伸展到根。 定义这个方法为swim()。
+同样的，当有一个结点的值小于孩子结点的值，为了达到平衡，我们需要将它与左右孩子中值较大的那个交换。并且一直这种情况可以一直延申到叶子节点。定义这个方法为sink().
+有了swim()和sink()两个方法后，当我们插入一个元素时，总将元素插入到下一个叶子结点(数组的后一个位置)，然后利用swim()进行调整。
+当我们要返回最大元素时，我们将根节点和最后一个结点交换位置(数组的第一个结点和最后一个),然后利用sink()方法将现在的根节点调整到对应位置。
+有一个命题：对于一个含有N个元素的堆，插入操作不超过(logN&#43;1)次比较，删除最大元素不超过2logN次比较。（由完全二叉树的高度保证）
+参考源码:
+public class MaxHeap&lt;Key&gt; implements Iterable&lt;Key&gt; { private Key[] pq; private int n; private Comparator&lt;Key&gt; comparator; public MaxHeap(int initCapacity) { pq = (Key[]) new Object[initCapacity &#43; 1]; //pq[0]不放元素  n = 0; } public void insert(Key x) { if (n == pq."/>
+
+    <meta property="og:title" content="优先队列(堆)及堆排序" />
+<meta property="og:description" content="优先队列(堆) 我们经常遇到这样的问题：要求一个很大的数组中最小/最大的前几个数。对于数组个数较小的情况，我们可以将数组排序，然后按序输出几个数。但是当数组元素个数很大的时候，先将整个数组都排序就会很浪费时间。我们的注意只要求其中最大/最小的几个数，所以可以构造一个新的数据结构，它适用于返回最大/最小的数以及插入新的元素。而（优先队列）堆就是很好的这样一个新的数据结构。
+以大顶堆（最大元素的优先队列）为例。堆最重要的操作就是删除最大元素和插入新的元素。回顾之前定义栈，队列时的想法。我们可以利用两者最基本的数据结构：数组和链表来实现。并且数组实现的栈和队列适用于查找很平凡，插入删除很少的情况。而链表实现适用于查找很少，插入和删除频繁的情况。同样的，对于堆的实现，我们也可以借助最基本的数据结构。
+1.利用数组实现。为了返回最大的元素，我们可以在每次插入时候都按顺序插入，这样返回最大元素可以直接返回数组的最后一个元素。为了插入元素的方便，我们又可以每次插入都将新元素放在原始数组的后面。这就又使数组实现分为有序数组和无序数组。对于有序数组，插入元素的复杂度为O(N),返回最大元素为O(1);对于无序数组,插入元素复杂度为O(1),返回最大元素为O(N)。这显然达不到我们的要求。
+2.利用链表实现。链表的优势在于插入和删除元素的复杂度为O(1)。但对于堆的基本操作来说，为了删除最大元素，可以将链表排序为有序链表，也可以每次返回最大元素时遍历整个链表。插入新元素时，若要按顺序插入，复杂度也会变为O(N),与数组的实现基本一致，效果依旧不好。
+引入 仿照二叉树的基本结构可以很好的实现堆。我们定义：当一棵二叉树的每个结点大于等于它的两个子节点时，这是一个大顶堆。(小顶堆类似定义)。 大顶堆的根节点就是最大元素，小顶堆的根节点就是最小元素。
+ 1 7 2 3 6 5 4 5 6 7 //小顶堆 4 3 2 1 //大顶堆  如果我们使用结点以及指针的方式实现，每个结点需要3个指针（左右子树各一个 父节点一个）。但是通过观察，堆是一棵完全二叉树，对于完全二叉树， 我们通常用数组来存储。即按照层次遍历的方法，将各个元素的值放入一个数组中。 为了表示方便，不使用a[0]。那么第k个结点的左右孩子结点（如果存在） 那么他们在数组中的位置就是2k和2k&#43;1.第k个结点的父节点（如果存在），就是k/2.
+由于一颗大小为N的完全二叉树的高度为logN取下整，所以保证了这样实现的堆插入和返回最大元素的复杂度都控制在了O(logN).
+堆的算法 以大顶堆为例。为了保证每个结点大于等于它的两个子节点，当有一个元素的值大于父节点时，我们就需要将它与父节点交换(交换a[k]和a[k/2])。但交换后这个结点还可能比父节点大，那么继续交换直至伸展到根。 定义这个方法为swim()。
+同样的，当有一个结点的值小于孩子结点的值，为了达到平衡，我们需要将它与左右孩子中值较大的那个交换。并且一直这种情况可以一直延申到叶子节点。定义这个方法为sink().
+有了swim()和sink()两个方法后，当我们插入一个元素时，总将元素插入到下一个叶子结点(数组的后一个位置)，然后利用swim()进行调整。
+当我们要返回最大元素时，我们将根节点和最后一个结点交换位置(数组的第一个结点和最后一个),然后利用sink()方法将现在的根节点调整到对应位置。
+有一个命题：对于一个含有N个元素的堆，插入操作不超过(logN&#43;1)次比较，删除最大元素不超过2logN次比较。（由完全二叉树的高度保证）
+参考源码:
+public class MaxHeap&lt;Key&gt; implements Iterable&lt;Key&gt; { private Key[] pq; private int n; private Comparator&lt;Key&gt; comparator; public MaxHeap(int initCapacity) { pq = (Key[]) new Object[initCapacity &#43; 1]; //pq[0]不放元素  n = 0; } public void insert(Key x) { if (n == pq." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yzz-git111.github.io/post/%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97%E5%A0%86%E5%8F%8A%E5%A0%86%E6%8E%92%E5%BA%8F/" />
+<meta property="article:published_time" content="2020-10-24T14:39:06+08:00" />
+<meta property="article:modified_time" content="2020-10-24T14:39:06+08:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://yzz-git111.github.io/"><img class="app-header-avatar" src="/avatar.jpeg" alt="yzz帅的一匹" /></a>
+      <h1></h1>
+      <p>yzz也想变成学霸</p>
+      <div class="app-header-social">
+        
+          <a target="_blank" href="https://github.com/yzz-git111" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg></a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">优先队列(堆)及堆排序</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Oct 24, 2020
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          3 min read
+        </div></div>
+    </header>
+    <div class="post-content">
+      <h1 id="优先队列堆">优先队列(堆)</h1>
+<p>我们经常遇到这样的问题：要求一个很大的数组中最小/最大的前几个数。对于数组个数较小的情况，我们可以将数组排序，然后按序输出几个数。但是当数组元素个数很大的时候，先将整个数组都排序就会很浪费时间。我们的注意只要求其中最大/最小的几个数，所以可以构造一个新的数据结构，它适用于返回最大/最小的数以及插入新的元素。而（优先队列）堆就是很好的这样一个新的数据结构。</p>
+<p>以大顶堆（最大元素的优先队列）为例。堆最重要的操作就是删除最大元素和插入新的元素。回顾之前定义栈，队列时的想法。我们可以利用两者最基本的数据结构：数组和链表来实现。并且数组实现的栈和队列适用于查找很平凡，插入删除很少的情况。而链表实现适用于查找很少，插入和删除频繁的情况。同样的，对于堆的实现，我们也可以借助最基本的数据结构。</p>
+<p>1.利用数组实现。为了返回最大的元素，我们可以在每次插入时候都按顺序插入，这样返回最大元素可以直接返回数组的最后一个元素。为了插入元素的方便，我们又可以每次插入都将新元素放在原始数组的后面。这就又使数组实现分为有序数组和无序数组。对于有序数组，插入元素的复杂度为O(N),返回最大元素为O(1);对于无序数组,插入元素复杂度为O(1),返回最大元素为O(N)。这显然达不到我们的要求。</p>
+<p>2.利用链表实现。链表的优势在于插入和删除元素的复杂度为O(1)。但对于堆的基本操作来说，为了删除最大元素，可以将链表排序为有序链表，也可以每次返回最大元素时遍历整个链表。插入新元素时，若要按顺序插入，复杂度也会变为O(N),与数组的实现基本一致，效果依旧不好。</p>
+<h2 id="引入">引入</h2>
+<p>仿照二叉树的基本结构可以很好的实现堆。我们定义：当一棵二叉树的每个结点大于等于它的两个子节点时，这是一个大顶堆。(小顶堆类似定义)。
+大顶堆的根节点就是最大元素，小顶堆的根节点就是最小元素。</p>
+<pre><code>        1                                   7
+    2       3                           6       5
+4   5   6    7  //小顶堆             4     3  2     1  //大顶堆
+</code></pre>
+<p>如果我们使用结点以及指针的方式实现，每个结点需要3个指针（左右子树各一个 父节点一个）。但是通过观察，堆是一棵完全二叉树，对于完全二叉树，
+我们通常用数组来存储。即按照层次遍历的方法，将各个元素的值放入一个数组中。 为了表示方便，不使用a[0]。那么第k个结点的左右孩子结点（如果存在）
+那么他们在数组中的位置就是2<em>k和2</em>k+1.第k个结点的父节点（如果存在），就是k/2.</p>
+<p>由于一颗大小为N的完全二叉树的高度为logN取下整，所以保证了这样实现的堆插入和返回最大元素的复杂度都控制在了O(logN).</p>
+<h2 id="堆的算法">堆的算法</h2>
+<p>以大顶堆为例。为了保证每个结点大于等于它的两个子节点，当有一个元素的值大于父节点时，我们就需要将它与父节点交换(交换a[k]和a[k/2])。但交换后这个结点还可能比父节点大，那么继续交换直至伸展到根。
+定义这个方法为swim()。</p>
+<p>同样的，当有一个结点的值小于孩子结点的值，为了达到平衡，我们需要将它与左右孩子中值较大的那个交换。并且一直这种情况可以一直延申到叶子节点。定义这个方法为sink().</p>
+<p>有了swim()和sink()两个方法后，当我们插入一个元素时，总将元素插入到下一个叶子结点(数组的后一个位置)，然后利用swim()进行调整。</p>
+<p>当我们要返回最大元素时，我们将根节点和最后一个结点交换位置(数组的第一个结点和最后一个),然后利用sink()方法将现在的根节点调整到对应位置。</p>
+<p>有一个命题：对于一个含有N个元素的堆，插入操作不超过(logN+1)次比较，删除最大元素不超过2logN次比较。（由完全二叉树的高度保证）</p>
+<p>参考源码:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MaxHeap</span><span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">implements</span> Iterable<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">&gt;</span>
+<span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> Key<span style="color:#f92672">[]</span> pq<span style="color:#f92672">;</span>          
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> n<span style="color:#f92672">;</span>                       
+    <span style="color:#66d9ef">private</span> Comparator<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">&gt;</span> comparator<span style="color:#f92672">;</span> 
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">MaxHeap</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> initCapacity<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        pq <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Key<span style="color:#f92672">[])</span> <span style="color:#66d9ef">new</span> Object<span style="color:#f92672">[</span>initCapacity <span style="color:#f92672">+</span> 1<span style="color:#f92672">];</span>  <span style="color:#75715e">//pq[0]不放元素
+</span><span style="color:#75715e"></span>        n <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span>Key x<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">==</span> pq<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> 
+            resize<span style="color:#f92672">(</span>2 <span style="color:#f92672">*</span> pq<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">);</span>  <span style="color:#75715e">//调整数组大小
+</span><span style="color:#75715e"></span>        pq<span style="color:#f92672">[++</span>n<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> x<span style="color:#f92672">;</span>                <span style="color:#75715e">//插入数组后一个位置
+</span><span style="color:#75715e"></span>        swim<span style="color:#f92672">(</span>n<span style="color:#f92672">);</span>                    <span style="color:#75715e">//利用swim()调整
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">assert</span> isMaxHeap<span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> Key <span style="color:#a6e22e">delMax</span><span style="color:#f92672">()</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isEmpty<span style="color:#f92672">())</span> 
+            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> NoSuchElementException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Priority queue underflow&#34;</span><span style="color:#f92672">);</span>
+        Key max <span style="color:#f92672">=</span> pq<span style="color:#f92672">[</span>1<span style="color:#f92672">];</span>
+        exch<span style="color:#f92672">(</span>1<span style="color:#f92672">,</span> n<span style="color:#f92672">--);</span>               <span style="color:#75715e">//交换第一个和最后一个
+</span><span style="color:#75715e"></span>        sink<span style="color:#f92672">(</span>1<span style="color:#f92672">);</span>                    <span style="color:#75715e">//对现在的根节点利用sink()调整
+</span><span style="color:#75715e"></span>        pq<span style="color:#f92672">[</span>n<span style="color:#f92672">+</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>             <span style="color:#75715e">//防止对象游离
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>n <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">==</span> <span style="color:#f92672">(</span>pq<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 4<span style="color:#f92672">))</span> 
+            resize<span style="color:#f92672">(</span>pq<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">);</span>  <span style="color:#75715e">//调整数组大小
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">assert</span> isMaxHeap<span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">return</span> max<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">swim</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>   
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>k <span style="color:#f92672">&gt;</span> 1 <span style="color:#f92672">&amp;&amp;</span> less<span style="color:#f92672">(</span>k<span style="color:#f92672">/</span>2<span style="color:#f92672">,</span> k<span style="color:#f92672">))</span>   <span style="color:#75715e">//如果父节点比子节点小
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">{</span>
+            exch<span style="color:#f92672">(</span>k<span style="color:#f92672">,</span> k<span style="color:#f92672">/</span>2<span style="color:#f92672">);</span>
+            k <span style="color:#f92672">=</span> k<span style="color:#f92672">/</span>2<span style="color:#f92672">;</span>                    <span style="color:#75715e">//继续往上swim();
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">sink</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>2<span style="color:#f92672">*</span>k <span style="color:#f92672">&lt;=</span> n<span style="color:#f92672">)</span>                    <span style="color:#75715e">//防止越界
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 2<span style="color:#f92672">*</span>k<span style="color:#f92672">;</span>                
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>j <span style="color:#f92672">&lt;</span> n <span style="color:#f92672">&amp;&amp;</span> less<span style="color:#f92672">(</span>j<span style="color:#f92672">,</span> j<span style="color:#f92672">+</span>1<span style="color:#f92672">))</span> 
+                j<span style="color:#f92672">++;</span>                        <span style="color:#75715e">//找子节点较大的那个
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>less<span style="color:#f92672">(</span>k<span style="color:#f92672">,</span> j<span style="color:#f92672">))</span>                <span style="color:#75715e">//如果子节点比父节点大
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
+            exch<span style="color:#f92672">(</span>k<span style="color:#f92672">,</span> j<span style="color:#f92672">);</span>                     <span style="color:#75715e">//交换父节点和较大的那个子节点
+</span><span style="color:#75715e"></span>            k <span style="color:#f92672">=</span> j<span style="color:#f92672">;</span>                          <span style="color:#75715e">//继续往下sink()
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">less</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> j<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>comparator <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span>
+        <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#f92672">((</span>Comparable<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">&gt;)</span> pq<span style="color:#f92672">[</span>i<span style="color:#f92672">]).</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>pq<span style="color:#f92672">[</span>j<span style="color:#f92672">])</span> <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">else</span>
+        <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> comparator<span style="color:#f92672">.</span><span style="color:#a6e22e">compare</span><span style="color:#f92672">(</span>pq<span style="color:#f92672">[</span>i<span style="color:#f92672">],</span> pq<span style="color:#f92672">[</span>j<span style="color:#f92672">])</span> <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">exch</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> j<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        Key swap <span style="color:#f92672">=</span> pq<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
+        pq<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> pq<span style="color:#f92672">[</span>j<span style="color:#f92672">];</span>
+        pq<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> swap<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> Iterator<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">iterator</span><span style="color:#f92672">()</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> HeapIterator<span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">HeapIterator</span> <span style="color:#66d9ef">implements</span> Iterator<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">&gt;</span>
+    <span style="color:#f92672">{</span>
+
+        <span style="color:#75715e">// create a new pq
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">private</span> MaxHeap<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">&gt;</span> copy<span style="color:#f92672">;</span>
+
+        <span style="color:#75715e">// add all items to copy of heap
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// takes linear time since already in heap order so no keys move
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">HeapIterator</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>comparator <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> copy <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> MaxHeap<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">&gt;(</span>size<span style="color:#f92672">());</span>
+            <span style="color:#66d9ef">else</span>                    copy <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> MaxHeap<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">&gt;(</span>size<span style="color:#f92672">(),</span> comparator<span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;=</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span>
+                copy<span style="color:#f92672">.</span><span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span>pq<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">hasNext</span><span style="color:#f92672">()</span>  <span style="color:#f92672">{</span> <span style="color:#66d9ef">return</span> <span style="color:#f92672">!</span>copy<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">();</span>                     <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">remove</span><span style="color:#f92672">()</span>      <span style="color:#f92672">{</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> UnsupportedOperationException<span style="color:#f92672">();</span>  <span style="color:#f92672">}</span>
+
+        <span style="color:#66d9ef">public</span> Key <span style="color:#a6e22e">next</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>hasNext<span style="color:#f92672">())</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> NoSuchElementException<span style="color:#f92672">();</span>
+            <span style="color:#66d9ef">return</span> copy<span style="color:#f92672">.</span><span style="color:#a6e22e">delMax</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><h2 id="改进">改进</h2>
+<p>1.多叉堆：对于数组中的1到N的N个元素，第k个元素的父节点为(k+1)/3，子结点为3k-1,3k,3k+1.对于任意的d叉树也都类似。</p>
+<p>2.调整数组大小：我们可以添加一个没有参数的构造函数，并且在insert()中判断数组是否够用，不够用的话就将数组长度加倍。在delMax()中可以缩小数组大小。</p>
+<p>3.利用索引的堆。</p>
+<hr>
+<hr>
+<h1 id="堆排序">堆排序</h1>
+<p>在有了堆这样一个优秀的数据结构之后，堆排序的算法也就很容易的能够实现了：构造一个小顶堆，每次删除堆顶元素delMin()并用sink()调整堆，直至堆为空为止。</p>
+<p>算法大致实现很简单，但是也有点需要注意：</p>
+<p>如何将一个无序输入的数组构造成一个数组实现的堆，即如何构造一个堆?一种最直观的想法就是从第一个元素开始每次调用insert()并且用swim()调整。但是还有一种更为简便的算法：在左右孩子都为堆的情况下，以这个结点为根的子树也一定构成一个堆。并且只有根节点的一定是一个堆。那么我们就可以对原始数组(一个未调整的堆)从最小的子树进行调整。叶子节点是只有根节点的子树，不需要调整，所以就从k/2(第一个不是叶子结点)开始使用sink()调整到根结点。每次调整都保证以当前结点为根的子树构成堆，那么最终这棵树也一定是堆了。</p>
+<p>命题：用sink()操作由N个元素构造堆只需要少于2N次的比较以及少于N次的交换</p>
+<p>参考源码:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">HeapSort</span>
+<span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>Comparable<span style="color:#f92672">[]</span> a<span style="color:#f92672">)</span>     <span style="color:#75715e">//适用于所有实现了Comparable的类
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> a<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> k <span style="color:#f92672">=</span> n<span style="color:#f92672">/</span>2<span style="color:#f92672">;</span> k <span style="color:#f92672">&gt;=</span> 1<span style="color:#f92672">;</span> k<span style="color:#f92672">--)</span>
+            sink<span style="color:#f92672">(</span>a<span style="color:#f92672">,</span> k<span style="color:#f92672">,</span> n<span style="color:#f92672">);</span>
+
+        <span style="color:#66d9ef">int</span> k <span style="color:#f92672">=</span> n<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>k <span style="color:#f92672">&gt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            exch<span style="color:#f92672">(</span>a<span style="color:#f92672">,</span> 1<span style="color:#f92672">,</span> k<span style="color:#f92672">--);</span>
+            sink<span style="color:#f92672">(</span>a<span style="color:#f92672">,</span> 1<span style="color:#f92672">,</span> k<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">sink</span><span style="color:#f92672">(</span>Comparable<span style="color:#f92672">[]</span> a<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> n<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>2<span style="color:#f92672">*</span>k <span style="color:#f92672">&lt;=</span> n<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 2<span style="color:#f92672">*</span>k<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>j <span style="color:#f92672">&lt;</span> n <span style="color:#f92672">&amp;&amp;</span> less<span style="color:#f92672">(</span>a<span style="color:#f92672">,</span> j<span style="color:#f92672">,</span> j<span style="color:#f92672">+</span>1<span style="color:#f92672">))</span> j<span style="color:#f92672">++;</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>less<span style="color:#f92672">(</span>a<span style="color:#f92672">,</span> k<span style="color:#f92672">,</span> j<span style="color:#f92672">))</span> <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
+            exch<span style="color:#f92672">(</span>a<span style="color:#f92672">,</span> k<span style="color:#f92672">,</span> j<span style="color:#f92672">);</span>
+            k <span style="color:#f92672">=</span> j<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">less</span><span style="color:#f92672">(</span>Comparable<span style="color:#f92672">[]</span> a<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> i<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> j<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> a<span style="color:#f92672">[</span>i<span style="color:#f92672">-</span>1<span style="color:#f92672">].</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>a<span style="color:#f92672">[</span>j<span style="color:#f92672">-</span>1<span style="color:#f92672">])</span> <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">exch</span><span style="color:#f92672">(</span>Object<span style="color:#f92672">[]</span> a<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> i<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> j<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        Object swap <span style="color:#f92672">=</span> a<span style="color:#f92672">[</span>i<span style="color:#f92672">-</span>1<span style="color:#f92672">];</span>
+        a<span style="color:#f92672">[</span>i<span style="color:#f92672">-</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> a<span style="color:#f92672">[</span>j<span style="color:#f92672">-</span>1<span style="color:#f92672">];</span>
+        a<span style="color:#f92672">[</span>j<span style="color:#f92672">-</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> swap<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">show</span><span style="color:#f92672">(</span>Comparable<span style="color:#f92672">[]</span> a<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> a<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            StdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>a<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        String<span style="color:#f92672">[]</span> a <span style="color:#f92672">=</span> StdIn<span style="color:#f92672">.</span><span style="color:#a6e22e">readAllStrings</span><span style="color:#f92672">();</span>
+        HeapSort<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>a<span style="color:#f92672">);</span>
+        show<span style="color:#f92672">(</span>a<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><pre><code>在看代码的时候，出现了小问题：对于HeapSort()，给定的参数依然是原来的数组。堆排序首先要对原始的随机的数组进行重新的调整，
+使得原来无序的数组变成一个堆，然后对于调整好了的堆才能调用堆最常用的两个API.
+
+另外，java的语言特性。在测试时，要先在类中定义一个数组并初始化，或者每次通过输入来给定数组。这样数组才能作为参数传递给方法。
+而且为了代码的可重复性，java可以通过泛型来不规定特殊的类型，在具体的实现时再指定特定的类型。
+比如：public class TEST&lt;Key&gt; implements Iterable&lt;Key&gt; 
+这里的Key和前面的Item 都是泛型，可以是Integer，Character，Double，String，还可以是其他的类。
+比如        Integer a[]={9,6,7,2,3,4,1,5};
+        TEST&lt;Integer&gt; test = new TEST&lt;Integer&gt;(a);
+</code></pre>
+<h1 id="复杂度分析">复杂度分析</h1>
+<p>命题：将N个元素排序，堆排序只需要少于(2NlogN+2N)次比较。其中2N项来自于堆的构造，2NlogN来自于每次下沉操作最大可能的比较次数。</p>
+<p>堆排序的时间复杂度能够控制再O(NlogN)量级，且只需要O(1)的额外空间，是一种非常优雅的算法。</p>
+<p>但现代系统很少使用它，因为它无法利用缓存。数组很少和相邻的其他元素进行比较，因此缓存未命中的次数要远远高于大多数比较都在相邻元素之间的算法，如：快速排序，归并排序，甚至希尔排序。</p>
+<p>但是由于它的两个重要的API：删除最大/最小的元素 插入元素。所以再这两个操作频繁的问题中优先考虑堆这一数据结构和堆排序算法。</p>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

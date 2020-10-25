@@ -5,10 +5,50 @@
     <link>https://yzz-git111.github.io/</link>
     <description>Recent content on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 22 Oct 2020 23:08:46 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 25 Oct 2020 10:54:00 +0800</lastBuildDate>
     
 	<atom:link href="https://yzz-git111.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>排序算法总结即实例</title>
+      <link>https://yzz-git111.github.io/post/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93%E5%8D%B3%E5%AE%9E%E4%BE%8B/</link>
+      <pubDate>Sun, 25 Oct 2020 10:54:00 +0800</pubDate>
+      
+      <guid>https://yzz-git111.github.io/post/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93%E5%8D%B3%E5%AE%9E%E4%BE%8B/</guid>
+      <description>各种排序算法的比较 应用 找出重复元素 找中位数 调度 负载均衡 </description>
+    </item>
+    
+    <item>
+      <title>堆排序应用</title>
+      <link>https://yzz-git111.github.io/post/%E5%A0%86%E6%8E%92%E5%BA%8F%E5%BA%94%E7%94%A8/</link>
+      <pubDate>Sun, 25 Oct 2020 10:53:39 +0800</pubDate>
+      
+      <guid>https://yzz-git111.github.io/post/%E5%A0%86%E6%8E%92%E5%BA%8F%E5%BA%94%E7%94%A8/</guid>
+      <description>无需交换的堆 假设已经有一个有序的大顶堆，当新插入一个很大的元素的时候，利用swim()对堆进行调整。 往往这样的调整会一直延申到靠近根的位置，这样的话一层层的交换会有很多无用的操作。 回顾之前的插入排序，最简单的插入排序将待插入元素a[j]从已经有序的序列a[0..j-1]最后一个元素开始比较， 如果比a[j]大，就交换。但是通过改进：如果a[0..j-1]从后起的元素比a[j]大，就将这个元素赋值给后一个元素， 同时j向前移动一个位置，最后找到第一个比待插入元素小的，记录下位置，第一个比a[j]小的后一个就是a[j]待插入的位置。 通过改进，减少了很多不必要的交换。 同样的，对于堆的调整，也可以借助这样的思想。在向大顶堆插入一个较大元素的时候，每次若父节点比插入元素小，就将 父节点赋值给当前的结点，最后在把这个插入元素插入到相应位置即可。 ```java private void swim(int k) { Key temp=pq[k]; int index=k; while (k &amp;gt; 1 &amp;amp;&amp;amp; less(k/2, index)) { //这里的less要进行重写，在MaxHeap中是比较pq数组中的两个下标的值， //但当我们把父节点的值赋给子节点时，这个下标的值就被改变了， //把less重写为比较两个泛型&amp;lt;Key&amp;gt;的大小就可以实现 pq[k]=pq[k/2]; k=k/2; } pq[k]=temp; } private boolean less(Key i, Key j) { if (comparator == null) { return ((Comparable&amp;lt;Key&amp;gt;)i).compareTo(j) &amp;lt; 0; } else { return comparator.compare(i, j) &amp;lt; 0; } } //这里的Key是泛型 (泛型的名字随意 T ,elemtype都可以 就相当于自己将所有的类型都抽象成了一个Key类型，只要实现时指明即可) //定义时：public class MaxHeap&amp;lt;Key&amp;gt; implements Iterable&amp;lt;Key&amp;gt; //声明时：MaxHeap&amp;lt;Integer&amp;gt; x=new MaxHeap&amp;lt;Integer&amp;gt;(); //与Comparable接口不同，Comparable接口是系统自定义的一个接口，只要类实现了Comparable中的compareTo()就可以， //并且常用的类Integer Character String都实现了Comparable，所以和泛型大多数情况一致， // //使用泛型而不用Comparable接口原因在于：用Comparable的话delMax()的用例就需要将返回值转换为某种具体的类型，比如String //一般来说，应该尽量避免在用例中进行类型转换。 ``` 更进一步的，插入排序的改进中还提到了使用二分插入法，即在前面已经有序的序列中运用二分查找 来快速找到待插入的位置。这也同样的适用于堆排序的swim()调整堆。  选择过滤 给定一个问题：对于一个不知道有多少输入的数组，怎样快速的返回其中最小的10个元素呢？</description>
+    </item>
+    
+    <item>
+      <title>优先队列(堆)及堆排序</title>
+      <link>https://yzz-git111.github.io/post/%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97%E5%A0%86%E5%8F%8A%E5%A0%86%E6%8E%92%E5%BA%8F/</link>
+      <pubDate>Sat, 24 Oct 2020 14:39:06 +0800</pubDate>
+      
+      <guid>https://yzz-git111.github.io/post/%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97%E5%A0%86%E5%8F%8A%E5%A0%86%E6%8E%92%E5%BA%8F/</guid>
+      <description>优先队列(堆) 我们经常遇到这样的问题：要求一个很大的数组中最小/最大的前几个数。对于数组个数较小的情况，我们可以将数组排序，然后按序输出几个数。但是当数组元素个数很大的时候，先将整个数组都排序就会很浪费时间。我们的注意只要求其中最大/最小的几个数，所以可以构造一个新的数据结构，它适用于返回最大/最小的数以及插入新的元素。而（优先队列）堆就是很好的这样一个新的数据结构。
+以大顶堆（最大元素的优先队列）为例。堆最重要的操作就是删除最大元素和插入新的元素。回顾之前定义栈，队列时的想法。我们可以利用两者最基本的数据结构：数组和链表来实现。并且数组实现的栈和队列适用于查找很平凡，插入删除很少的情况。而链表实现适用于查找很少，插入和删除频繁的情况。同样的，对于堆的实现，我们也可以借助最基本的数据结构。
+1.利用数组实现。为了返回最大的元素，我们可以在每次插入时候都按顺序插入，这样返回最大元素可以直接返回数组的最后一个元素。为了插入元素的方便，我们又可以每次插入都将新元素放在原始数组的后面。这就又使数组实现分为有序数组和无序数组。对于有序数组，插入元素的复杂度为O(N),返回最大元素为O(1);对于无序数组,插入元素复杂度为O(1),返回最大元素为O(N)。这显然达不到我们的要求。
+2.利用链表实现。链表的优势在于插入和删除元素的复杂度为O(1)。但对于堆的基本操作来说，为了删除最大元素，可以将链表排序为有序链表，也可以每次返回最大元素时遍历整个链表。插入新元素时，若要按顺序插入，复杂度也会变为O(N),与数组的实现基本一致，效果依旧不好。
+引入 仿照二叉树的基本结构可以很好的实现堆。我们定义：当一棵二叉树的每个结点大于等于它的两个子节点时，这是一个大顶堆。(小顶堆类似定义)。 大顶堆的根节点就是最大元素，小顶堆的根节点就是最小元素。
+ 1 7 2 3 6 5 4 5 6 7 //小顶堆 4 3 2 1 //大顶堆  如果我们使用结点以及指针的方式实现，每个结点需要3个指针（左右子树各一个 父节点一个）。但是通过观察，堆是一棵完全二叉树，对于完全二叉树， 我们通常用数组来存储。即按照层次遍历的方法，将各个元素的值放入一个数组中。 为了表示方便，不使用a[0]。那么第k个结点的左右孩子结点（如果存在） 那么他们在数组中的位置就是2k和2k+1.第k个结点的父节点（如果存在），就是k/2.
+由于一颗大小为N的完全二叉树的高度为logN取下整，所以保证了这样实现的堆插入和返回最大元素的复杂度都控制在了O(logN).
+堆的算法 以大顶堆为例。为了保证每个结点大于等于它的两个子节点，当有一个元素的值大于父节点时，我们就需要将它与父节点交换(交换a[k]和a[k/2])。但交换后这个结点还可能比父节点大，那么继续交换直至伸展到根。 定义这个方法为swim()。
+同样的，当有一个结点的值小于孩子结点的值，为了达到平衡，我们需要将它与左右孩子中值较大的那个交换。并且一直这种情况可以一直延申到叶子节点。定义这个方法为sink().
+有了swim()和sink()两个方法后，当我们插入一个元素时，总将元素插入到下一个叶子结点(数组的后一个位置)，然后利用swim()进行调整。
+当我们要返回最大元素时，我们将根节点和最后一个结点交换位置(数组的第一个结点和最后一个),然后利用sink()方法将现在的根节点调整到对应位置。
+有一个命题：对于一个含有N个元素的堆，插入操作不超过(logN+1)次比较，删除最大元素不超过2logN次比较。（由完全二叉树的高度保证）
+参考源码:
+public class MaxHeap&amp;lt;Key&amp;gt; implements Iterable&amp;lt;Key&amp;gt; { private Key[] pq; private int n; private Comparator&amp;lt;Key&amp;gt; comparator; public MaxHeap(int initCapacity) { pq = (Key[]) new Object[initCapacity + 1]; //pq[0]不放元素  n = 0; } public void insert(Key x) { if (n == pq.</description>
+    </item>
     
     <item>
       <title>快速排序补充</title>

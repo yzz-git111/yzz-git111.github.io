@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>堆排序应用 // </title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.74.3" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="yzz帅的一匹" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://yzz-git111.github.io/css/main.min.88e7083eff65effb7485b6e6f38d10afbec25093a6fac42d734ce9024d3defbd.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="堆排序应用"/>
+<meta name="twitter:description" content="无需交换的堆 假设已经有一个有序的大顶堆，当新插入一个很大的元素的时候，利用swim()对堆进行调整。 往往这样的调整会一直延申到靠近根的位置，这样的话一层层的交换会有很多无用的操作。 回顾之前的插入排序，最简单的插入排序将待插入元素a[j]从已经有序的序列a[0..j-1]最后一个元素开始比较， 如果比a[j]大，就交换。但是通过改进：如果a[0..j-1]从后起的元素比a[j]大，就将这个元素赋值给后一个元素， 同时j向前移动一个位置，最后找到第一个比待插入元素小的，记录下位置，第一个比a[j]小的后一个就是a[j]待插入的位置。 通过改进，减少了很多不必要的交换。 同样的，对于堆的调整，也可以借助这样的思想。在向大顶堆插入一个较大元素的时候，每次若父节点比插入元素小，就将 父节点赋值给当前的结点，最后在把这个插入元素插入到相应位置即可。 ```java private void swim(int k) { Key temp=pq[k]; int index=k; while (k &gt; 1 &amp;&amp; less(k/2, index)) { //这里的less要进行重写，在MaxHeap中是比较pq数组中的两个下标的值， //但当我们把父节点的值赋给子节点时，这个下标的值就被改变了， //把less重写为比较两个泛型&lt;Key&gt;的大小就可以实现 pq[k]=pq[k/2]; k=k/2; } pq[k]=temp; } private boolean less(Key i, Key j) { if (comparator == null) { return ((Comparable&lt;Key&gt;)i).compareTo(j) &lt; 0; } else { return comparator.compare(i, j) &lt; 0; } } //这里的Key是泛型 (泛型的名字随意 T ,elemtype都可以 就相当于自己将所有的类型都抽象成了一个Key类型，只要实现时指明即可) //定义时：public class MaxHeap&lt;Key&gt; implements Iterable&lt;Key&gt; //声明时：MaxHeap&lt;Integer&gt; x=new MaxHeap&lt;Integer&gt;(); //与Comparable接口不同，Comparable接口是系统自定义的一个接口，只要类实现了Comparable中的compareTo()就可以， //并且常用的类Integer Character String都实现了Comparable，所以和泛型大多数情况一致， // //使用泛型而不用Comparable接口原因在于：用Comparable的话delMax()的用例就需要将返回值转换为某种具体的类型，比如String //一般来说，应该尽量避免在用例中进行类型转换。 ``` 更进一步的，插入排序的改进中还提到了使用二分插入法，即在前面已经有序的序列中运用二分查找 来快速找到待插入的位置。这也同样的适用于堆排序的swim()调整堆。  选择过滤 给定一个问题：对于一个不知道有多少输入的数组，怎样快速的返回其中最小的10个元素呢？"/>
+
+    <meta property="og:title" content="堆排序应用" />
+<meta property="og:description" content="无需交换的堆 假设已经有一个有序的大顶堆，当新插入一个很大的元素的时候，利用swim()对堆进行调整。 往往这样的调整会一直延申到靠近根的位置，这样的话一层层的交换会有很多无用的操作。 回顾之前的插入排序，最简单的插入排序将待插入元素a[j]从已经有序的序列a[0..j-1]最后一个元素开始比较， 如果比a[j]大，就交换。但是通过改进：如果a[0..j-1]从后起的元素比a[j]大，就将这个元素赋值给后一个元素， 同时j向前移动一个位置，最后找到第一个比待插入元素小的，记录下位置，第一个比a[j]小的后一个就是a[j]待插入的位置。 通过改进，减少了很多不必要的交换。 同样的，对于堆的调整，也可以借助这样的思想。在向大顶堆插入一个较大元素的时候，每次若父节点比插入元素小，就将 父节点赋值给当前的结点，最后在把这个插入元素插入到相应位置即可。 ```java private void swim(int k) { Key temp=pq[k]; int index=k; while (k &gt; 1 &amp;&amp; less(k/2, index)) { //这里的less要进行重写，在MaxHeap中是比较pq数组中的两个下标的值， //但当我们把父节点的值赋给子节点时，这个下标的值就被改变了， //把less重写为比较两个泛型&lt;Key&gt;的大小就可以实现 pq[k]=pq[k/2]; k=k/2; } pq[k]=temp; } private boolean less(Key i, Key j) { if (comparator == null) { return ((Comparable&lt;Key&gt;)i).compareTo(j) &lt; 0; } else { return comparator.compare(i, j) &lt; 0; } } //这里的Key是泛型 (泛型的名字随意 T ,elemtype都可以 就相当于自己将所有的类型都抽象成了一个Key类型，只要实现时指明即可) //定义时：public class MaxHeap&lt;Key&gt; implements Iterable&lt;Key&gt; //声明时：MaxHeap&lt;Integer&gt; x=new MaxHeap&lt;Integer&gt;(); //与Comparable接口不同，Comparable接口是系统自定义的一个接口，只要类实现了Comparable中的compareTo()就可以， //并且常用的类Integer Character String都实现了Comparable，所以和泛型大多数情况一致， // //使用泛型而不用Comparable接口原因在于：用Comparable的话delMax()的用例就需要将返回值转换为某种具体的类型，比如String //一般来说，应该尽量避免在用例中进行类型转换。 ``` 更进一步的，插入排序的改进中还提到了使用二分插入法，即在前面已经有序的序列中运用二分查找 来快速找到待插入的位置。这也同样的适用于堆排序的swim()调整堆。  选择过滤 给定一个问题：对于一个不知道有多少输入的数组，怎样快速的返回其中最小的10个元素呢？" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yzz-git111.github.io/post/%E5%A0%86%E6%8E%92%E5%BA%8F%E5%BA%94%E7%94%A8/" />
+<meta property="article:published_time" content="2020-10-25T10:53:39+08:00" />
+<meta property="article:modified_time" content="2020-10-25T10:53:39+08:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://yzz-git111.github.io/"><img class="app-header-avatar" src="/avatar.jpeg" alt="yzz帅的一匹" /></a>
+      <h1></h1>
+      <p>yzz也想变成学霸</p>
+      <div class="app-header-social">
+        
+          <a target="_blank" href="https://github.com/yzz-git111" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg></a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">堆排序应用</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Oct 25, 2020
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          2 min read
+        </div></div>
+    </header>
+    <div class="post-content">
+      <h1 id="无需交换的堆">无需交换的堆</h1>
+<pre><code>假设已经有一个有序的大顶堆，当新插入一个很大的元素的时候，利用swim()对堆进行调整。
+往往这样的调整会一直延申到靠近根的位置，这样的话一层层的交换会有很多无用的操作。
+回顾之前的插入排序，最简单的插入排序将待插入元素a[j]从已经有序的序列a[0..j-1]最后一个元素开始比较，
+如果比a[j]大，就交换。但是通过改进：如果a[0..j-1]从后起的元素比a[j]大，就将这个元素赋值给后一个元素，
+同时j向前移动一个位置，最后找到第一个比待插入元素小的，记录下位置，第一个比a[j]小的后一个就是a[j]待插入的位置。
+通过改进，减少了很多不必要的交换。
+同样的，对于堆的调整，也可以借助这样的思想。在向大顶堆插入一个较大元素的时候，每次若父节点比插入元素小，就将
+父节点赋值给当前的结点，最后在把这个插入元素插入到相应位置即可。
+
+```java
+private void swim(int k)
+{
+    Key temp=pq[k];
+    int index=k;
+    while (k &gt; 1 &amp;&amp; less(k/2, index))   
+    {   //这里的less要进行重写，在MaxHeap中是比较pq数组中的两个下标的值，
+        //但当我们把父节点的值赋给子节点时，这个下标的值就被改变了，
+        //把less重写为比较两个泛型&lt;Key&gt;的大小就可以实现
+        pq[k]=pq[k/2];
+        k=k/2;
+    }
+    pq[k]=temp;
+}
+
+private boolean less(Key i, Key j)
+{
+    if (comparator == null)
+    {
+        return ((Comparable&lt;Key&gt;)i).compareTo(j) &lt; 0;
+    }
+    else
+    {
+        return comparator.compare(i, j) &lt; 0;
+    }
+}
+//这里的Key是泛型 (泛型的名字随意 T ,elemtype都可以  就相当于自己将所有的类型都抽象成了一个Key类型，只要实现时指明即可)
+//定义时：public class MaxHeap&lt;Key&gt; implements Iterable&lt;Key&gt;
+//声明时：MaxHeap&lt;Integer&gt; x=new MaxHeap&lt;Integer&gt;();
+
+//与Comparable接口不同，Comparable接口是系统自定义的一个接口，只要类实现了Comparable中的compareTo()就可以，
+//并且常用的类Integer Character String都实现了Comparable，所以和泛型大多数情况一致，
+//
+//使用泛型而不用Comparable接口原因在于：用Comparable的话delMax()的用例就需要将返回值转换为某种具体的类型，比如String
+//一般来说，应该尽量避免在用例中进行类型转换。
+```
+
+更进一步的，插入排序的改进中还提到了使用二分插入法，即在前面已经有序的序列中运用二分查找
+来快速找到待插入的位置。这也同样的适用于堆排序的swim()调整堆。
+</code></pre>
+<h1 id="选择过滤">选择过滤</h1>
+<p>给定一个问题：对于一个不知道有多少输入的数组，怎样快速的返回其中最小的10个元素呢？</p>
+<p>分析：问题的关键在于不知道总共有多少的输入，换句话来说，输入的规模可能很大很大。如果采用以前的方法：等到所有的输入都完成，对整个数组进行排序，然后返回最前面的10个元素。这样的开销对于只要求前十个最小的元素来说太浪费了。更进一步的，如果在将整个数组都排好序后，又给定了若干个元素，难道为了这若干个元素再次把数组排序吗？
+对于这样的问题，使用堆可以很好的解决，因为堆就是适用于频繁的插入和返回最值问题的数据结构。</p>
+<p>思路：创建一个10个元素的大顶堆，在输入不超过十个元素的时候，把所有的元素都直接插进去。当输入规模超过10的时候，首先调用delMax()方法，返回已有的堆的最大的元素。如果新输入的元素比最大的元素还要大，那么它肯定不是所有问题中的最小的十个元素，重新把堆的最大的元素插进去;如果新输入的元素比最大的元素小，那么这个最大的元素肯定不是所有问题的最小的10个元素之一，就把新输入的元素插入进去。重复这个步骤到输入结束。最终堆里一定存放的是10个所有问题中最小的元素。</p>
+<h1 id="动态中位数查找">动态中位数查找</h1>
+<p>问题：如何查找动态输入的问题的中位数？</p>
+<p>分析：问题的难点在于问题是动态的，也就是说随之问题输入的增加，中位数也可能实时在发生改变。蛮力解法就是对于每一次的输入都将已有的元素排序，然后返回数组第n/2个元素。</p>
+<p>分析中位数满足的条件：小于x的元素的个数和大于x的元素的个数相差不能超过1。</p>
+<p>那么假设有一堆数：5 4 1 6 8 2 3 9 7 0 . 我们每次都动态的增加一个元素。首先第一个给定的元素是5，就把5看作是当前问题的中位数(只有一个元素，那只能它是中位数)。然后假想有两个集合，一个集合所有元素小于5，另一大于5（此时两个集合都是空集）。</p>
+<p>然后给定了输入4，把它放到小于5的集合中。又给定了1，把他放到小于5的集合。但是现在小于5的集合的元素有2个，而大于5的是空集，那么5就做不成一个中位数。并且由于小于5的集合的元素多，所以中位数应该在小于5的集合里面。我们取小于集合中最大的元素4作为中位数，大于4的5自然归到大的集合，小的集合也有一个1，有达到了平衡，此时4就是问题5 4 1的中位数。</p>
+<p>继续增加元素6，放到大于的集合中。增加元素8，也放到大于的集合。此时大于中位数4的集合有5 6 8，而小于的集合只有1，又不平衡。取大于集合中的最小的数5，同时将4放入小于集合。那么此时中位数是5，大于集合有6 8，小于集合有1 4，再次平衡&hellip;&hellip;以此反复，就能求得最后解。</p>
+<pre><code>如何实现这个思路？观察到思路中关键的点:
+当两个集合的规模只差大于1时就需要更新。
+且更新应该渐进的变化。
+若大于集合规模大，说明中位数取值偏小，应该返回大于集合的最小的元素。
+同样的，若小于集合规模大，每次返回小于集合的最大的元素。
+而这样的实现正好也对应了堆的特性。只需要定义一个大顶堆，一个小顶堆。
+当元素大于中位数，应该将它插入小顶堆，这样调用小顶堆的delMin()返回的就是大于当前中位数的最小的值。
+当元素小于中位数，应该将它插入大顶堆，这样调用大顶堆的delMax()返回的就是小于当前中位数的最大的值。
+每次插入后都调整两个堆，以达到规模平衡。
+调整方法：将规模大的堆删除堆顶的元素作为新的中位数，同时将原来的中位数插入另一个堆。直到规模平衡。
+</code></pre>
+<p>参考源码：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">FindMidNum</span>
+<span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> MaxHeap<span style="color:#f92672">&lt;</span>Comparable<span style="color:#f92672">&gt;</span> maxPQ<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> MinHeap<span style="color:#f92672">&lt;</span>Comparable<span style="color:#f92672">&gt;</span> minPQ<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> Comparable median<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> N<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">FindMidNum</span><span style="color:#f92672">()</span>            <span style="color:#75715e">//无参数的构造函数  初始化一个大顶堆，一个小顶堆
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">{</span>
+        maxPQ <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> MaxHeap<span style="color:#f92672">&lt;&gt;();</span>
+        minPQ <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> MinHeap<span style="color:#f92672">&lt;&gt;();</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">FindMidNum</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> capacity<span style="color:#f92672">)</span> <span style="color:#75715e">//传递一个总的输入规模的参数，创建两个规模平衡的堆
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">{</span>
+        <span style="color:#75715e">// 各存储一半数组(先减去中位数)
+</span><span style="color:#75715e"></span>        maxPQ <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> MaxHeap<span style="color:#f92672">&lt;</span>Comparable<span style="color:#f92672">&gt;((</span>capacity <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">);</span>
+        minPQ <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> MinHeap<span style="color:#f92672">&lt;</span>Comparable<span style="color:#f92672">&gt;((</span>capacity <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">FindMidNum</span><span style="color:#f92672">(</span>Comparable<span style="color:#f92672">[]</span> keys<span style="color:#f92672">)</span>    <span style="color:#75715e">//传递一个数组
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">{</span>
+        maxPQ <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> MaxHeap<span style="color:#f92672">&lt;&gt;();</span>
+        minPQ <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> MinHeap<span style="color:#f92672">&lt;&gt;();</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>keys<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span>
+        <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        N <span style="color:#f92672">=</span> keys<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+        median <span style="color:#f92672">=</span> keys<span style="color:#f92672">[</span>0<span style="color:#f92672">];</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> keys<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span>
+        <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>median<span style="color:#f92672">.</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>keys<span style="color:#f92672">[</span>i<span style="color:#f92672">])</span> <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span>
+                minPQ<span style="color:#f92672">.</span><span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span>keys<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span><span style="color:#75715e">// 存比median大的
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">else</span>
+                maxPQ<span style="color:#f92672">.</span><span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span>keys<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
+        <span style="color:#f92672">}</span>
+        updateMedian<span style="color:#f92672">();</span><span style="color:#75715e">// 如果左右两堆数量差大于一就继续,直到平衡为止
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span>Comparable key<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>N <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span>
+        <span style="color:#f92672">{</span>
+            N<span style="color:#f92672">++;</span>
+            median <span style="color:#f92672">=</span> key<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key<span style="color:#f92672">.</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>median<span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span>
+            maxPQ<span style="color:#f92672">.</span><span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span>key<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">else</span>
+            minPQ<span style="color:#f92672">.</span><span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span>key<span style="color:#f92672">);</span>
+        N<span style="color:#f92672">++;</span>
+        updateMedian<span style="color:#f92672">();</span><span style="color:#75715e">// 调整
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> Comparable <span style="color:#a6e22e">delMedian</span><span style="color:#f92672">()</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isEmpty<span style="color:#f92672">())</span>
+            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> NoSuchElementException<span style="color:#f92672">();</span>
+        Comparable median <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">median</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>N <span style="color:#f92672">==</span> 1<span style="color:#f92672">)</span>
+        <span style="color:#f92672">{</span>
+            N<span style="color:#f92672">--;</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">median</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">return</span> median<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>minPQ<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">&gt;</span> maxPQ<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">())</span>
+        <span style="color:#f92672">{</span>
+            median <span style="color:#f92672">=</span> minPQ<span style="color:#f92672">.</span><span style="color:#a6e22e">delMin</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span>
+            median <span style="color:#f92672">=</span> maxPQ<span style="color:#f92672">.</span><span style="color:#a6e22e">delMax</span><span style="color:#f92672">();</span>
+        N<span style="color:#f92672">--;</span>
+        <span style="color:#66d9ef">return</span> median<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> Comparable <span style="color:#a6e22e">median</span><span style="color:#f92672">()</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> median<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> N <span style="color:#f92672">==</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">updateMedian</span><span style="color:#f92672">()</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>maxPQ<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> minPQ<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">&gt;</span> 1<span style="color:#f92672">)</span>
+        <span style="color:#f92672">{</span>
+            minPQ<span style="color:#f92672">.</span><span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span>median<span style="color:#f92672">);</span>
+            median <span style="color:#f92672">=</span> maxPQ<span style="color:#f92672">.</span><span style="color:#a6e22e">delMax</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>minPQ<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> maxPQ<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">&gt;</span> 1<span style="color:#f92672">)</span>
+        <span style="color:#f92672">{</span>
+            maxPQ<span style="color:#f92672">.</span><span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span>median<span style="color:#f92672">);</span>
+            median <span style="color:#f92672">=</span> minPQ<span style="color:#f92672">.</span><span style="color:#a6e22e">delMin</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>代码中给出了几个不同的构造函数。</p>
+<p>第一种：输入的元素是动态给入的。这样构造函数只要创建两个空的堆，每次动态添加新的元素时都调用insert(),而insert()方法又实现了调整堆之间的平衡。</p>
+<p>第二种：输入的元素直接通过一个数组给入。这样的构造函数需要创建两个空的堆，然后将给定数组的元素一个个insert()。</p>
+<h1 id="总结">总结</h1>
+<p>当问题是关于动态求解最值的问题，可以先考虑使用堆。</p>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

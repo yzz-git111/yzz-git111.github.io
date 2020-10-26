@@ -12,7 +12,8 @@
     
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Union Find算法"/>
-<meta name="twitter:description" content="union-find|并查集 问题引入 假设给定一个数组A[0..n]。将它的每个点都看作一个独立的，每个点都可以用来表示任何一种数据类型。 对于给定的一对整数对，判断是否属于同一个集合。 若不属于同一个集合，则将两者所在的集合并为同一个集合。 参考第1.5节1的内容，将对象成为触点，将整数对称为连接，将等价类称为连通分量。
+<meta name="twitter:description" content="union-find|并查集 问题引入 假设给定一个数组A[0..n]。将它的每个点都看作一个独立的，每个点都可以用来表示任何一种数据类型。 对于给定的一对整数对，判断是否属于同一个集合。 若不属于同一个集合，则将两者所在的集合并为同一个集合。
+参考第1.5节1的内容，将对象成为触点，将整数对称为连接，将等价类称为连通分量。
 引入算法的目的 可以用于计算机网络，假设每个点都是一台计算机。 对于想要通信的两台计算机可以抽象为输入的一个整数对。算法可以判断两台计算机之间是否可以有连接能够通信。若没有连接则需要建立连接。
 同时假设有一个十分庞大的人际关系网，使用算法可以很快的判断出对于输入的两人是否相识。并查集是一种简单有效的算法。
  API 首先给出算法的API
@@ -20,7 +21,8 @@ UF（） //构造方法 初始化N个触点 void union(int p,int q) //将p和q�
 所有对于给定的一个整数对，先用find()找出两者所在的连通分量的id。 若id相同即说明二者在同一连通分量内，无需union 若id不同，则说明二者处在不同的连通分量内。调用union()。 union:循环遍历整个触点的数组 将id与触点p的id相同的所有触点该称q所在的连通分量的id，这就保证了将p所在的连通分量连接到q的连通分量上。 union()的最后不能忘记将count&ndash; 说明整个连通分量的数目减1.实现 UF() class UF { private int[]id; //以触点作为索引  private int count; public UF(int N) //构造方法 用于初始化触点  { count = N; id = new int[N]; for(int i=0;i&lt;N;i&#43;&#43;) { id[i] = i; } } getCount() public int getCount() //用于返回private成员count 即连通分量的数目  { return count; } find() public int find(int p) //返回p的连通分量  { return id[p]; } union public void union(int p,int q) //将触点p和q连接到统一连通分量  { int pID = find(p); int qID = find(q); if(pID == qID) //p,q已经统一连通分量 空操作  { return; } for(int i=0;i&lt;id."/>
 
     <meta property="og:title" content="Union Find算法" />
-<meta property="og:description" content="union-find|并查集 问题引入 假设给定一个数组A[0..n]。将它的每个点都看作一个独立的，每个点都可以用来表示任何一种数据类型。 对于给定的一对整数对，判断是否属于同一个集合。 若不属于同一个集合，则将两者所在的集合并为同一个集合。 参考第1.5节1的内容，将对象成为触点，将整数对称为连接，将等价类称为连通分量。
+<meta property="og:description" content="union-find|并查集 问题引入 假设给定一个数组A[0..n]。将它的每个点都看作一个独立的，每个点都可以用来表示任何一种数据类型。 对于给定的一对整数对，判断是否属于同一个集合。 若不属于同一个集合，则将两者所在的集合并为同一个集合。
+参考第1.5节1的内容，将对象成为触点，将整数对称为连接，将等价类称为连通分量。
 引入算法的目的 可以用于计算机网络，假设每个点都是一台计算机。 对于想要通信的两台计算机可以抽象为输入的一个整数对。算法可以判断两台计算机之间是否可以有连接能够通信。若没有连接则需要建立连接。
 同时假设有一个十分庞大的人际关系网，使用算法可以很快的判断出对于输入的两人是否相识。并查集是一种简单有效的算法。
  API 首先给出算法的API
@@ -73,7 +75,8 @@ UF（） //构造方法 初始化N个触点 void union(int p,int q) //将p和q�
 <h2 id="问题引入">问题引入</h2>
 <p>假设给定一个数组A[0..n]。将它的每个点都看作一个独立的，每个点都可以用来表示任何一种数据类型。
 <strong>对于给定的一对整数对，判断是否属于同一个集合。
-若不属于同一个集合，则将两者所在的集合并为同一个集合。</strong>
+若不属于同一个集合，则将两者所在的集合并为同一个集合。</strong><br>
+<img src="/union_find/Connectivity_example.png" alt="">
 <!-- raw HTML omitted --></p>
 <p>参考第1.5节<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>的内容，将对象成为触点，将整数对称为连接，将等价类称为连通分量。</p>
 <h2 id="引入算法的目的">引入算法的目的</h2>
@@ -235,6 +238,7 @@ id| 1 8 1 8 3 0 5 1 8 8
 <p>加权quick-union算法在quick-union上进一步的进行了优化，<strong>避免了每次find都从叶子遍历到根触点的最坏情况。</strong>
 通过<strong>增加了size成员来记录连通分量的大小</strong>，<!-- raw HTML omitted -->每次保证了将小的连通分量连接到大的上面。<!-- raw HTML omitted -->
 最坏情况下的时间复杂度也控制在了对数级别下</p>
+<p><img src="/union_find/weighted-quick-union-overview.png" alt=""></p>
 <!-- raw HTML omitted -->
 <h2 id="部分源码">部分源码</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WeightedQuickUnionUF</span> <span style="color:#66d9ef">extends</span> UF

@@ -97,7 +97,7 @@ UF（） //构造方法 初始化N个触点 void union(int p,int q) //将p和q�
 若id不同，则说明二者处在不同的连通分量内。调用union()。
 union:循环遍历整个触点的数组 将id与触点p的id相同的所有触点该称q所在的连通分量的id，这就保证了将p所在的连通分量连接到q的连通分量上。</strong>
 <!-- raw HTML omitted -->union()的最后不能忘记将count&ndash;  说明整个连通分量的数目减1.<!-- raw HTML omitted --></p>
-<p><img src="/union_find/quick-find-overview.png%22" alt=""></p>
+<p><img src="/union_find/quick-find-overview.png" alt=""></p>
 <h2 id="实现">实现</h2>
 <h3 id="uf">UF()</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">UF</span>
@@ -195,7 +195,7 @@ union遍历整个触点数组，将一个触点所在的连通分量的所有触
 <em><strong>假若一个触点p与另一个触点q进行union。只要将p连接到q的树（q所在连通分量）上。即将p的id改为q的id；</strong></em>
 对于普通情况，假如将p连接到q上 因为p，q分别在两棵不同的树上(属于不同的连通分量)，此时就要找到q所在的连通分量的<strong>根触点的id值qRoot</strong>，同时找到<strong>p所在的连通分量的根触点pRoot。只要将id[pRoot]赋值为qRoot</strong>即可
 <!-- raw HTML omitted -->(将根节点q所在的树作为子树连接到p所在的树上)。<!-- raw HTML omitted --></p>
-<p><img src="/union_find/quick-union-overview.png%22" alt=""></p>
+<p><img src="/union_find/quick-union-overview.png" alt=""></p>
 <h2 id="find-1">find()</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">find</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> p<span style="color:#f92672">)</span>  <span style="color:#75715e">//返回p的连通分量
 </span><span style="color:#75715e"></span>    <span style="color:#f92672">{</span>

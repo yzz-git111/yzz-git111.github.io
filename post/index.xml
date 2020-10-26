@@ -86,7 +86,8 @@ public class MaxHeap&amp;lt;Key&amp;gt; implements Iterable&amp;lt;Key&amp;gt; {
       <pubDate>Sun, 18 Oct 2020 21:28:01 +0800</pubDate>
       
       <guid>https://yzz-git111.github.io/post/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F/</guid>
-      <description>基础 考虑这样一种情况：对于两个已经有序的子序列，如何实现将这两个子序列排序。(重点：带归并的子序列已经有序) 这就相当于对于两个有序链表合并为一个大的有序链表的问题。 方法：用两个“指针”分别指向子序列的第一个元素。先比较两个子序列的第一个元素哪个小，把小的放到另一个数组（从数组第一个位置开始放）。 然后将较小元素的指针往后移动一个，指向下一个元素。再次比较这两个指针所指元素的大小，每次把较小的元素放到另一个数组。 若有一个子序列的所有元素已经放完（指针移动到了最后一个元素之后）。由于子序列都有序，这时只要将另一个子序列的元素依次放入即可。 实例：1 3 5 | 2 4 6 8 新的数组 1 3 5 | 2 4 6 8 新的数组 1 2 3 5 | 4 6 8 新的数组 1 2 3 5 | 4 6 8 新的数组 1 2 3 4 5 | 6 8 新的数组 1 2 3 4 5 | 6 8 //这时一个子序列已经没了 新的数组 1 2 3 4 5 6 新的数组 1 2 3 4 5 6 8   merge源码 public static void merge(Comparable[] a,int low, int mid,int high) { int i=low; int j=mid+1; for(int k=low;k&amp;lt;=high;k++) //赋值到辅助数组中  { aux[k] = a[k]; } for(int k=low;k&amp;lt;=high;k++) { if(i&amp;gt;mid) //左半边归并光了  { a[k] = aux[j++]; } else if(j&amp;gt;high) //右半边归并光了  { a[k] = aux[i++]; } else if(template.</description>
+      <description>基础 考虑这样一种情况：对于两个已经有序的子序列，如何实现将这两个子序列排序。(重点：待归并的子序列已经有序) 这就相当于对于两个有序链表合并为一个大的有序链表的问题。 方法：创建一个大小足够的辅助数组。先将两个子序列都复制到辅助数组中。用两个“指针”分别指向辅助数组中两个子序列的第一个元素。先比较两个子序列的第一个元素哪个小，把小的放到原来的数组（从第一个位置开始放）。 然后将较小元素的指针往后移动一个，指向下一个元素。再次比较这两个指针所指元素的大小，每次把较小的元素放回到原来的数组中。 若有一个子序列的所有元素已经放完（指针移动到了此子数组最后一个元素之后）。由于子序列都有序，这时只要将另一个子序列的元素依次放入即可。
+ 辅助数组: 1 3 5 | 2 4 6 8 初始数组 1 3 5 | 2 4 6 8 初始数组 1 2 3 5 | 4 6 8 初始数组 1 2 3 5 | 4 6 8 初始数组 1 2 3 4 5 | 6 8 初始数组 1 2 3 4 5 | 6 8 //这时一个子序列已经没了 初始数组 1 2 3 4 5 6 初始数组 1 2 3 4 5 6 8   merge源码 public static void merge(Comparable[] a,int low, int mid,int high) { int i=low; int j=mid+1; for(int k=low;k&amp;lt;=high;k++) //赋值到辅助数组中  { aux[k] = a[k]; } for(int k=low;k&amp;lt;=high;k++) { if(i&amp;gt;mid) //左半边归并光了  { a[k] = aux[j++]; } else if(j&amp;gt;high) //右半边归并光了  { a[k] = aux[i++]; } else if(template.</description>
     </item>
     
     <item>
@@ -95,7 +96,11 @@ public class MaxHeap&amp;lt;Key&amp;gt; implements Iterable&amp;lt;Key&amp;gt; {
       <pubDate>Mon, 12 Oct 2020 20:10:17 +0800</pubDate>
       
       <guid>https://yzz-git111.github.io/post/%E5%88%9D%E7%BA%A7%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</guid>
-      <description>选择排序（SelectSort） 算法思想  结合现实中的例子，每次都从一堆数据中找出最小的数，将他放在第一位。为了将一堆数据排序，需要进行n次（从0到n-1，n为数据个数） 抽象来看，将待排序数据存放到一个数组中。外循环执行n次(遍历整个数组)。每次外循环都实现取未排序的最小的元素。 为了在一堆数据中找到最小的元素，当然需要再用一个内循环来遍历数组。初始时，对于未排序的元素都将第一个作为最小元素min。 循环从i到n，若第j个元素小于现在的min，则min=j；内循环最后只要将a[min]与a[j]交换就满足了将一个数据排序好。  算法特点 运行时间和输入无关：即使给定的数据已经有序，选择排序任然要遍历数组。 减缓次数和数组大小是线性关系：每次外循环都只会交换两个数。而其他算法数据的移动都比这个多。  源码实现 public static void SelectSort(Comparable[] a) { int N = a.length; for(int i=0;i&amp;lt;N;i++) { int min = i; for(int j=i+1;j&amp;lt;N;j++) { if(template.less(a[j],a[min])) //自己在template类实现 Comparable接口的less方法  { min = j; } } template.exchange(a,i,min); //自己在template类实现exchange方法  } } 复杂度 命题：对于长度为N的数组，选择排序大约需要(N^2)/2次比较和N次交换 时间复杂度： 外循环O(n),内循环O(n),数据交换O(1) T(n) = O(n)*(O(n)+O(1)) =O(n^2); 最好最坏情况都为O(n^2) 空间复杂度： 只需要在交换a[min]与a[j]时申请一个变量temp 所以S(n) = O(1) 相对来说 选择排序算法时间复杂度太高，不适合处理大规模问题。但是其实现简单。   插入排序（InsertSort） 算法思想 插入排序类似于平时打扑克牌，对于每张牌都按顺序插入到适当位置。 对于给定的数组，将其看作三部分组成。其中a[0..i-1]为已经有序部分（初始时仅将a[0]看作有序）； a[i]为待排元素；a[i+1.</description>
+      <description>选择排序（SelectSort） 算法思想 结合现实中的例子，每次都从一堆数据中找出最小的数，将他放在第一位。为了将一堆数据排序，需要进行n次（从0到n-1，n为数据个数） 抽象来看，将待排序数据存放到一个数组中。外循环执行n次(遍历整个数组)。每次外循环都实现将未排序序列最小的元素放到已经有序的序列末尾。 为了在一堆数据中找到最小的元素，当然需要再用一个内循环来遍历数组。初始时，对于未排序的元素都将第一个作为最小元素min。 循环从i到n，若第j个元素小于现在的min，则min=j；内循环最后只要将a[min]与a[j]交换就满足了将一个数据排序好。
+算法特点 运行时间和输入无关：即使给定的数据已经有序，选择排序任然要遍历数组。 交换次数和数组大小是线性关系：每次外循环都只会交换两个数。而其他算法数据的移动都比这个多。
+源码实现 public static void SelectSort(Comparable[] a) { int N = a.length; for(int i=0;i&amp;lt;N;i++) { int min = i; for(int j=i+1;j&amp;lt;N;j++) { if(template.less(a[j],a[min])) //自己在template类实现 Comparable接口的less方法  { min = j; } } template.exchange(a,i,min); //自己在template类实现exchange方法  } } 复杂度 命题：对于长度为N的数组，选择排序大约需要(N^2)/2次比较和N次交换 时间复杂度： 外循环O(n),内循环O(n),数据交换O(1) T(n) = O(n)(O(n)+O(1)) =O(n^2) 最好最坏情况都为O(n^2) 空间复杂度： 只需要在交换a[min]与a[j]时申请一个变量temp 所以S(n) = O(1) 相对来说 选择排序算法时间复杂度太高，不适合处理大规模问题。但是其实现简单。
+ 插入排序（InsertSort） 算法思想 插入排序类似于平时打扑克牌，对于每张牌都按顺序插入到适当位置。 对于给定的数组，将其看作三部分组成。其中a[0..i-1]为已经有序部分（初始时仅将a[0]看作有序） a[i]为待排元素；a[i+1..n-1]为无序部分。 现遍历整个数组，每次循环将待排序元素插入到已经有序部分中。
+那么在数组中怎么实现将某个待排序数插入到适当位置？ 首先每次循环将待排序的元素保存到某个变量temp中(严蔚敏版的数据结构中采用将数组下标为0的位置用于存放待排序变量，有几点好处) 为了找到自己待插入的位置，需要一个循环向前遍历。如果元素大于这个待排序元素，就将这个元素后移一位。直至找到第一个小于待排序元素的数。那么这个数的后一个位置就是插入位置。</description>
     </item>
     
     <item>

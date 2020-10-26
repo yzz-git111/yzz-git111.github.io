@@ -12,16 +12,14 @@
     
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="快速排序"/>
-<meta name="twitter:description" content="思想 考虑这样的一个情况：如果给定你一个方法partition(),此方法能够实现将一个序列进行划分。 以序列的第一个元素a[low]作为划分的依据，将原序列划分成为(小于a[low])(a[low])(大于a[low]).
-那么将可以怎么利用这个方法对序列进行排序呢？ 运用分而治之（Divid &amp; conquer）的思想：首先对于原始的大的序列，取第一个元素进行划分，将原问题划分为两个小的子问题。 要使得整个序列都有序，且因为这个划分的元素已经处于其对应的有序序列的位置，所以只要保证两个子问题有序即可。 对于划分的两个子问题，其中一个子问题是所有小于划分元素的，另一个子问题是所有大于划分元素的。再递归的对这两个子问题进行划分， 直至将问题划分到只有一个元素，这就是平凡问题（一个元素的序列已经有序）。 这时由于每个子问题都已经有序，且所有的划分元素都在其对应的有序序列的位置，所以整个序列都保证有序。
-那么如何实现对问题的划分呢？ 我们可以总是以序列的首元素进行划分元素。从左往右直至选到一个大于等于划分元素的，同时从右往左直至选到一个小于等于比划分元素的。 这时交换两个元素。如此继续下去，就可以保证左指针i左侧的所有元素都不大于切分元素，右指针j右侧的所有元素都不小于切分元素。 最后当两个指针相遇时，就说明遍历完了数组，此时只要将切分元素（序列的首元素）与左子序列最右侧的元素（a[j]）交换并返回j。 其中返回j时为了下面进行更小子序列的划分。直到子序列只有一个元素，就可以直接返回。
-源码 public class QuickSort { public static void sort(Comparable[] a) { StdRandom.shuffle(a); //对初始序列进行随机打乱  sort(a,0,a.length-1); } public static void sort(Comparable[] a,int low ,int high) { if(high&lt;=low) return; int j = partition(a,low,high); sort(a,low,j-1); sort(a,j&#43;1,high); //划分成三分 小于j的 j 大于j的  } public static int partition(Comparable[] a,int low,int high) { int i=low; // low是切分元素 low&#43;1是第一个扫描的元素  int j=high&#43;1; // high&#43;1 是数组最后一个元素的后一个 high才是第一个扫描的元素  Comparable v=a[low]; //第一个元素为切分元素  while(true) { while(template."/>
+<meta name="twitter:description" content="思想 考虑这样的一个情况：如果给定你一个方法partition(),此方法能够实现将一个序列进行划分:以序列的第一个元素a[low]作为划分的依据，将原序列划分成为(小于a[low])(a[low])(大于a[low]).
+那么将可以怎么利用这个方法对序列进行排序呢？ 运用 分而治之(Divid &amp; conquer) 的思想：首先对于原始的大的序列，取第一个元素进行划分，将原问题划分为两个小的子问题。 要使得整个序列都有序，且因为这个划分的元素已经处于其对应的有序序列的位置，所以只要保证两个子问题有序即可。 对于划分的两个子问题，其中一个子问题是所有小于划分元素的，另一个子问题是所有大于划分元素的。再递归的对这两个子问题进行划分， 直至将问题划分到只有一个元素，这就是平凡问题（一个元素的序列已经有序）。 这时由于每个子问题都已经有序，且所有的划分元素都在其对应的有序序列的位置，所以整个序列都保证有序。
+那么如何实现对问题的划分呢？ 我们可以总是 以序列的首元素进行划分元素。从左往右直至选到一个大于等于划分元素的，同时从右往左直至选到一个小于等于比划分元素的。 这时交换两个元素。如此继续下去，就可以保证左指针i左侧的所有元素都不大于切分元素，右指针j右侧的所有元素都不小于切分元素。 最后当两个指针相遇时，就说明遍历完了数组，此时只要 将切分元素（序列的首元素）与左子序列最右侧的元素（a[j]）交换并返回j。 其中返回j是为了下面进行更小子序列的划分。直到子序列只有一个元素，就可以直接返回。 源码 public class QuickSort { public static void sort(Comparable[] a) { StdRandom.shuffle(a); //对初始序列进行随机打乱  sort(a,0,a.length-1); } public static void sort(Comparable[] a,int low ,int high) { if(high&lt;=low) return; int j = partition(a,low,high); sort(a,low,j-1); sort(a,j&#43;1,high); //划分成三分 小于j的 j 大于j的  } public static int partition(Comparable[] a,int low,int high) { int i=low; // low是切分元素 low&#43;1是第一个扫描的元素  int j=high&#43;1; // high&#43;1 是数组最后一个元素的后一个 high才是第一个扫描的元素  Comparable v=a[low]; //第一个元素为切分元素  while(true) { while(template."/>
 
     <meta property="og:title" content="快速排序" />
-<meta property="og:description" content="思想 考虑这样的一个情况：如果给定你一个方法partition(),此方法能够实现将一个序列进行划分。 以序列的第一个元素a[low]作为划分的依据，将原序列划分成为(小于a[low])(a[low])(大于a[low]).
-那么将可以怎么利用这个方法对序列进行排序呢？ 运用分而治之（Divid &amp; conquer）的思想：首先对于原始的大的序列，取第一个元素进行划分，将原问题划分为两个小的子问题。 要使得整个序列都有序，且因为这个划分的元素已经处于其对应的有序序列的位置，所以只要保证两个子问题有序即可。 对于划分的两个子问题，其中一个子问题是所有小于划分元素的，另一个子问题是所有大于划分元素的。再递归的对这两个子问题进行划分， 直至将问题划分到只有一个元素，这就是平凡问题（一个元素的序列已经有序）。 这时由于每个子问题都已经有序，且所有的划分元素都在其对应的有序序列的位置，所以整个序列都保证有序。
-那么如何实现对问题的划分呢？ 我们可以总是以序列的首元素进行划分元素。从左往右直至选到一个大于等于划分元素的，同时从右往左直至选到一个小于等于比划分元素的。 这时交换两个元素。如此继续下去，就可以保证左指针i左侧的所有元素都不大于切分元素，右指针j右侧的所有元素都不小于切分元素。 最后当两个指针相遇时，就说明遍历完了数组，此时只要将切分元素（序列的首元素）与左子序列最右侧的元素（a[j]）交换并返回j。 其中返回j时为了下面进行更小子序列的划分。直到子序列只有一个元素，就可以直接返回。
-源码 public class QuickSort { public static void sort(Comparable[] a) { StdRandom.shuffle(a); //对初始序列进行随机打乱  sort(a,0,a.length-1); } public static void sort(Comparable[] a,int low ,int high) { if(high&lt;=low) return; int j = partition(a,low,high); sort(a,low,j-1); sort(a,j&#43;1,high); //划分成三分 小于j的 j 大于j的  } public static int partition(Comparable[] a,int low,int high) { int i=low; // low是切分元素 low&#43;1是第一个扫描的元素  int j=high&#43;1; // high&#43;1 是数组最后一个元素的后一个 high才是第一个扫描的元素  Comparable v=a[low]; //第一个元素为切分元素  while(true) { while(template." />
+<meta property="og:description" content="思想 考虑这样的一个情况：如果给定你一个方法partition(),此方法能够实现将一个序列进行划分:以序列的第一个元素a[low]作为划分的依据，将原序列划分成为(小于a[low])(a[low])(大于a[low]).
+那么将可以怎么利用这个方法对序列进行排序呢？ 运用 分而治之(Divid &amp; conquer) 的思想：首先对于原始的大的序列，取第一个元素进行划分，将原问题划分为两个小的子问题。 要使得整个序列都有序，且因为这个划分的元素已经处于其对应的有序序列的位置，所以只要保证两个子问题有序即可。 对于划分的两个子问题，其中一个子问题是所有小于划分元素的，另一个子问题是所有大于划分元素的。再递归的对这两个子问题进行划分， 直至将问题划分到只有一个元素，这就是平凡问题（一个元素的序列已经有序）。 这时由于每个子问题都已经有序，且所有的划分元素都在其对应的有序序列的位置，所以整个序列都保证有序。
+那么如何实现对问题的划分呢？ 我们可以总是 以序列的首元素进行划分元素。从左往右直至选到一个大于等于划分元素的，同时从右往左直至选到一个小于等于比划分元素的。 这时交换两个元素。如此继续下去，就可以保证左指针i左侧的所有元素都不大于切分元素，右指针j右侧的所有元素都不小于切分元素。 最后当两个指针相遇时，就说明遍历完了数组，此时只要 将切分元素（序列的首元素）与左子序列最右侧的元素（a[j]）交换并返回j。 其中返回j是为了下面进行更小子序列的划分。直到子序列只有一个元素，就可以直接返回。 源码 public class QuickSort { public static void sort(Comparable[] a) { StdRandom.shuffle(a); //对初始序列进行随机打乱  sort(a,0,a.length-1); } public static void sort(Comparable[] a,int low ,int high) { if(high&lt;=low) return; int j = partition(a,low,high); sort(a,low,j-1); sort(a,j&#43;1,high); //划分成三分 小于j的 j 大于j的  } public static int partition(Comparable[] a,int low,int high) { int i=low; // low是切分元素 low&#43;1是第一个扫描的元素  int j=high&#43;1; // high&#43;1 是数组最后一个元素的后一个 high才是第一个扫描的元素  Comparable v=a[low]; //第一个元素为切分元素  while(true) { while(template." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://yzz-git111.github.io/post/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/" />
 <meta property="article:published_time" content="2020-10-21T16:39:25+08:00" />
@@ -66,19 +64,20 @@
     </header>
     <div class="post-content">
       <h1 id="思想">思想</h1>
-<p>考虑这样的一个情况：如果给定你一个方法partition(),此方法能够实现将一个序列进行划分。
-以序列的第一个元素a[low]作为划分的依据，将原序列划分成为(小于a[low])(a[low])(大于a[low]).</p>
+<p>考虑这样的一个情况：如果给定你一个方法partition(),此方法能够实现将一个序列进行划分:<strong>以序列的第一个元素a[low]作为划分的依据，将原序列划分成为(<del>小于a[low]</del>)(<del>a[low]</del>)(<del>大于a[low]</del>).</strong></p>
 <p>那么将可以怎么利用这个方法对序列进行排序呢？
-运用分而治之（Divid &amp; conquer）的思想：首先对于原始的大的序列，取第一个元素进行划分，将原问题划分为两个小的子问题。
-要使得整个序列都有序，且因为这个划分的元素已经处于其对应的有序序列的位置，所以只要保证两个子问题有序即可。
-对于划分的两个子问题，其中一个子问题是所有小于划分元素的，另一个子问题是所有大于划分元素的。再递归的对这两个子问题进行划分，
-直至将问题划分到只有一个元素，这就是平凡问题（一个元素的序列已经有序）。
+运用 <em><strong>分而治之(Divid &amp; conquer)</strong></em> 的思想：首先对于原始的大的序列，取第一个元素进行划分，<em>将原问题划分为两个小的子问题</em>。
+要使得整个序列都有序，且因为这个<strong>划分的元素已经处于其对应的有序序列的位置</strong>，所以<strong>只要保证两个子问题有序即可。</strong>
+对于划分的两个子问题，<strong>其中一个子问题是所有小于划分元素的，另一个子问题是所有大于划分元素的。再递归的对这两个子问题进行划分，</strong>
+<strong>直至将问题划分到只有一个元素，这就是平凡问题（一个元素的序列已经有序）。</strong>
 这时由于每个子问题都已经有序，且所有的划分元素都在其对应的有序序列的位置，所以整个序列都保证有序。</p>
 <p>那么如何实现对问题的划分呢？
-我们可以总是以序列的首元素进行划分元素。从左往右直至选到一个大于等于划分元素的，同时从右往左直至选到一个小于等于比划分元素的。
-这时交换两个元素。如此继续下去，就可以保证左指针i左侧的所有元素都不大于切分元素，右指针j右侧的所有元素都不小于切分元素。
-最后当两个指针相遇时，就说明遍历完了数组，此时只要将切分元素（序列的首元素）与左子序列最右侧的元素（a[j]）交换并返回j。
-其中返回j时为了下面进行更小子序列的划分。直到子序列只有一个元素，就可以直接返回。</p>
+我们可以总是 <em><strong>以序列的首元素进行划分元素。从左往右直至选到一个大于等于划分元素的，同时从右往左直至选到一个小于等于比划分元素的。</strong></em>
+这时交换两个元素。如此继续下去，就可以<strong>保证左指针i左侧的所有元素都不大于切分元素，右指针j右侧的所有元素都不小于切分元素。</strong>
+最后当两个指针相遇时，就说明遍历完了数组，此时只要 <em><strong>将切分元素（序列的首元素）与左子序列最右侧的元素（a[j]）交换并返回j。</strong></em>
+其中返回j是为了下面进行更小子序列的划分。直到子序列只有一个元素，就可以直接返回。
+<img src="/chapter2/partitioning-overview.png" alt="">
+<img src="/chapter2/partitioning.png" alt=""></p>
 <h2 id="源码">源码</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">QuickSort</span>
 <span style="color:#f92672">{</span>
@@ -131,74 +130,85 @@
         template<span style="color:#f92672">.</span><span style="color:#a6e22e">show</span><span style="color:#f92672">(</span>a<span style="color:#f92672">);</span>
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
-</code></pre></div><h1 id="几个注意点">几个注意点!!!!</h1>
-<pre><code>1.终止循环的条件
+</code></pre></div><p><img src="/chapter2/quicksort.png" alt=""></p>
+<hr>
+<h1 id="几个注意点">几个注意点!!!!</h1>
+<ol>
+<li>
+<p>终止循环的条件
 在partition()中，从左端找一个比v大的元素以及从右端找一个比v小的元素都需要一个内循环。
-而内循环的退出的条件是左端遇到了一个大于等于v的元素;右端遇到了一个小于等于v的元素。
-虽然等于的情况会造成不必要的相等元素的交换，但是这个可以避免算法时间复杂度降低到O(N^2)量级.
-
-2.防止越界
-对于判断左侧是否越界的语句其实是冗余的。
-</code></pre>
+而<strong>内循环的退出的条件是左端遇到了一个<em>大于等于v</em>的元素;右端遇到了一个<em>小于等于v</em>的元素。</strong>
+<em><strong>虽然等于的情况会造成不必要的相等元素的交换，但是这个可以避免算法时间复杂度降低到O(N^2)量级.</strong></em></p>
+</li>
+<li>
+<p>防止越界
+对于判断左侧是否越界的语句其实是冗余的。</p>
+</li>
+</ol>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">while</span><span style="color:#f92672">(</span>template<span style="color:#f92672">.</span><span style="color:#a6e22e">less</span><span style="color:#f92672">(</span>v<span style="color:#f92672">,</span>a<span style="color:#f92672">[--</span>j<span style="color:#f92672">]))</span>
     <span style="color:#f92672">{</span>
         <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>j<span style="color:#f92672">==</span>low<span style="color:#f92672">)</span>
             <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>      <span style="color:#75715e">//如果找第一个比v小的元素一直到了数组开头 则说明数组都比v大
 </span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-</code></pre></div><pre><code>因为用来划分的元素就是a[low],从右往左找比划分元素小的元素，当比较到a[low]时，由于v==a[low]，所以自动跳出循坏，不需要判别。
-相同的右边判断的情况也可以去掉。
-
-
-3.终止递归的情况
-当子序列只有一个元素时，对其进行partition()划分，由于没有比它小的元素，也没有比它大的，所以这个子序列已经划分完成，不需要任何操作。
-
-4.保持随机性
-当每次的划分元素都是最大/最小元素时，就不能划分成三个序列，这样情况是最糟糕的。所有需要重新打乱数组，将这种概率降低。
-
-5.原地划分
-如果使用一个辅助数组，那么实现划分很容易（遍历数组，比划分元素小的元素从数组头部开始放，比划分元素大的元素从数组尾部开始放，然后将数组复制到原数组）
-但是这样开销会很大，从而影响快速排序的复杂度。
-</code></pre>
+</code></pre></div><p><strong>因为用来划分的元素就是a[low],从右往左找比划分元素小的元素，当比较到a[low]时，由于v==a[low]，所以自动跳出循坏，不需要判别。
+相同的右边判断的情况也可以去掉。</strong></p>
+<ol start="3">
+<li>
+<p>终止递归的情况
+当子序列只有一个元素时，对其进行partition()划分，由于没有比它小的元素，也没有比它大的，所以这个子序列已经划分完成，不需要任何操作。</p>
+</li>
+<li>
+<p>保持随机性
+<strong>当每次的划分元素都是最大/最小元素时，就不能划分成三个序列，这样情况是最糟糕的。所有需要重新打乱数组，将这种概率降低。</strong></p>
+</li>
+<li>
+<p>原地划分
+<strong>如果使用一个辅助数组，那么实现划分很容易（遍历数组，比划分元素小的元素从数组头部开始放，比划分元素大的元素从数组尾部开始放，然后将数组复制到原数组）
+但是这样开销会很大，从而影响快速排序的复杂度。</strong></p>
+</li>
+</ol>
 <h1 id="复杂度">复杂度</h1>
-<pre><code>最好情况下，每次都能正好的将原问题划分为等规模的两个子问题。
-这时正好满足递推式f(N)=2f(N/2)+N，其中2f(N/2)代表将两个子问题排序的代价，N表示用划分元素和所有数组元素进行比较的成本。
-利用主定理可以很容易算出T(N)=O(NlogN).
-
-最坏情况，每次划分的元素都是当前子序列的最小/大的元素，所以进行划分时小于/大于划分元素的部分一定为空。每次调用只会移除一个元素，需要进行约N^2/2次比较。
-
-为了尽可能的避免最坏情况的发生，我们可以先打乱原数组。
-由理论知识可以保证将长度为N的无重复的数组排序，快速排序平均需要约2NlogN次比较.
-所以快速排序T(N)=O(NlogN)。是目前基于比较排序的最低的复杂度。
-</code></pre>
+<p><em><strong>最好情况下，每次都能正好的将原问题划分为等规模的两个子问题。</strong></em>
+这时正好满足递推式<strong>f(N)=2f(N/2)+N，其中2f(N/2)代表将两个子问题排序的代价，N表示用划分元素和所有数组元素进行比较的成本。</strong>
+利用主定理可以很容易算出<strong>T(N)=O(NlogN).</strong></p>
+<p><em><strong>最坏情况，每次划分的元素都是当前子序列的最小/大的元素，所以进行划分时小于/大于划分元素的部分一定为空。每次调用只会移除一个元素，需要进行约N^2/2次比较。</strong></em></p>
+<p><em><strong>为了尽可能的避免最坏情况的发生，我们可以先随机打乱原数组。</strong></em></p>
+<p>由理论知识可以保证将长度为N的无重复的数组排序，<em><strong>快速排序平均需要约2NlogN次比较.
+所以快速排序T(N)=O(NlogN)。是目前基于比较排序的最低的复杂度。</strong></em></p>
 <hr>
 <h1 id="改进">改进</h1>
-<pre><code>尽管快速排序的性能非常好了，但是还是有一些细节可以进一步提高其性能。
-1.结合插入排序。
-    对于小数组问题，快速排序比插入排序要慢。如果在问题规模小于某一值时，用快速排序来保证子问题的有序，可以切换到插入排序。
-例如将sort()中的if(high&lt;=low) return; 改为if(high&lt;=low+M) {Insertion.sort(a,low,high); return;}
-
-2.三取样切分
-    使用子数组的一小部分元素的中位数来划分数组效果可能比直接取第一个元素好，但是其代价时要继续中位数。
-综合考虑，通常将取样大小为3并用大小居中的元素来划分的效果最好。
-
-3.三切分排序
-    在现实生活中，有很多情况数组中有大量的重复的元素。当一个元素全部重复的子数组就不用继续划分成更小的数组来排序了。
-比如划分到某一阶段一个子数组是 bbbbb x ccccc  那么子数组bbbbb,ccccc就不要继续划分更小来排序了。
-在有大量重复元素的情况下，快速排序可以将性能从线性对数提高到线性级别！
-</code></pre>
+<p>尽管快速排序的性能非常好了，但是还是有一些细节可以进一步提高其性能。</p>
+<ul>
+<li>
+<p>结合插入排序。
+<strong>对于小数组问题，快速排序比插入排序要慢。如果在问题规模小于某一值时，可以切换到插入排序来保证子问题的有序。</strong>
+<strong>例如将sort()中的if(high&lt;=low) return; 改为if(high&lt;=low+M) {Insertion.sort(a,low,high); return;}</strong></p>
+</li>
+<li>
+<p>三取样切分
+<strong>使用子数组的一小部分元素的中位数来划分数组效果可能比直接取第一个元素好，但是其代价时要继续中位数。</strong>
+综合考虑，通常 <em><strong>将取样大小为3并用大小居中的元素</strong></em> 来划分的效果最好。</p>
+</li>
+<li>
+<p>三切分排序
+在现实生活中，有很多情况数组中<strong>有大量的重复的元素</strong>。当一个元素全部重复的子数组就不用继续划分成更小的数组来排序了。
+<strong>比如划分到某一阶段一个子数组是 bbbbb x ccccc  那么子数组bbbbb,ccccc就不要继续划分更小来排序了。
+在有大量重复元素的情况下，快速排序可以将性能从线性对数提高到线性级别！</strong></p>
+</li>
+</ul>
 <hr>
 <h1 id="三向切分的快速排序">三向切分的快速排序</h1>
-<pre><code>对于只有若干个不同主键的随机数组，快速排序任然有很大的提升空间。用三向切分的快速排序可以将复杂度降低到线性级别。
-</code></pre>
+<p><strong>对于只有若干个不同主键的随机数组，快速排序任然有很大的提升空间。用三向切分的快速排序可以将复杂度降低到线性级别。</strong></p>
 <h2 id="想法">想法</h2>
-<pre><code>当一个元素全部重复的子数组就不用继续划分成更小的数组来排序了。
+<p><img src="/chapter2/quicksort3-bars.png" alt="">
+当一个元素全部重复的子数组就不用继续划分成更小的数组来排序了。
 比如划分到某一阶段一个子数组是 bbbbb x ccccc  那么子数组bbbbb,ccccc就不要继续划分更小来排序了。
-一个简单的想法是将数组切分成三部分，分别对应小于，等于和大于切分元素的数组。
+<strong>一个简单的想法是将数组切分成三部分，分别对应小于，等于和大于切分元素的数组。</strong>
 如何实现呢：
-    从左到右遍历数组一次，维护一个指针lt使得a[low .. lt-1]中的所有元素都小于v，一个指针gt使得a[gt+1 .. high]中所有元素大于v,
-一个指针i使得a[lt .. i-1]的元素都等于v，a[i .. gt]元素尚未确定。
-一次切分后类似于 bbaabbab  cccccc  deeedde。然后继续对a[low .. lt-1]和a[i .. gt]进行sort()即可。
-</code></pre>
+<em><strong>从左到右遍历数组一次，维护一个指针lt使得a[low .. lt-1]中的所有元素都小于v，一个指针gt使得a[gt+1 .. high]中所有元素大于v,一个指针i使得a[lt .. i-1]的元素都等于v，
+a[i .. gt]元素尚未确定。
+一次切分后类似于 bbaabbab  cccccc  deeedde。然后继续对bbaabbab和deeedde进行sort()即可。</strong></em></p>
+<p><img src="/chapter2/partitioning3-overview.png" alt=""></p>
 <h2 id="源码-1">源码</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">QuickSort3way</span>
 <span style="color:#f92672">{</span>
@@ -229,32 +239,24 @@
 </span><span style="color:#75715e"></span>        sort<span style="color:#f92672">(</span>a<span style="color:#f92672">,</span>gt<span style="color:#f92672">+</span>1<span style="color:#f92672">,</span>high<span style="color:#f92672">);</span>
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
-</code></pre></div><h2 id="复杂度分析">复杂度分析</h2>
-<pre><code>这种基于快速排序改进的三向切分的快速排序对于含有很多重复元素的数组的排序效率很高的原因就在于：
-快速排序的每次partation()只能保证将一个元素放到对应的有序序列的位置，而三向切分的快速排序能保证将与切分元素相等的所有元素都
-到了对应有序序列的最终位置。一次就保证了很多元素的排序。而后面只要对前后两个数组分别再排序就行。
-
-但是三向切分的最坏情况却是所有主键均不相同的情况。对于这种情况，使用普通的快速排序已经归并排序都有很好的效果。
-
-对于元素重复较多的数组，三向切分的快速排序可以将复杂度降低到O(N)级别。
-</code></pre>
+</code></pre></div><p><img src="/chapter2/partitioning3.png" alt=""></p>
+<h2 id="复杂度分析">复杂度分析</h2>
+<p>这种基于快速排序改进的三向切分的快速排序对于含有很多重复元素的数组的排序效率很高的原因就在于：
+<em><strong>快速排序的每次partation()只能保证将一个元素放到对应的有序序列的位置，而三向切分的快速排序能保证将与切分元素相等的所有元素都到了对应有序序列的最终位置。一次就保证了很多元素的排序。而后面只要对前后两个数组分别再排序就行。</strong></em></p>
+<p>但是<strong>三向切分的最坏情况却是所有主键均不相同的情况。对于这种情况，使用普通的快速排序已经归并排序都有很好的效果。</strong></p>
+<p><strong>对于元素重复较多的数组，三向切分的快速排序可以将复杂度降低到O(N)级别。</strong></p>
 <h1 id="总结">总结</h1>
-<pre><code>快速排序的优缺点
-快速排序最大的优点在于它是原地排序（只需要一个很小的辅助栈，O(logN)级别），且T(N)=O(NlogN).
-且快速排序的内循环比大多数排序算法都要短小。
-它保证了时间复杂度与空间复杂度都很低。是目前所接触的算法中最好的一个。
-
-
-快速排序与归并排序的对比：
-归并排序和希尔排序一般都比快速排序慢，主要原因就是他们在内循环中移动数据。
-虽然归并排序的数量级别也是O(NlogN)，但是它的常系数却比快速排序大。并且归并排序需要一个O(N)量级的辅助数组。
-
-两者都是分治算法的典型体现。不同的在于归并算法是将大的问题分解成规模近似的小的问题，递归分解直至分到子问题只有一个数组，
-此时默认这个最小的子问题已经有序了。接着就一步步地合并子问题。
-而快速排序的思想是：在两个子序列都有序的前提下，整个子序列就有序了。而保证子序列有序可以一直使用划分，划分到子序列只有一个元素时，
-也就默认子序列有序，此时较小的子序列+划分元素+较小的子序列 就构成了一个次小的子序列。
-归并排序的递归发生在处理整个数组之前；快速排序的递归发生在处理整个数组之后。
-归并排序一个数组被等分为两部分；快速排序数组的划分取决于数组的内容。</code></pre>
+<p>快速排序的优缺点
+快速排序最大的优点在于它是<strong>原地排序</strong>（ <em><strong>只需要一个很小的辅助栈，O(logN)级别），且T(N)=O(NlogN).</strong></em>
+且<strong>快速排序的内循环比大多数排序算法都要短小。</strong>
+它保证了时间复杂度与空间复杂度都很低。是目前所接触的算法中最好的一个。</p>
+<p>快速排序与归并排序的对比：
+归并排序和希尔排序一般都比快速排序慢，主要原因就是他们在<strong>内循环中移动数据。</strong>
+<strong>虽然归并排序的数量级别也是O(NlogN)，但是它的常系数却比快速排序大。并且归并排序需要一个O(N)量级的辅助数组。</strong></p>
+<p>两者都是 <em><strong>分治算法</strong></em> 的典型体现。不同的在于<strong>归并算法是将大的问题分解成规模近似的小的问题，递归分解直至分到子问题只有一个数组，此时默认这个最小的子问题已经有序了。接着就一步步地合并子问题。</strong>
+而快速排序的思想是： <em><strong>在两个子序列都有序的前提下，整个子序列就有序了。而保证子序列有序可以一直使用划分，划分到子序列只有一个元素时，也就默认子序列有序，此时较小的子序列+划分元素+较小的子序列 就构成了一个次小的子序列。</strong></em></p>
+<p><em><strong>归并排序的递归发生在处理整个数组之前；快速排序的递归发生在处理整个数组之后。
+归并排序一个数组被等分为两部分；快速排序数组的划分取决于数组的内容。</strong></em></p>
 
     </div>
     <div class="post-footer">

@@ -110,7 +110,7 @@ public class MaxHeap&amp;lt;Key&amp;gt; implements Iterable&amp;lt;Key&amp;gt; {
     </item>
     
     <item>
-      <title>Union Find算法1(quick-find算法)</title>
+      <title>Union Find算法</title>
       <link>https://yzz-git111.github.io/post/union-find%E7%AE%97%E6%B3%95/</link>
       <pubDate>Sat, 26 Sep 2020 18:26:44 +0800</pubDate>
       

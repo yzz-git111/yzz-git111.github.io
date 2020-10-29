@@ -5,18 +5,39 @@
     <link>https://yzz-git111.github.io/post/</link>
     <description>Recent content in Posts on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 25 Oct 2020 10:54:00 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 29 Oct 2020 20:34:14 +0800</lastBuildDate>
     
 	<atom:link href="https://yzz-git111.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>排序算法总结即实例</title>
+      <title>浅析堆区和栈区</title>
+      <link>https://yzz-git111.github.io/post/%E6%B5%85%E6%9E%90%E5%A0%86%E5%8C%BA%E5%92%8C%E6%A0%88%E5%8C%BA/</link>
+      <pubDate>Thu, 29 Oct 2020 20:34:14 +0800</pubDate>
+      
+      <guid>https://yzz-git111.github.io/post/%E6%B5%85%E6%9E%90%E5%A0%86%E5%8C%BA%E5%92%8C%E6%A0%88%E5%8C%BA/</guid>
+      <description>java的内存分为堆区，栈区和方法区三类。
+堆 特点：
+ 堆区中不存放基本类型和对象引用，只存放对象本身（通过new生成的对象）。 堆是可以被所有的线程所共享的。 内存分配是连续分配的，即，所分配的内存是在一块连续的内存区域内．  堆的优点是：可以动态的分配内存大小，在运行时动态分配内存，Java的垃圾收集器会自动收走这些不再使用的数据。 但是缺点是：存取速度较慢。
+栈 特点：
+ 栈区存储基本变量类型,并且包含这个基本类型的具体数据。 栈区存储堆中对象的引用（引用在堆区中的地址） 方法调用时进栈，当方法执行完时退栈。栈空时程序执行完。 内存中的分布不是连续的，它们是不同区域的内存块通过指针链接起来的．  方法区  被线程共享的区域 包括常量池和静态区 存储被static修饰的常量和所有的class  实例1 实例2 如上图：
+ 定义了一个Pet类，包括name和age两个属性，一个shout()方法。类是存放在方法区里。 main()方法首先进入栈区(main也可以传递参数String args[]) 在main中定义了Pet的两个对象：dog和cat。通过new的对象本身存放在堆区。而引用存放在栈区中。 为赋值前，name默认null，age默认0.赋值后，堆区相应的值改变，而栈区仍然存放的是dog和cat这两个对象的引用。 字符串“旺财”作为常量，被存放在常量池中。  实例3 每次通过String构造的一个String的对象，即使给定的字符串一样，但是这两个String的对象不一样。这是因为判断两个对象是否一样比较的是对象的引用。每次new一个对象都会在堆区申请相应的空间，然后栈区存储这个对象的引用。存储的是不同的引用。
+而通过String c = &amp;ldquo;abc&amp;rdquo;; String d = &amp;ldquo;abc&amp;rdquo;; 判断c==d返回的是true。 这是因为字符串&amp;quot;abc&amp;quot;是常量，被存储在常量池中。这里是把常量池的&amp;quot;abc&amp;quot;的引用给了这两个对象。 （java除了基本数据类型是值传递 其他都是引用传递）</description>
+    </item>
+    
+    <item>
+      <title>排序算法总结及实例</title>
       <link>https://yzz-git111.github.io/post/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93%E5%8D%B3%E5%AE%9E%E4%BE%8B/</link>
       <pubDate>Sun, 25 Oct 2020 10:54:00 +0800</pubDate>
       
       <guid>https://yzz-git111.github.io/post/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93%E5%8D%B3%E5%AE%9E%E4%BE%8B/</guid>
-      <description>各种排序算法的比较 应用 找出重复元素 找中位数 调度 负载均衡 </description>
+      <description>各种排序算法的比较 在大多数实际情况中，快速排序是最佳选择。但是如果稳定很重要而空间又不是问题，那么归并排序是最好的选择。
+注意：在java中，我们除了原始数字类型之外，操作的总是数据的引用（指针），而非数据本身。使用引用的好处是对于一些复杂的数据类型，数组保存的是待排序对象的引用，移动元素时只需要移动引用而不是整个元素。 但是对于将数字排序的情况，更合理的做法是跳过引用而直接将原始数组类型排序。例如：一个double类型的数组和一个Double类型的数组。对于前者可以直接交换这些元素并且排序；而对于后者交换的存储了数字的Double对象的引用。跳过引用可以节省存储引用的空间和通过引用访问数字的成本，以及调用compareTo()和less()的开销。 跳过引用的方法就是把Comparable接口替换为原始数组类型名，重新定义less()或者直接使用a[i]&amp;lt;a[j].
+应用 找第k个数 对于找中位数，利用一个大顶堆和一个小顶堆可以实现。 除此之外，还有一种方法能够快速的找到中位数。更一般的，可以找到任意第k小的数。 还有一种想法：每调用一次快速排序的partition()就返回划分元素所在对应的有序数组中的下标。如果返回的下标正好满足对应的有序序列中位数的下标(n/2)就说明划分元素就是中位数。如果下标大于n/2就说明小于划分元素的数的个数大于n/2，那么中位数一定在小于划分元素的那个序列中，对这个序列继续partition()，直至返回的下标为n/2即找到中位数。
+public static Comparable select(Comparable[] a,int k) { StdRandom.shuffle(a); int low=0,high=a.length-1; int i=partition(a,low,high); while (i!=k) //当下标不为要求的下标时就继续  { if(i&amp;gt;k) //中位数在元素多的数组中  { high=i-1; i=partition(a,low,high); } else { low=i+1; i=partition(a,low,high); } } return a[i]; } 当select(a,n/2)时就是返回中位数。若想返回其他的数(第k小的数)，只要传递相应的k值即可. 复杂度： 可能出现最坏的情况：每次划分元素都只能将范围缩小1，那么需要partition()O(N)次，且每次的partition()需要遍历数组，比较O(N)次，那么复杂度会O(N^2).但是通过随机打乱数组能尽可能避免这种情况。 假设每次恰好将数组二分，那么比较的总次数为(N+ N/2 + N/4 +&amp;hellip;)直到找到第k小的元素，这个和小于2N.T(N)=O(N).
+当然还有更好的算法保证最坏情况下也是O(N).
+指定的排序顺序 如何实现按照某一特定的顺序进行排序？ 问题：为了制止对名字在字母结尾出现的候选人的偏见，加利福尼亚使用以下顺序对出现在其2003年州长选举中的候选人进行了排序：RWQOJMVAHBSGZXNTCIEKUPDYFL
+public class California { public static final Comparator&amp;lt;String&amp;gt; CANDIDATE_ORDER = new CandidateComparator(); //在California类中有一个final的静态变量,静态变量是CandidateComparator类  private static class CandidateComparator implements Comparator&amp;lt;String&amp;gt; {//又定义了California的内部类CandidateComparator  //并且内部类CandidateComparator实现了接口Comparator ,即要重写compare方法  //&amp;lt;String&amp;gt;表示Comparator的泛型T在这里用String特定实现。  private static String order = &amp;#34;RWQOJMVAHBSGZXNTCIEKUPDYFL&amp;#34;; //内部类CandidateComparator有一个静态成员变量order，指定了排序的顺序  public int compare(String a, String b) {//实现Comparator接口的compare()  int n = Math.</description>
     </item>
     
     <item>

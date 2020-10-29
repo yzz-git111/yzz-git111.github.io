@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>浅析堆区和栈区 // </title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.74.3" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="yzz帅的一匹" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://yzz-git111.github.io/css/main.min.88e7083eff65effb7485b6e6f38d10afbec25093a6fac42d734ce9024d3defbd.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="浅析堆区和栈区"/>
+<meta name="twitter:description" content="java的内存分为堆区，栈区和方法区三类。
+堆 特点：
+ 堆区中不存放基本类型和对象引用，只存放对象本身（通过new生成的对象）。 堆是可以被所有的线程所共享的。 内存分配是连续分配的，即，所分配的内存是在一块连续的内存区域内．  堆的优点是：可以动态的分配内存大小，在运行时动态分配内存，Java的垃圾收集器会自动收走这些不再使用的数据。 但是缺点是：存取速度较慢。
+栈 特点：
+ 栈区存储基本变量类型,并且包含这个基本类型的具体数据。 栈区存储堆中对象的引用（引用在堆区中的地址） 方法调用时进栈，当方法执行完时退栈。栈空时程序执行完。 内存中的分布不是连续的，它们是不同区域的内存块通过指针链接起来的．  方法区  被线程共享的区域 包括常量池和静态区 存储被static修饰的常量和所有的class  实例1 实例2 如上图：
+ 定义了一个Pet类，包括name和age两个属性，一个shout()方法。类是存放在方法区里。 main()方法首先进入栈区(main也可以传递参数String args[]) 在main中定义了Pet的两个对象：dog和cat。通过new的对象本身存放在堆区。而引用存放在栈区中。 为赋值前，name默认null，age默认0.赋值后，堆区相应的值改变，而栈区仍然存放的是dog和cat这两个对象的引用。 字符串“旺财”作为常量，被存放在常量池中。  实例3 每次通过String构造的一个String的对象，即使给定的字符串一样，但是这两个String的对象不一样。这是因为判断两个对象是否一样比较的是对象的引用。每次new一个对象都会在堆区申请相应的空间，然后栈区存储这个对象的引用。存储的是不同的引用。
+而通过String c = &ldquo;abc&rdquo;; String d = &ldquo;abc&rdquo;; 判断c==d返回的是true。 这是因为字符串&quot;abc&quot;是常量，被存储在常量池中。这里是把常量池的&quot;abc&quot;的引用给了这两个对象。 （java除了基本数据类型是值传递 其他都是引用传递）"/>
+
+    <meta property="og:title" content="浅析堆区和栈区" />
+<meta property="og:description" content="java的内存分为堆区，栈区和方法区三类。
+堆 特点：
+ 堆区中不存放基本类型和对象引用，只存放对象本身（通过new生成的对象）。 堆是可以被所有的线程所共享的。 内存分配是连续分配的，即，所分配的内存是在一块连续的内存区域内．  堆的优点是：可以动态的分配内存大小，在运行时动态分配内存，Java的垃圾收集器会自动收走这些不再使用的数据。 但是缺点是：存取速度较慢。
+栈 特点：
+ 栈区存储基本变量类型,并且包含这个基本类型的具体数据。 栈区存储堆中对象的引用（引用在堆区中的地址） 方法调用时进栈，当方法执行完时退栈。栈空时程序执行完。 内存中的分布不是连续的，它们是不同区域的内存块通过指针链接起来的．  方法区  被线程共享的区域 包括常量池和静态区 存储被static修饰的常量和所有的class  实例1 实例2 如上图：
+ 定义了一个Pet类，包括name和age两个属性，一个shout()方法。类是存放在方法区里。 main()方法首先进入栈区(main也可以传递参数String args[]) 在main中定义了Pet的两个对象：dog和cat。通过new的对象本身存放在堆区。而引用存放在栈区中。 为赋值前，name默认null，age默认0.赋值后，堆区相应的值改变，而栈区仍然存放的是dog和cat这两个对象的引用。 字符串“旺财”作为常量，被存放在常量池中。  实例3 每次通过String构造的一个String的对象，即使给定的字符串一样，但是这两个String的对象不一样。这是因为判断两个对象是否一样比较的是对象的引用。每次new一个对象都会在堆区申请相应的空间，然后栈区存储这个对象的引用。存储的是不同的引用。
+而通过String c = &ldquo;abc&rdquo;; String d = &ldquo;abc&rdquo;; 判断c==d返回的是true。 这是因为字符串&quot;abc&quot;是常量，被存储在常量池中。这里是把常量池的&quot;abc&quot;的引用给了这两个对象。 （java除了基本数据类型是值传递 其他都是引用传递）" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yzz-git111.github.io/post/%E6%B5%85%E6%9E%90%E5%A0%86%E5%8C%BA%E5%92%8C%E6%A0%88%E5%8C%BA/" />
+<meta property="article:published_time" content="2020-10-29T20:34:14+08:00" />
+<meta property="article:modified_time" content="2020-10-29T20:34:14+08:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://yzz-git111.github.io/"><img class="app-header-avatar" src="/avatar.jpeg" alt="yzz帅的一匹" /></a>
+      <h1></h1>
+      <p>yzz也想变成学霸</p>
+      <div class="app-header-social">
+        
+          <a target="_blank" href="https://github.com/yzz-git111" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg></a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">浅析堆区和栈区</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Oct 29, 2020
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          1 min read
+        </div></div>
+    </header>
+    <div class="post-content">
+      <p>java的内存分为堆区，栈区和方法区三类。</p>
+<h1 id="堆">堆</h1>
+<p>特点：</p>
+<ol>
+<li>堆区中不存放基本类型和对象引用，只存放对象本身（通过new生成的对象）。</li>
+<li>堆是可以被所有的线程所共享的。</li>
+<li>内存分配是连续分配的，即，所分配的内存是在一块连续的内存区域内．</li>
+</ol>
+<p>堆的优点是：可以动态的分配内存大小，在运行时动态分配内存，Java的垃圾收集器会自动收走这些不再使用的数据。
+但是缺点是：存取速度较慢。</p>
+<h1 id="栈">栈</h1>
+<p>特点：</p>
+<ol>
+<li>栈区存储基本变量类型,并且包含这个基本类型的具体数据。</li>
+<li>栈区存储堆中对象的引用（引用在堆区中的地址）</li>
+<li>方法调用时进栈，当方法执行完时退栈。栈空时程序执行完。</li>
+<li>内存中的分布不是连续的，它们是不同区域的内存块通过指针链接起来的．</li>
+</ol>
+<h1 id="方法区">方法区</h1>
+<ol>
+<li>被线程共享的区域</li>
+<li>包括常量池和静态区</li>
+<li>存储被static修饰的常量和所有的class</li>
+</ol>
+<h2 id="实例1">实例1</h2>
+<p><img src="/union_find/%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B.png" alt=""></p>
+<h2 id="实例2">实例2</h2>
+<p><img src="/union_find/1.png" alt="">
+如上图：</p>
+<ol>
+<li>定义了一个Pet类，包括name和age两个属性，一个shout()方法。类是存放在方法区里。</li>
+<li>main()方法首先进入栈区(main也可以传递参数String args[])</li>
+<li>在main中定义了Pet的两个对象：dog和cat。通过new的对象本身存放在堆区。而引用存放在栈区中。</li>
+<li>为赋值前，name默认null，age默认0.赋值后，堆区相应的值改变，而栈区仍然存放的是dog和cat这两个对象的引用。</li>
+<li>字符串“旺财”作为常量，被存放在常量池中。</li>
+</ol>
+<h2 id="实例3">实例3</h2>
+<p><img src="/union_find/2.png" alt="">
+<img src="/union_find/3.png" alt=""></p>
+<p>每次通过String构造的一个String的对象，即使给定的字符串一样，但是这两个String的对象不一样。这是因为判断两个对象是否一样比较的是对象的引用。每次new一个对象都会在堆区申请相应的空间，然后栈区存储这个对象的引用。存储的是不同的引用。</p>
+<p>而通过String c = &ldquo;abc&rdquo;; String d = &ldquo;abc&rdquo;;  判断c==d返回的是true。
+这是因为字符串&quot;abc&quot;是常量，被存储在常量池中。这里是把常量池的&quot;abc&quot;的引用给了这两个对象。
+（java除了基本数据类型是值传递  其他都是引用传递）</p>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

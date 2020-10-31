@@ -5,10 +5,22 @@
     <link>https://yzz-git111.github.io/post/</link>
     <description>Recent content in Posts on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 29 Oct 2020 20:34:14 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 31 Oct 2020 15:12:26 +0800</lastBuildDate>
     
 	<atom:link href="https://yzz-git111.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>基本的查找算法</title>
+      <link>https://yzz-git111.github.io/post/%E5%9F%BA%E6%9C%AC%E7%9A%84%E6%9F%A5%E6%89%BE%E7%AE%97%E6%B3%95/</link>
+      <pubDate>Sat, 31 Oct 2020 15:12:26 +0800</pubDate>
+      
+      <guid>https://yzz-git111.github.io/post/%E5%9F%BA%E6%9C%AC%E7%9A%84%E6%9F%A5%E6%89%BE%E7%AE%97%E6%B3%95/</guid>
+      <description>根据书中的定义：符号表是一种存储键值对的数据结构。支持插入操作：将一组新的键值对存入表中。和查找操作：根据给定的键得到相对应的值 典型的符号表的应用：查字典时，单词就是键，释义就是值。通过单词来找到意思。 网络搜索时，关键字就是键，网页名称就是值，通过关键字来找到网页。
+约定  每个键只对应一个值(而一个值可以对应于多个键)。即索引是唯一的。 键不能为空。 查找成功成为命中，不成功返回null为不命中 采用泛型的设计思想，在具体实现时在规定特定的类型。  最基本的符号表的API： 基于链表实现 符号表作为一种数据结构可以通过最基本的链表来实现。
+public class SequentialSearchST&amp;lt;Key,Value&amp;gt; { private Node first; //相当于头结点指针  private class Node { Key key; Value val; Node next; public Node(Key key, Value val, Node next) { this.key=key; this.val=val; this.next=next; } } } 这里给出了链表实现的方法：使用一个内部私有类Node来存放键和值。链表只有一个私有成员first，类型为私有内部类Node，用来指示下一个结点的位置，初始值是null。
+/*这是根据键查找值 以及 插入一对新的键值对的方法*/ public Value get(Key key) { for(Node x=first;x!=null;x=x.next) { if(key.equals(x.key)) { return x.val; } } return null; } public void put(Key key,Value val) { for(Node x=first;x!</description>
+    </item>
     
     <item>
       <title>浅析堆区和栈区</title>

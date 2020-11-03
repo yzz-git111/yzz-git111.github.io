@@ -12,14 +12,20 @@
     
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="基本的查找算法"/>
-<meta name="twitter:description" content="根据书中的定义：符号表是一种存储键值对的数据结构。支持插入操作：将一组新的键值对存入表中。和查找操作：根据给定的键得到相对应的值 典型的符号表的应用：查字典时，单词就是键，释义就是值。通过单词来找到意思。 网络搜索时，关键字就是键，网页名称就是值，通过关键字来找到网页。
-约定  每个键只对应一个值(而一个值可以对应于多个键)。即索引是唯一的。 键不能为空。 查找成功成为命中，不成功返回null为不命中 采用泛型的设计思想，在具体实现时在规定特定的类型。  最基本的符号表的API： 基于链表实现 符号表作为一种数据结构可以通过最基本的链表来实现。
+<meta name="twitter:description" content="根据书中的定义：符号表是一种存储键值对的数据结构。支持插入操作：将一组新的键值对存入表中。和查找操作：根据给定的键得到相对应的值
+典型的符号表的应用：查字典时，单词就是键，释义就是值。通过单词来找到意思。
+网络搜索时，关键字就是键，网页名称就是值，通过关键字来找到网页。
+约定  每个键只对应一个值(而一个值可以对应于多个键)。即索引是唯一的。 键不能为空。 查找成功成为命中，不成功返回null为不命中 采用泛型的设计思想，在具体实现时在规定特定的类型。  最基本的符号表的API：
+基于链表实现 符号表作为一种数据结构可以通过最基本的链表来实现。
 public class SequentialSearchST&lt;Key,Value&gt; { private Node first; //相当于头结点指针  private class Node { Key key; Value val; Node next; public Node(Key key, Value val, Node next) { this.key=key; this.val=val; this.next=next; } } } 这里给出了链表实现的方法：使用一个内部私有类Node来存放键和值。链表只有一个私有成员first，类型为私有内部类Node，用来指示下一个结点的位置，初始值是null。
 /*这是根据键查找值 以及 插入一对新的键值对的方法*/ public Value get(Key key) { for(Node x=first;x!=null;x=x.next) { if(key.equals(x.key)) { return x.val; } } return null; } public void put(Key key,Value val) { for(Node x=first;x!"/>
 
     <meta property="og:title" content="基本的查找算法" />
-<meta property="og:description" content="根据书中的定义：符号表是一种存储键值对的数据结构。支持插入操作：将一组新的键值对存入表中。和查找操作：根据给定的键得到相对应的值 典型的符号表的应用：查字典时，单词就是键，释义就是值。通过单词来找到意思。 网络搜索时，关键字就是键，网页名称就是值，通过关键字来找到网页。
-约定  每个键只对应一个值(而一个值可以对应于多个键)。即索引是唯一的。 键不能为空。 查找成功成为命中，不成功返回null为不命中 采用泛型的设计思想，在具体实现时在规定特定的类型。  最基本的符号表的API： 基于链表实现 符号表作为一种数据结构可以通过最基本的链表来实现。
+<meta property="og:description" content="根据书中的定义：符号表是一种存储键值对的数据结构。支持插入操作：将一组新的键值对存入表中。和查找操作：根据给定的键得到相对应的值
+典型的符号表的应用：查字典时，单词就是键，释义就是值。通过单词来找到意思。
+网络搜索时，关键字就是键，网页名称就是值，通过关键字来找到网页。
+约定  每个键只对应一个值(而一个值可以对应于多个键)。即索引是唯一的。 键不能为空。 查找成功成为命中，不成功返回null为不命中 采用泛型的设计思想，在具体实现时在规定特定的类型。  最基本的符号表的API：
+基于链表实现 符号表作为一种数据结构可以通过最基本的链表来实现。
 public class SequentialSearchST&lt;Key,Value&gt; { private Node first; //相当于头结点指针  private class Node { Key key; Value val; Node next; public Node(Key key, Value val, Node next) { this.key=key; this.val=val; this.next=next; } } } 这里给出了链表实现的方法：使用一个内部私有类Node来存放键和值。链表只有一个私有成员first，类型为私有内部类Node，用来指示下一个结点的位置，初始值是null。
 /*这是根据键查找值 以及 插入一对新的键值对的方法*/ public Value get(Key key) { for(Node x=first;x!=null;x=x.next) { if(key.equals(x.key)) { return x.val; } } return null; } public void put(Key key,Value val) { for(Node x=first;x!" />
 <meta property="og:type" content="article" />
@@ -65,9 +71,9 @@ public class SequentialSearchST&lt;Key,Value&gt; { private Node first; //相当�
         </div></div>
     </header>
     <div class="post-content">
-      <p><strong>根据书中的定义：符号表是一种存储键值对的数据结构。支持插入操作：将一组新的键值对存入表中。和查找操作：根据给定的键得到相对应的值</strong>
-典型的符号表的应用：查字典时，单词就是键，释义就是值。通过单词来找到意思。
-网络搜索时，关键字就是键，网页名称就是值，通过关键字来找到网页。</p>
+      <p><strong>根据书中的定义：符号表是一种存储键值对的数据结构。支持插入操作：将一组新的键值对存入表中。和查找操作：根据给定的键得到相对应的值</strong></p>
+<p>典型的符号表的应用：查字典时，单词就是键，释义就是值。通过单词来找到意思。</p>
+<p>网络搜索时，关键字就是键，网页名称就是值，通过关键字来找到网页。</p>
 <h1 id="约定">约定</h1>
 <ol>
 <li>每个键只对应一个值(而一个值可以对应于多个键)。即索引是唯一的。</li>
@@ -75,8 +81,8 @@ public class SequentialSearchST&lt;Key,Value&gt; { private Node first; //相当�
 <li>查找成功成为命中，不成功返回null为不命中</li>
 <li>采用泛型的设计思想，在具体实现时在规定特定的类型。</li>
 </ol>
-<p>最基本的符号表的API：
-<img src="/chapter3/3.1API.png" alt=""></p>
+<p>最基本的符号表的API：</p>
+<p><img src="/chapter3/3.1API.png" alt=""></p>
 <h1 id="基于链表实现">基于链表实现</h1>
 <p>符号表作为一种数据结构可以通过最基本的链表来实现。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SequentialSearchST</span><span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">,</span>Value<span style="color:#f92672">&gt;</span>
@@ -125,14 +131,14 @@ public class SequentialSearchST&lt;Key,Value&gt; { private Node first; //相当�
 <span style="color:#f92672">}</span>
 </code></pre></div><p><img src="/chapter3/3.1disorderlinkexample.png" alt=""></p>
 <p>对于链表的实现又可以分为有序和无序，
-有序链表需要在每次插入时控制插入的位置，时间复杂度为O(N)。
+有序链表需要在每次插入时控制插入的位置，时间复杂度为O(N)。<br>
 无序链表每次插入只要在头部或者尾部插入即可，时间复杂度为O(1)。
-但是符号表的基本操作是通过键查找值和插入一对新的键值对。这显然不适合有序链表：有序链表插入是O(N),查找也需要O(N).
+但是符号表的基本操作是通过键查找值和插入一对新的键值对。这显然不适合有序链表：有序链表插入是O(N),查找也需要O(N).<br>
 对于无序链表，插入操作很快，但是查找的复杂度也到达O(N)。</p>
 <h1 id="基于数组实现">基于数组实现</h1>
-<p>考虑用数组来实现符号表
-当然也可以分为有序数组和无序数组。
-对于无序数组，插入操作为O(1),但是查找却需要遍历数组O(N)，本质上跟无序链表一致。
+<p>考虑用数组来实现符号表<br>
+当然也可以分为有序数组和无序数组。<br>
+对于无序数组，插入操作为O(1),但是查找却需要遍历数组O(N)，本质上跟无序链表一致。<br>
 但是对于有序数组，虽然插入时需要O(N)，但是查找可以通过著名的二分查找算法，将复杂度控制在O(logN).</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BinarySearchST</span><span style="color:#f92672">&lt;</span>Key <span style="color:#66d9ef">extends</span> Comparable<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">&gt;,</span> Value<span style="color:#f92672">&gt;</span>
 <span style="color:#f92672">{</span>
@@ -149,8 +155,8 @@ public class SequentialSearchST&lt;Key,Value&gt; { private Node first; //相当�
 </code></pre></div><p>此外，在有序数组实现符号表中，可以在很短的时间有更多的操作。比如返回最大/小的键即返回数组的下标第一个/最后一个。
 <img src="/chapter3/3.1API2.png" alt=""></p>
 <p>所以，在基础的实现中，有序数组实现符号表是最高效的，这得力于适用于有序序列的 <em><strong>二分查找</strong></em> 算法。</p>
-<p>给出基本方法的实现。其中 <strong>rank()</strong> 操作：
-<strong>如果存在key键，则返回该键的位置，否则返回小于key的键的数目。</strong>
+<p>给出基本方法的实现。其中 <strong>rank()</strong> 操作：<br>
+<strong>如果存在key键，则返回该键的位置，否则返回小于key的键的数目。</strong><br>
 <strong>这样做的目的是可以让别的方法调用这个方法。比如put()通过rank()确定插入位置。</strong></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">resize</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> capacity<span style="color:#f92672">)</span>
 <span style="color:#f92672">{</span>
@@ -312,9 +318,9 @@ public class SequentialSearchST&lt;Key,Value&gt; { private Node first; //相当�
 </ol>
 <h2 id="二分查找">二分查找</h2>
 <p><img src="/chapter3/3.1BinarySearch.png" alt=""></p>
-<p>二分查找的思想：<strong>对于有序数组</strong>，<em><strong>先将被查找的键和子数组的中间的键比较。如果被查找的键小于中间的键，则继续在左子数组查找；如果大于，则继续在右子数组查找；否则中间的那个键就是我们要查找的键。</strong></em>
-注意点：1. <strong>有序</strong>。二分查找只适用于有序的数组。对于无序的数组不能使用，只能遍历查找。
-2.<strong>数组</strong>。二分查找并不适用于链表实现的符号表。因为它每次都将待查找的键与数组中间的键比较。数组能根据下标迅速找到中间的键，但是链表却不能。</p>
+<p>二分查找的思想：<strong>对于有序数组</strong>，<em><strong>先将被查找的键和子数组的中间的键比较。如果被查找的键小于中间的键，则继续在左子数组查找；如果大于，则继续在右子数组查找；否则中间的那个键就是我们要查找的键。</strong></em><br>
+注意点：1.<strong>有序</strong>。二分查找只适用于有序的数组。对于无序的数组不能使用，只能遍历查找。<br>
+2. <strong>数组</strong>。二分查找并不适用于链表实现的符号表。因为它每次都将待查找的键与数组中间的键比较。数组能根据下标迅速找到中间的键，但是链表却不能。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">BinarySearch</span><span style="color:#f92672">(</span>Key key<span style="color:#f92672">)</span>   <span style="color:#75715e">//即上面的rank()方法
 </span><span style="color:#75715e"></span><span style="color:#f92672">{</span>
     <span style="color:#66d9ef">int</span> lo <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> hi <span style="color:#f92672">=</span> n <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
@@ -354,15 +360,15 @@ public class SequentialSearchST&lt;Key,Value&gt; { private Node first; //相当�
     <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>contains<span style="color:#f92672">(</span>hi<span style="color:#f92672">))</span> <span style="color:#66d9ef">return</span> rank<span style="color:#f92672">(</span>hi<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> rank<span style="color:#f92672">(</span>lo<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
     <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">return</span> rank<span style="color:#f92672">(</span>hi<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> rank<span style="color:#f92672">(</span>lo<span style="color:#f92672">);</span>
 <span style="color:#f92672">}</span>
-</code></pre></div><p>其中对于rank()方法，return lo;语句是必要的。因为rank()的作用：如果存在key键，则返回该键的位置，<strong>否则返回小于key的键的数目。</strong> <strong>目的是为了方便其他的get(),put(),delete()方法。</strong>
+</code></pre></div><p>其中对于rank()方法，return lo;语句是必要的。因为rank()的作用：如果存在key键，则返回该键的位置，<strong>否则返回小于key的键的数目。</strong> <strong>目的是为了方便其他的get(),put(),delete()方法。</strong><br>
 仅对于二分查找来说，这句话是不必要的，或者可以约定在不存在key时return null;</p>
 <h2 id="二分查找的分析">二分查找的分析</h2>
-<p><strong>命题：在N个键的有序数组中进行二分查找最多需要(logN+1)次比较，无论命中还是未命中。即BinarySearch()的T(N)=O(logN).</strong>
+<p><strong>命题：在N个键的有序数组中进行二分查找最多需要(logN+1)次比较，无论命中还是未命中。即BinarySearch()的T(N)=O(logN).</strong><br>
 对于其他的方法，都只调用了一到两次rank()即二分查找算法。这些方法的时间最多也是对数级别的。</p>
-<p>尽管二分查找算法以及将复杂度从线性级别降低到对数级别，但是仍然不能用来处理大问题。<strong>因为在键随机排列时，构造一个基于有序数组的符号标所需要访问数组的次数时O(N^2).</strong>
+<p>尽管二分查找算法以及将复杂度从线性级别降低到对数级别，但是仍然不能用来处理大问题。<strong>因为在键随机排列时，构造一个基于有序数组的符号标所需要访问数组的次数时O(N^2).</strong><br>
 <strong>命题：向大小为N的有序数组插入一个新的元素在最坏情况下需要访问~2N次数组。因此向一个空符号表插入N个元素最坏情况下需要访问~N^2次数组。</strong></p>
 <h2 id="启示">启示</h2>
-<p><strong>对于一个静态表(不允许插入)来说，在初始时将它排序(O(NlogN))，然后再利用二分查找是值得的</strong>。
+<p><strong>对于一个静态表(不允许插入)来说，在初始时将它排序(O(NlogN))，然后再利用二分查找是值得的</strong>。<br>
 但是对于任意插入和删除的符号表来说，需要更加高效的实现。
 <img src="/chapter3/allTypesOfST.jpg" alt=""></p>
 

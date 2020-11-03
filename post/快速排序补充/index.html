@@ -278,9 +278,10 @@
 </code></pre></div><hr>
 <hr>
 <h1 id="非递归的快速排序">非递归的快速排序</h1>
-<p>递归的代码虽然有助于我们代码上的阅读，但是非递归的实现方式往往会更加好，因为这样可以预防 StackOverflow 异常。
+<p>递归的代码虽然有助于我们代码上的阅读，但是非递归的实现方式往往会更加好，因为这样可以预防 StackOverflow 异常。<br>
 那么如何将快速排序进行非递归的实现呢？</p>
-<p>想法：由于<strong>递归本身就是一个栈结构，即递归栈，<strong>所以我们可以引入<del>栈</del>结构来实现非递归的快速排序。快速排序多次调用partation(),当子问题规模降低到1时不用处理。partition() 方法中需要传入参数 low 和 high，那么我们就只需要</strong>在栈中保留 low 和 high 的信息</strong>即可。**当high&gt;low时，计算mid=(low+high)/2,并将两个子问题入栈，即push(low,mid-1),push(mid+1,high)。当high&lt;=low时，即为平凡问题，**已经有序。且栈正好有<del>FILO的特性</del>，正好保证了先将子数组排好序，当子数组有序了，那么原数组也有序了。</p>
+<p>想法：由于<strong>递归本身就是一个栈结构，即递归栈，</strong> 所以我们可以引入<del>栈</del>结构来实现非递归的快速排序。快速排序多次调用partation(),当子问题规模降低到1时不用处理。<br>
+partition() 方法中需要传入参数 low 和 high，那么我们就只需要<strong>在栈中保留 low 和 high 的信息</strong>即可。<strong>当high&gt;low时，计算mid=(low+high)/2,并将两个子问题入栈，即push(low,mid-1),push(mid+1,high)。当high&lt;=low时，即为平凡问题，</strong> 已经有序。且栈正好有<del>FILO的特性</del>，正好保证了先将子数组排好序，当子数组有序了，那么原数组也有序了。</p>
 <p>参考源码：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> java.util.Stack<span style="color:#f92672">;</span>
 

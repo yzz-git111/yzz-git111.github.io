@@ -71,7 +71,7 @@
   <title>clock</title>
   <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
 </svg>
-          3 min read
+          5 min read
         </div></div>
     </header>
     <div class="post-content">
@@ -253,11 +253,113 @@
 <h2 id="选择和排名">选择和排名</h2>
 <p>在定义数据结构时维护一个子树结点计数器变量N主要就是为了实现这两个方法的。</p>
 <ol>
-<li>选择 select(int k):返回排名第k的键(<strong>即树中刚好有k个键小于它</strong>).（k从0开始）
+<li>选择
+select(int k):返回排名第k的键(<strong>即树中刚好有k个键小于它</strong>).（k从0开始）
 想法：<strong>若左子树的结点t大于k，就说明这个键在左子树中，就继续递归地在左子树中查找。如果等于k，就说明这个根结点就是要找的。如果t小于k，就递归地在右子树中查找排名为(k-t-1)的键。</strong></li>
 </ol>
-<h1 id="注意点">注意点</h1>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> Key <span style="color:#a6e22e">select</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> rank<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>rank <span style="color:#f92672">&lt;</span> 0 <span style="color:#f92672">||</span> rank <span style="color:#f92672">&gt;=</span> size<span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;argument to select() is invalid: &#34;</span> <span style="color:#f92672">+</span> rank<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> select<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> rank<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">private</span> Key <span style="color:#a6e22e">select</span><span style="color:#f92672">(</span>Node x<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> rank<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> leftSize <span style="color:#f92672">=</span> size<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">if</span>      <span style="color:#f92672">(</span>leftSize <span style="color:#f92672">&gt;</span> rank<span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> select<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">,</span>  rank<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>leftSize <span style="color:#f92672">&lt;</span> rank<span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> select<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">,</span> rank <span style="color:#f92672">-</span> leftSize <span style="color:#f92672">-</span> 1<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">else</span>                      <span style="color:#66d9ef">return</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">key</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p><img src="/chapter3/3.2.8bst-select.png" alt=""></p>
+<ol start="2">
+<li>排名   rank()方法是select()的逆方法。<strong>如果给定的键和根结点的键相等，则返回左子树的节点总数t;如果给定的键小于根结点的键，递归返回该键在左子树中的排名;如果给定的键大于根结点，返回t+1加他在右子树的排名。</strong></li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">rank</span><span style="color:#f92672">(</span>Key key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;argument to rank() is null&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">return</span> rank<span style="color:#f92672">(</span>key<span style="color:#f92672">,</span> root<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">// Number of keys in the subtree less than key.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">rank</span><span style="color:#f92672">(</span>Key key<span style="color:#f92672">,</span> Node x<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> cmp <span style="color:#f92672">=</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">key</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">if</span>      <span style="color:#f92672">(</span>cmp <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> rank<span style="color:#f92672">(</span>key<span style="color:#f92672">,</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>cmp <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> 1 <span style="color:#f92672">+</span> size<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">)</span> <span style="color:#f92672">+</span> rank<span style="color:#f92672">(</span>key<span style="color:#f92672">,</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">else</span>              <span style="color:#66d9ef">return</span> size<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+
+</code></pre></div><hr>
+<h2 id="删除最大键和最小键">删除最大键和最小键</h2>
+<p>二叉查找树的最小键一定是最左下角（一直x.left）的结点。且该结点最多只有右子树，不可能有左子树。所以可以一直通过x.left找到最小的结点，然后将最小结点的右子树链接给父结点的左子树即可。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">deleteMin</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isEmpty<span style="color:#f92672">())</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> NoSuchElementException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Symbol table underflow&#34;</span><span style="color:#f92672">);</span>
+    root <span style="color:#f92672">=</span> deleteMin<span style="color:#f92672">(</span>root<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">assert</span> check<span style="color:#f92672">();</span>
+<span style="color:#f92672">}</span>
+<span style="color:#66d9ef">private</span> Node <span style="color:#a6e22e">deleteMin</span><span style="color:#f92672">(</span>Node x<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">;</span>
+    x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span> deleteMin<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">);</span>
+    x<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span> <span style="color:#f92672">=</span> size<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">)</span> <span style="color:#f92672">+</span> size<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">return</span> x<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>   <span style="color:#75715e">//deleteMin返回的是根结点的链接
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">deleteMax</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isEmpty<span style="color:#f92672">())</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> NoSuchElementException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Symbol table underflow&#34;</span><span style="color:#f92672">);</span>
+    root <span style="color:#f92672">=</span> deleteMax<span style="color:#f92672">(</span>root<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">assert</span> check<span style="color:#f92672">();</span>
+<span style="color:#f92672">}</span>
+<span style="color:#66d9ef">private</span> Node <span style="color:#a6e22e">deleteMax</span><span style="color:#f92672">(</span>Node x<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">;</span>
+    x<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span> deleteMax<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">);</span>
+    x<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span> <span style="color:#f92672">=</span> size<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">)</span> <span style="color:#f92672">+</span> size<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">return</span> x<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p><img src="/chapter3/3.2.9bst-deletemin.png" alt=""></p>
+<p>这里不调用min()方法是因为min只返回最小结点，而不返回其父亲结点。不能将父节点的左链接接到最小结点的右子树。<br>
+if (x.left == null) return x.right;遇到最小的结点就会返回最小结点的右子树的链接，然后返回到上一级的deleteMin,此时的x是最小结点的父结点，这时在x.left = deleteMin(x.left);就实现了将父节点的左链接接到最小结点的右子树。<br>
+最后不能忘记更新每个结点的size(),从下往上更新.</p>
+<hr>
+<h2 id="删除">删除</h2>
+<p>删除方法是二叉查找树的最难实现的一个方法。对于只有一个子树(或者没有子树)的结点都可以用删除最小结点的方法。但是对于两个子树都有的结点需要考虑如何放置两个子树。</p>
+<p><em><strong>删除x结点后用它的后继节点(中序遍历的后一个结点)填补它的位置。</strong></em>
+<em><strong>因为它x有一个右子树，因此它的后继节点就是右子树的最小结点</strong></em>
+***deleMin</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">delete</span><span style="color:#f92672">(</span>Key key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;calls delete() with a null key&#34;</span><span style="color:#f92672">);</span>
+        root <span style="color:#f92672">=</span> delete<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> key<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">assert</span> check<span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> Node <span style="color:#a6e22e">delete</span><span style="color:#f92672">(</span>Node x<span style="color:#f92672">,</span> Key key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+
+        <span style="color:#66d9ef">int</span> cmp <span style="color:#f92672">=</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">key</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span>      <span style="color:#f92672">(</span>cmp <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span>  <span style="color:#f92672">=</span> delete<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">,</span>  key<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>cmp <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span> delete<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">,</span> key<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">;</span> <span style="color:#75715e">//处理没有右子树的情况
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span>  <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">;</span>    <span style="color:#75715e">//处理没有左子树的情况
+</span><span style="color:#75715e"></span>            Node t <span style="color:#f92672">=</span> x<span style="color:#f92672">;</span>
+            x <span style="color:#f92672">=</span> min<span style="color:#f92672">(</span>t<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">);</span>   <span style="color:#75715e">//x指向后继节点
+</span><span style="color:#75715e"></span>            x<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span> deleteMin<span style="color:#f92672">(</span>t<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">);</span>   <span style="color:#75715e">//x的右链接指向deleteMin返回的链接  --  t的右链接
+</span><span style="color:#75715e"></span>            x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span> t<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">;</span>    
+        <span style="color:#f92672">}</span>
+        x<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span> <span style="color:#f92672">=</span> size<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">)</span> <span style="color:#f92672">+</span> size<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>  <span style="color:#75715e">//更新各个结点的size
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> x<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p><img src="/chapter3/3.2.10bst-delete.png" alt=""></p>
+<hr>
+<h2 id="注意点">注意点</h2>
 <p>这里的每个方法都对应着一个私有方法，私有方法额外接受一个链接作为参数指向某个结点。<strong>目的是方便递归的调用，且别人在使用时只需要给出键不需要输入根结点。对别人来说是透明的。</strong></p>
+<hr>
+<h2 id="复杂度分析">复杂度分析</h2>
+<p><em><strong>在二叉查找树中，所有操作在最坏情况下所需的时间都和树的高度成正比。</strong></em></p>
+<p>当二叉查找树是一棵完全二叉树时，树高达到最低。此时复杂度为O(logN)。<br>
+平均情况下，随机插入键构造的二叉查找树的平均高度近似于2.99logN。<br>
+<em><strong>但是当键按照顺序或者逆序插入时，二叉查找树高度达到最高,h=n，此时复杂度为O(N)。</strong></em></p>
+<p>对于最坏的情况我们时不允许的，而平衡二叉查找树就是解决这一问题的。</p>
+<hr>
 
     </div>
     <div class="post-footer">

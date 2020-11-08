@@ -25,8 +25,7 @@
  将一棵标准二叉查找树中的结点称作2-结点(一个键和两条链接) 类似的，k-结点有k-1个键和k条链接
   2-3查找树的定义：一棵2-3查找树或为一棵空树，或由2-结点/3-结点组成。
 那么m-n查找树的定义：一棵m-n查找树或为一棵空树，或由m-结点到n结点组成
-将指向一棵空树的链接称为空链接，那么一棵完美平衡的2-3查找树中的所有空链接到根结点的距离都相等。
-1、查找 2-3查找树的查找算法和二叉查找树类似，唯一不同的只是二叉查找树每个结点都是2-结点(只有一个键)，所以二叉查找树只需要将key和结点x.key相比，然后递归的在左或者右子树查找;
+将指向一棵空树的链接称为空链接，那么一棵完美平衡的2-3查找树中的所有空链接到根结点的距离都相等。 1、查找 2-3查找树的查找算法和二叉查找树类似，唯一不同的只是二叉查找树每个结点都是2-结点(只有一个键)，所以二叉查找树只需要将key和结点x.key相比，然后递归的在左或者右子树查找;
 而2-3查找树可能有3-结点，那么判断时就需要将结点的所有键与key比较，然后递归的在左，中间或者右子树查找。
 2、插入 保证插入后树仍然平衡
 2、1 &mdash; 向2-结点插入新键 把插入的键保存在结点中，使得2-结点变成3-结点即可。
@@ -41,7 +40,12 @@
 命题：在一棵大小为N的2-3树中，查找和插入操作访问的结点必然不超过logN个。
 每个操作中处理每个结点的时间都不会超过很小的一个常数，所以任何查找或者插入操作的成本都不会超过对数级别。但是2-结点和3-结点之间的转换却需要很大的成本。这是得不偿失的。
 所以我们引入了红黑树。
- 二、红黑二叉查找树 "/>
+ 二、红黑二叉查找树 定义 关于红黑树有两种定义：
+  借助2-3树。
+将2-3树中的3-结点表示为由一条左斜的红色链接(两个2-结点其中之一是另一个的左子结点)相连的两个2-结点。
+将红链接画平时，一棵红黑树就是一棵2-3树。
+  红黑树是含有红黑链接并且满足下面条件的二叉查找树：
+   根结点为黑结点 红链接均为左链接。 没有任意一个结点同时和两条红链接相连。 该树是完美黑色平衡的，即任意空链接到根结点路径上的黑链接数量相同。  红黑树既是二叉查找树又是2-3树。将二叉查找树的查找方法和2-3树的平衡插入算法结合起来。"/>
 
     <meta property="og:title" content="平衡查找树" />
 <meta property="og:description" content="引入：
@@ -57,8 +61,7 @@
  将一棵标准二叉查找树中的结点称作2-结点(一个键和两条链接) 类似的，k-结点有k-1个键和k条链接
   2-3查找树的定义：一棵2-3查找树或为一棵空树，或由2-结点/3-结点组成。
 那么m-n查找树的定义：一棵m-n查找树或为一棵空树，或由m-结点到n结点组成
-将指向一棵空树的链接称为空链接，那么一棵完美平衡的2-3查找树中的所有空链接到根结点的距离都相等。
-1、查找 2-3查找树的查找算法和二叉查找树类似，唯一不同的只是二叉查找树每个结点都是2-结点(只有一个键)，所以二叉查找树只需要将key和结点x.key相比，然后递归的在左或者右子树查找;
+将指向一棵空树的链接称为空链接，那么一棵完美平衡的2-3查找树中的所有空链接到根结点的距离都相等。 1、查找 2-3查找树的查找算法和二叉查找树类似，唯一不同的只是二叉查找树每个结点都是2-结点(只有一个键)，所以二叉查找树只需要将key和结点x.key相比，然后递归的在左或者右子树查找;
 而2-3查找树可能有3-结点，那么判断时就需要将结点的所有键与key比较，然后递归的在左，中间或者右子树查找。
 2、插入 保证插入后树仍然平衡
 2、1 &mdash; 向2-结点插入新键 把插入的键保存在结点中，使得2-结点变成3-结点即可。
@@ -73,7 +76,12 @@
 命题：在一棵大小为N的2-3树中，查找和插入操作访问的结点必然不超过logN个。
 每个操作中处理每个结点的时间都不会超过很小的一个常数，所以任何查找或者插入操作的成本都不会超过对数级别。但是2-结点和3-结点之间的转换却需要很大的成本。这是得不偿失的。
 所以我们引入了红黑树。
- 二、红黑二叉查找树 " />
+ 二、红黑二叉查找树 定义 关于红黑树有两种定义：
+  借助2-3树。
+将2-3树中的3-结点表示为由一条左斜的红色链接(两个2-结点其中之一是另一个的左子结点)相连的两个2-结点。
+将红链接画平时，一棵红黑树就是一棵2-3树。
+  红黑树是含有红黑链接并且满足下面条件的二叉查找树：
+   根结点为黑结点 红链接均为左链接。 没有任意一个结点同时和两条红链接相连。 该树是完美黑色平衡的，即任意空链接到根结点路径上的黑链接数量相同。  红黑树既是二叉查找树又是2-3树。将二叉查找树的查找方法和2-3树的平衡插入算法结合起来。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://yzz-git111.github.io/post/%E5%B9%B3%E8%A1%A1%E6%9F%A5%E6%89%BE%E6%A0%91/" />
 <meta property="article:published_time" content="2020-11-04T23:28:42+08:00" />
@@ -113,7 +121,7 @@
   <title>clock</title>
   <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
 </svg>
-          1 min read
+          3 min read
         </div></div>
     </header>
     <div class="post-content">
@@ -137,7 +145,8 @@
 </ul>
 <p>2-3查找树的定义：<strong>一棵2-3查找树或为一棵空树，或由2-结点/3-结点组成。</strong></p>
 <p>那么m-n查找树的定义：<strong>一棵m-n查找树或为一棵空树，或由m-结点到n结点组成</strong></p>
-<p>将指向一棵空树的链接称为空链接，那么一棵完美平衡的2-3查找树中的<strong>所有空链接到根结点</strong>的距离都相等。</p>
+<p>将指向一棵空树的链接称为空链接，那么一棵完美平衡的2-3查找树中的<strong>所有空链接到根结点</strong>的距离都相等。
+<img src="/chapter3/3.3.923tree-random" alt=""></p>
 <h2 id="1查找">1、查找</h2>
 <p>2-3查找树的查找算法和二叉查找树类似，唯一不同的只是二叉查找树每个结点都是2-结点(只有一个键)，所以二叉查找树只需要将key和结点x.key相比，然后递归的在左或者右子树查找;<br>
 而2-3查找树可能有3-结点，那么判断时就需要将结点的所有键与key比较，然后递归的在左，中间或者右子树查找。<br>
@@ -164,12 +173,295 @@
 <p><strong>与标准的二叉查找树从上而下的构造不同，2-3树的生长是从下而上的。</strong><br>
 按照升序插入的10个键，对于二叉查找树会得到一个高度为9的树，但是对于2-3树，树高仅仅为2。<br>
 对于最坏情况，2-3查找树也有很好的表现。<br>
-<img src="/chapter3/3.3.9%E3%80%82jpg" alt=""></p>
+<img src="/chapter3/3.3.9.jpg" alt=""></p>
 <p><strong>命题：在一棵大小为N的2-3树中，查找和插入操作访问的结点必然不超过logN个。</strong></p>
 <p>每个操作中处理每个结点的时间都不会超过很小的一个常数，所以任何查找或者插入操作的成本都不会超过对数级别。但是2-结点和3-结点之间的转换却需要很大的成本。这是得不偿失的。<br>
 所以我们引入了红黑树。</p>
 <hr>
 <h1 id="二红黑二叉查找树">二、红黑二叉查找树</h1>
+<h2 id="定义">定义</h2>
+<p>关于红黑树有两种定义：</p>
+<ol>
+<li>
+<p>借助2-3树。<br>
+将2-3树中的3-结点表示为由一条左斜的红色链接(两个2-结点其中之一是另一个的左子结点)相连的两个2-结点。<br>
+将红链接画平时，一棵红黑树就是一棵2-3树。</p>
+</li>
+<li>
+<p>红黑树是含有红黑链接并且满足下面条件的二叉查找树：</p>
+</li>
+</ol>
+<ul>
+<li>根结点为黑结点</li>
+<li>红链接均为左链接。</li>
+<li>没有任意一个结点同时和两条红链接相连。</li>
+<li>该树是<strong>完美黑色平衡</strong>的，即任意空链接到根结点路径上的<strong>黑链接数量</strong>相同。</li>
+</ul>
+<p>红黑树既是二叉查找树又是2-3树。将二叉查找树的查找方法和2-3树的平衡插入算法结合起来。</p>
+<p><img src="/chapter3/3.3.10redblack-1-1.png" alt=""></p>
+<h2 id="数据结构">数据结构</h2>
+<p><strong>因为每个结点都有唯一的一条由父结点指向自己的链接，而这个链接保存在Node类中。就可以将链接的颜色保存在表示结点的Node数据类型的布尔变量color中。并且设置true为红色，false为黑色。</strong><br>
+指向该结点的链接的颜色就是该结点的颜色。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RedBlackBST</span><span style="color:#f92672">&lt;</span>Key <span style="color:#66d9ef">extends</span> Comparable<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">&gt;,</span> Value<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">boolean</span> RED   <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">boolean</span> BLACK <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">private</span> Node root<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Node</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">private</span> Key key<span style="color:#f92672">;</span>           <span style="color:#75715e">// key
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">private</span> Value val<span style="color:#f92672">;</span>         <span style="color:#75715e">// associated data
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">private</span> Node left<span style="color:#f92672">,</span> right<span style="color:#f92672">;</span>  <span style="color:#75715e">// links to left and right subtrees
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> color<span style="color:#f92672">;</span>     <span style="color:#75715e">// color of parent link
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> size<span style="color:#f92672">;</span>          <span style="color:#75715e">// subtree count
+</span><span style="color:#75715e"></span>
+        <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Node</span><span style="color:#f92672">(</span>Key key<span style="color:#f92672">,</span> Value val<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span> color<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> size<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">key</span> <span style="color:#f92672">=</span> key<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">=</span> val<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">color</span> <span style="color:#f92672">=</span> color<span style="color:#f92672">;</span> <span style="color:#75715e">//相比较二叉查找树只多了个Boolean类型的变量color
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">size</span> <span style="color:#f92672">=</span> size<span style="color:#f92672">;</span>   
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">RedBlackBST</span><span style="color:#f92672">()</span> 
+    <span style="color:#f92672">{</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="基础方法">基础方法</h2>
+<ol>
+<li>旋转
+对于出现<strong>红色右链接或者连续两条红色的链接</strong>，可以通过左旋或者右旋处理。
+无论左旋还是右旋都会返回一条链接，并且用<em><strong>返回值重置父结点(或者根结点)中相应的链接</strong></em>。<br>
+并且通过x.color=h.color 保留它原来的颜色。<br>
+并且孩子的结点都设为red</li>
+</ol>
+<ul>
+<li>
+<p>左旋<br>
+<img src="/chapter3/3.3.11redblack-left-rotate.png" alt=""></p>
+</li>
+<li>
+<p>右旋<br>
+<img src="/chapter3/3.3.12redblack-right-rotate.png" alt=""></p>
+</li>
+</ul>
+<ol start="2">
+<li>转换颜色
+对于插入操作，可能遇到父结点的左右两个链接都是红的情况，这就相当与2-3树出现了4-结点。此时可以通过颜色转换将4-结点分解成3个2-结点。<br>
+即将左右两个链接的颜色变为黑，并且<strong>父结点的链接要置为红</strong>才能不影响整棵树的黑色平衡性。</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">flipColors</span><span style="color:#f92672">(</span>Node h<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">// h must have opposite color of its two children
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// assert (h != null) &amp;&amp; (h.left != null) &amp;&amp; (h.right != null);
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// assert (!isRed(h) &amp;&amp;  isRed(h.left) &amp;&amp;  isRed(h.right))
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">//    || (isRed(h)  &amp;&amp; !isRed(h.left) &amp;&amp; !isRed(h.right));
+</span><span style="color:#75715e"></span>    h<span style="color:#f92672">.</span><span style="color:#a6e22e">color</span> <span style="color:#f92672">=</span> <span style="color:#f92672">!</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">color</span><span style="color:#f92672">;</span>
+    h<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">.</span><span style="color:#a6e22e">color</span> <span style="color:#f92672">=</span> <span style="color:#f92672">!</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">.</span><span style="color:#a6e22e">color</span><span style="color:#f92672">;</span>
+    h<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">.</span><span style="color:#a6e22e">color</span> <span style="color:#f92672">=</span> <span style="color:#f92672">!</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">.</span><span style="color:#a6e22e">color</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p><img src="/chapter3/3.3.14.jpg" alt=""></p>
+<ol start="3">
+<li>根结点总是黑色的
+每次在插入操作后，都要将根结点设置为黑色。<br>
+并且<strong>每次将根结点由红变为黑时树的告诉会增大1.</strong></li>
+</ol>
+<h2 id="查找">查找</h2>
+<p>因为红黑树属于二叉查找树，只不过在二叉查找树的基础上增加了一个color变量，使得二叉查找树变成了黑平衡。<br>
+所以红黑树的查找操作和二叉查找树一致。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> Value <span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>Key key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;argument to get() is null&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">return</span> get<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> key<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">// value associated with the given key in subtree rooted at x; null if no such key
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">private</span> Value <span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>Node x<span style="color:#f92672">,</span> Key key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> cmp <span style="color:#f92672">=</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">key</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span>      <span style="color:#f92672">(</span>cmp <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> x <span style="color:#f92672">=</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>cmp <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> x <span style="color:#f92672">=</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">else</span>              <span style="color:#66d9ef">return</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="插入">插入</h2>
+<p><strong>插入操作只会出现在叶子结点。</strong><br>
+<strong>总的来说只有开始时向根结点插入和作为叶子结点在树底部插入两种情况。</strong><br>
+而这两个插入又可以分为<strong>父结点是2-结点还是3-结点两种情况</strong>。 <br>
+<em><strong>新插入的颜色总是红的</strong></em></p>
+<ol>
+<li>
+<p>向单个2-结点插入新键
+向一棵只有一个2-结点的红黑树插入另一个键。<br>
+若新键小于老键，只需要将新键作为红结点插入到左链接。<br>
+若新键大于老键，那么新增的红结点插入到右链接，还需要通过右旋操作使得变为红色的左链接并修正根结点的链接。<br>
+这两个操作均为一棵和单个3-结点等价的红黑树。含有两个键，一条红链接。树的黑链接高度为1. <br>
+<img src="/chapter3/3.3.15.jpg" alt=""></p>
+</li>
+<li>
+<p>向树底部的2-结点插入新键<br>
+完全可以借助 1 的方法进行处理。<br>
+<img src="/chapter3/3.3.16.jpg" alt=""></p>
+</li>
+<li>
+<p>向单个3-结点插入新键<br>
+单个3-结点转化为红黑树就是根结点为黑，它的左链接连接的左子结点为红色链接。</p>
+</li>
+</ol>
+<ul>
+<li>
+<p>情况一  新键大于原树的两个键，所以新键被连接到根的右子结点(3-结点的右链接)。那么就会出现根结点的左右连接都是红。我们要调用基本方法中的转换颜色方法flipColors();使得树的黑高度增加1。</p>
+</li>
+<li>
+<p>情况二 新键小于原树的两个键，那么会被连接到红结点的左链接(3-结点的左链接)。那么出现了连续的两个红链接。需要进行右旋再转换颜色。此时黑高度也增加了1。</p>
+</li>
+<li>
+<p>情况三 新键介于两个键之间，那么新键会被连接到红结点的右链接(3-结点的中间链接)。此时又会出现两个连续的红链接。需要先左旋，再右旋，再转换颜色。黑高度也增加1。<br>
+<img src="/chapter3/3.3.17.jpg" alt=""></p>
+</li>
+</ul>
+<ol start="4">
+<li>向树底部的3-结点插入新键<br>
+这与向单个3-结点插入新键类似，也有3种情况。</li>
+</ol>
+<ul>
+<li>
+<p>情况1 指向新结点的链接是3结点的右链接，此时只需要转换颜色即可。</p>
+</li>
+<li>
+<p>情况2 指向新结点的链接是3结点的左链接，此时需要先右旋再转换颜色。</p>
+</li>
+<li>
+<p>情况3 指向新结点的链接是3结点的中间链接，此时需要先左旋下层链接然后右旋上层链接，再转换颜色。<br>
+<strong>颜色转换会使得中间结点变红，相当于将它继续插入了父结点。</strong><br>
+对于这种情况，类似于2-3树中的向父结点为3-结点的3-结点插入新键，我们需要分解3-结点，将中间键插入父结点。这样的操作会一直往上，直到遇到一个2-结点或者是根结点。<br>
+而情况3使得中间结点变红，相当于继续插入到父结点中。这样的操作也会使红链接向树的上方传递，直到遇到一个2-结点或者是根结点。 <br>
+<img src="/chapter3/3.3.18.jpg" alt=""></p>
+</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>Key key<span style="color:#f92672">,</span> Value val<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;first argument to put() is null&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>val <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        delete<span style="color:#f92672">(</span>key<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    root <span style="color:#f92672">=</span> put<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> key<span style="color:#f92672">,</span> val<span style="color:#f92672">);</span>
+    root<span style="color:#f92672">.</span><span style="color:#a6e22e">color</span> <span style="color:#f92672">=</span> BLACK<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">private</span> Node <span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>Node h<span style="color:#f92672">,</span> Key key<span style="color:#f92672">,</span> Value val<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> 
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Node<span style="color:#f92672">(</span>key<span style="color:#f92672">,</span> val<span style="color:#f92672">,</span> RED<span style="color:#f92672">,</span> 1<span style="color:#f92672">);</span>
+
+    <span style="color:#66d9ef">int</span> cmp <span style="color:#f92672">=</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">key</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">if</span>      <span style="color:#f92672">(</span>cmp <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> h<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span>  <span style="color:#f92672">=</span> put<span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">,</span>  key<span style="color:#f92672">,</span> val<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>cmp <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> h<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span> put<span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">,</span> key<span style="color:#f92672">,</span> val<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">else</span>              h<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span>   <span style="color:#f92672">=</span> val<span style="color:#f92672">;</span>
+
+    <span style="color:#75715e">// fix-up any right-leaning links
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isRed<span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>isRed<span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">))</span>      h <span style="color:#f92672">=</span> rotateLeft<span style="color:#f92672">(</span>h<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isRed<span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">)</span>  <span style="color:#f92672">&amp;&amp;</span>  isRed<span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">))</span> h <span style="color:#f92672">=</span> rotateRight<span style="color:#f92672">(</span>h<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isRed<span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">)</span>  <span style="color:#f92672">&amp;&amp;</span>  isRed<span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">))</span>     flipColors<span style="color:#f92672">(</span>h<span style="color:#f92672">);</span>
+    h<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span> <span style="color:#f92672">=</span> size<span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">)</span> <span style="color:#f92672">+</span> size<span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">return</span> h<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>对比二叉查找树的插入算法，除了最后的3个if语句，其他基本一致。<br>
+红黑树的精妙之处就在于<strong>仅仅增加了一个变量color就保证了二叉查找树的平衡</strong>.</p>
+<p>第一条if是将任意有红色右链接的3-结点(或者临时的4-结点)向左旋转;<br>
+第二条if是将临时的4-结点中两条连续红链接中的上层链接向右旋转;<br>
+第三条if是进行颜色转换并将红链接在树中向上传递。</p>
+<p><img src="/chapter3/3.3.13redblack-construction.png" alt=""></p>
+<h2 id="2-3树删除最小键">2-3树删除最小键</h2>
+<p>为了实现红黑树的删除操作，要先回2-3树，熟悉2-3树的删除最小键的操作。</p>
+<p>对于最小键，一定是最左下角的结点。<br>
+而从树的底部的3-结点中删除键是很容易的，因为删除后3-结点变成2-结点，2-3树的所有结点的高度一样，树还是平衡的。但是删除2-结点后就会使得这个结点成为一个空链接，破坏了树的完美平衡性。</p>
+<p>而解决的方法就是<em><strong>确保当前待删除的结点不是2-结点，若是2-结点，就进行转化。</strong></em></p>
+<ol>
+<li>
+<p>根是2-结点且它的两个子结点都是2-结点。那么就把这三个结点变成一个临时的4-结点，然后删除其中最小的结点后就变成了一个3-结点。树的高度变成了1，但任然是平衡的。</p>
+</li>
+<li>
+<p>如果当前结点的左子结点不是2-结点，直接删除即可。</p>
+</li>
+<li>
+<p>如果当前结点的左子结点时2-结点，而它的亲兄弟结点不是2-结点，就将左子结点的兄弟结点中的一个键移动到左子结点中。</p>
+</li>
+<li>
+<p>如果当前结点的左子结点和它的亲兄弟结点都是2-结点。则将左子结点，父结点的最小键和左子结点最近的兄弟结点合并为一个4-结点，删除最小元素，得到3-结点。而父结点由3-结点变为2结点或者由4-结点变为3-结点。</p>
+</li>
+</ol>
+<p><img src="/chapter3/3.3.19.jpg" alt=""></p>
+<h2 id="删除最小结点">删除最小结点</h2>
+<p>红黑树的删除最小结点需要在沿着树的最左下路径向下的过程中实现如2-3树中删除最小结点的操作，以保证当前结点不是2-结点。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">delete</span><span style="color:#f92672">(</span>Key key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;argument to delete() is null&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>contains<span style="color:#f92672">(</span>key<span style="color:#f92672">))</span> <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+
+    <span style="color:#75715e">// if both children of root are black, set root to red
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">//如果根结点和左右子结点都是2-结点，就把他们合并
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>isRed<span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>isRed<span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">))</span>
+        root<span style="color:#f92672">.</span><span style="color:#a6e22e">color</span> <span style="color:#f92672">=</span> RED<span style="color:#f92672">;</span>
+
+    root <span style="color:#f92672">=</span> delete<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> key<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>isEmpty<span style="color:#f92672">())</span> root<span style="color:#f92672">.</span><span style="color:#a6e22e">color</span> <span style="color:#f92672">=</span> BLACK<span style="color:#f92672">;</span>
+    <span style="color:#75715e">// assert check();
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+
+<span style="color:#75715e">// delete the key-value pair with the given key rooted at h
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">private</span> Node <span style="color:#a6e22e">delete</span><span style="color:#f92672">(</span>Node h<span style="color:#f92672">,</span> Key key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">// assert get(h, key) != null;
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key<span style="color:#f92672">.</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">key</span><span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span>  <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//待删除元素在左子树中
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>isRed<span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>isRed<span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">))</span>
+            h <span style="color:#f92672">=</span> moveRedLeft<span style="color:#f92672">(</span>h<span style="color:#f92672">);</span>
+        <span style="color:#75715e">//保证每次遍历的结点都不是2-结点
+</span><span style="color:#75715e"></span>        h<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span> delete<span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">,</span> key<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isRed<span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">))</span>
+            h <span style="color:#f92672">=</span> rotateRight<span style="color:#f92672">(</span>h<span style="color:#f92672">);</span>
+        <span style="color:#75715e">//保证在右边遍历时结点都不是2-结点
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key<span style="color:#f92672">.</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">key</span><span style="color:#f92672">)</span> <span style="color:#f92672">==</span> 0 <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">))</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        <span style="color:#75715e">//找到了
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>isRed<span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>isRed<span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">))</span>
+            h <span style="color:#f92672">=</span> moveRedRight<span style="color:#f92672">(</span>h<span style="color:#f92672">);</span>
+        <span style="color:#75715e">//在右子树遍历
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key<span style="color:#f92672">.</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">key</span><span style="color:#f92672">)</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">//在右边找到了就用中序遍历的下一个元素替代
+</span><span style="color:#75715e"></span>            Node x <span style="color:#f92672">=</span> min<span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">);</span>
+            h<span style="color:#f92672">.</span><span style="color:#a6e22e">key</span> <span style="color:#f92672">=</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">key</span><span style="color:#f92672">;</span>
+            h<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">=</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
+            <span style="color:#75715e">// h.val = get(h.right, min(h.right).key);
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">// h.key = min(h.right).key;
+</span><span style="color:#75715e"></span>            h<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span> deleteMin<span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">else</span> h<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span> delete<span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">,</span> key<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> balance<span style="color:#f92672">(</span>h<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+
+</code></pre></div><h2 id="复杂度分析">复杂度分析</h2>
+<ul>
+<li>
+<p><em><strong>基于红黑树的符号表的实现都能保证所有操作的允许时间都是O(logN)</strong></em>  (范围查找除外)。<br>
+红黑树和2-3树一样，作为平衡二叉树，<strong>无论键插入的顺序如何，都能保证是几乎完美平衡的。避免了普通的二叉查找树在最坏情况下退化为线性表/链表的问题。</strong></p>
+</li>
+<li>
+<p>红黑树最坏的情况是它所对应的2-3树种构成最左边的路径结点都是3-结点，而其余的都是2-结点。即<strong>最左边是红链接和黑链接交替的，最左边的路径长度是只包含2-结点的路径长度(~logN)的两倍</strong>。<br>
+<strong>所以一棵大小为N的红黑树的高度不会超过logN。</strong></p>
+</li>
+<li>
+<p><strong>一棵大小为N的红黑树中，根结点到任意结点的平均路径长度为~1.00logN(对比于BST的1.39logN)</strong></p>
+</li>
+<li>
+<p>因为树是平衡的，所以红黑树的查找比二叉查找树更快。<br>
+并且二叉查找树的min(),max(),select(),rank()等操作由于不涉及结点的颜色，所以在红黑树也可以直接使用。红黑树的操作只有插入put()和删除delete()较复杂。</p>
+</li>
+</ul>
 
     </div>
     <div class="post-footer">

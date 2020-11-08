@@ -121,7 +121,7 @@
   <title>clock</title>
   <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
 </svg>
-          3 min read
+          4 min read
         </div></div>
     </header>
     <div class="post-content">
@@ -395,6 +395,33 @@
 <p><img src="/chapter3/3.3.19.jpg" alt=""></p>
 <h2 id="删除最小结点">删除最小结点</h2>
 <p>红黑树的删除最小结点需要在沿着树的最左下路径向下的过程中实现如2-3树中删除最小结点的操作，以保证当前结点不是2-结点。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">deleteMin</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">// if both children of root are black, set root to red
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">////如果根结点和左右子结点都是2-结点，就把他们合并
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>isRed<span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>isRed<span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">))</span>
+        root<span style="color:#f92672">.</span><span style="color:#a6e22e">color</span> <span style="color:#f92672">=</span> RED<span style="color:#f92672">;</span>
+
+    root <span style="color:#f92672">=</span> deleteMin<span style="color:#f92672">(</span>root<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>isEmpty<span style="color:#f92672">())</span> root<span style="color:#f92672">.</span><span style="color:#a6e22e">color</span> <span style="color:#f92672">=</span> BLACK<span style="color:#f92672">;</span> <span style="color:#75715e">//最后要将根恒置为黑色
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// assert check();
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+
+<span style="color:#75715e">// delete the key-value pair with the minimum key rooted at h
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">private</span> Node <span style="color:#a6e22e">deleteMin</span><span style="color:#f92672">(</span>Node h<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#75715e">//最小元素一定不会有左子结点
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>isRed<span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>isRed<span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">))</span>
+        h <span style="color:#f92672">=</span> moveRedLeft<span style="color:#f92672">(</span>h<span style="color:#f92672">);</span> <span style="color:#75715e">//保证每次遍历的结点都不是2-结点
+</span><span style="color:#75715e"></span>
+    h<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span> deleteMin<span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">);</span> <span style="color:#75715e">//继续向左下删除
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> balance<span style="color:#f92672">(</span>h<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p><img src="/chapter3/3.3.20.jpg" alt=""></p>
+<h2 id="删除">删除</h2>
+<p>和删除最小键一样，在遍历找到待删除元素的路径中，保证每次遍历的结点都不为2-结点。<br>
+如果待删除的元素在树底，就直接删除它。<br>
+否则，将它和它的后继结点交换，然后就转化为了在以可根结点不是2-结点的子树中删除最小的键。(即deleteMin(h.right))</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">delete</span><span style="color:#f92672">(</span>Key key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;argument to delete() is null&#34;</span><span style="color:#f92672">);</span>
     <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>contains<span style="color:#f92672">(</span>key<span style="color:#f92672">))</span> <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
@@ -413,17 +440,15 @@
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">private</span> Node <span style="color:#a6e22e">delete</span><span style="color:#f92672">(</span>Node h<span style="color:#f92672">,</span> Key key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
     <span style="color:#75715e">// assert get(h, key) != null;
 </span><span style="color:#75715e"></span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key<span style="color:#f92672">.</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">key</span><span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span>  <span style="color:#f92672">{</span>
-        <span style="color:#75715e">//待删除元素在左子树中
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key<span style="color:#f92672">.</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">key</span><span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span>  <span style="color:#f92672">{</span><span style="color:#75715e">//待删除元素在左子树中
 </span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>isRed<span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>isRed<span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">))</span>
-            h <span style="color:#f92672">=</span> moveRedLeft<span style="color:#f92672">(</span>h<span style="color:#f92672">);</span>
-        <span style="color:#75715e">//保证每次遍历的结点都不是2-结点
-</span><span style="color:#75715e"></span>        h<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span> delete<span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">,</span> key<span style="color:#f92672">);</span>
+            h <span style="color:#f92672">=</span> moveRedLeft<span style="color:#f92672">(</span>h<span style="color:#f92672">);</span><span style="color:#75715e">//保证每次遍历的结点都不是2-结点
+</span><span style="color:#75715e"></span>        
+        h<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span> delete<span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">,</span> key<span style="color:#f92672">);</span>
     <span style="color:#f92672">}</span>
     <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
         <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isRed<span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">))</span>
-            h <span style="color:#f92672">=</span> rotateRight<span style="color:#f92672">(</span>h<span style="color:#f92672">);</span>
-        <span style="color:#75715e">//保证在右边遍历时结点都不是2-结点
+            h <span style="color:#f92672">=</span> rotateRight<span style="color:#f92672">(</span>h<span style="color:#f92672">);</span><span style="color:#75715e">//保证在右边遍历时结点都不是2-结点
 </span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key<span style="color:#f92672">.</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">key</span><span style="color:#f92672">)</span> <span style="color:#f92672">==</span> 0 <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>h<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">))</span>
             <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
         <span style="color:#75715e">//找到了
@@ -443,7 +468,6 @@
     <span style="color:#f92672">}</span>
     <span style="color:#66d9ef">return</span> balance<span style="color:#f92672">(</span>h<span style="color:#f92672">);</span>
 <span style="color:#f92672">}</span>
-
 </code></pre></div><h2 id="复杂度分析">复杂度分析</h2>
 <ul>
 <li>

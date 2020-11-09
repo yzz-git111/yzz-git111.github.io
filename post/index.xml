@@ -5,10 +5,22 @@
     <link>https://yzz-git111.github.io/post/</link>
     <description>Recent content in Posts on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 08 Nov 2020 13:32:15 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 09 Nov 2020 18:37:30 +0800</lastBuildDate>
     
 	<atom:link href="https://yzz-git111.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>JavaSE知识点</title>
+      <link>https://yzz-git111.github.io/post/javase%E7%9F%A5%E8%AF%86%E7%82%B9/</link>
+      <pubDate>Mon, 09 Nov 2020 18:37:30 +0800</pubDate>
+      
+      <guid>https://yzz-git111.github.io/post/javase%E7%9F%A5%E8%AF%86%E7%82%B9/</guid>
+      <description>面向对象语言的三大特性：封装、继承、多态。java作为一门面向对象的语言，将一切都抽象为 类，实现万物皆对象。1
+封装 封装的好处：
+* 提高数据的安全性。 * 隐藏代码实现的细节 * 便于维护代码   使属性私有化，并且通过get(),set()方法来操作。  实例：
+class Student { private String id; private int age; Student() { } public int getAge() { return age; } public void setAge(int age) { if(age&amp;lt;0 || age&amp;gt;25) { System.out.println(&amp;#34;年龄不合法！&amp;#34;); return; } this.age = age; } public String getId(String password) { if(!password.equals(&amp;#34;123456&amp;#34;)) return &amp;#34;没有权限!&amp;#34;; return id; } public void setId(String id) { this.id = id; } } 对于上述的实例，在类中定义了两个成员age,id。为了保护隐私，将他们都设置为private。然后通过统一的set和get接口来操作这两个属性。</description>
+    </item>
     
     <item>
       <title>查找算法总结</title>

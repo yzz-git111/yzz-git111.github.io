@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>JavaSE知识点 // </title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.74.3" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="yzz帅的一匹" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://yzz-git111.github.io/css/main.min.88e7083eff65effb7485b6e6f38d10afbec25093a6fac42d734ce9024d3defbd.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="JavaSE知识点"/>
+<meta name="twitter:description" content="面向对象语言的三大特性：封装、继承、多态。java作为一门面向对象的语言，将一切都抽象为 类，实现万物皆对象。1
+封装 封装的好处：
+* 提高数据的安全性。 * 隐藏代码实现的细节 * 便于维护代码   使属性私有化，并且通过get(),set()方法来操作。  实例：
+class Student { private String id; private int age; Student() { } public int getAge() { return age; } public void setAge(int age) { if(age&lt;0 || age&gt;25) { System.out.println(&#34;年龄不合法！&#34;); return; } this.age = age; } public String getId(String password) { if(!password.equals(&#34;123456&#34;)) return &#34;没有权限!&#34;; return id; } public void setId(String id) { this.id = id; } } 对于上述的实例，在类中定义了两个成员age,id。为了保护隐私，将他们都设置为private。然后通过统一的set和get接口来操作这两个属性。"/>
+
+    <meta property="og:title" content="JavaSE知识点" />
+<meta property="og:description" content="面向对象语言的三大特性：封装、继承、多态。java作为一门面向对象的语言，将一切都抽象为 类，实现万物皆对象。1
+封装 封装的好处：
+* 提高数据的安全性。 * 隐藏代码实现的细节 * 便于维护代码   使属性私有化，并且通过get(),set()方法来操作。  实例：
+class Student { private String id; private int age; Student() { } public int getAge() { return age; } public void setAge(int age) { if(age&lt;0 || age&gt;25) { System.out.println(&#34;年龄不合法！&#34;); return; } this.age = age; } public String getId(String password) { if(!password.equals(&#34;123456&#34;)) return &#34;没有权限!&#34;; return id; } public void setId(String id) { this.id = id; } } 对于上述的实例，在类中定义了两个成员age,id。为了保护隐私，将他们都设置为private。然后通过统一的set和get接口来操作这两个属性。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yzz-git111.github.io/post/javase%E7%9F%A5%E8%AF%86%E7%82%B9/" />
+<meta property="article:published_time" content="2020-11-09T18:37:30+08:00" />
+<meta property="article:modified_time" content="2020-11-09T18:37:30+08:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://yzz-git111.github.io/"><img class="app-header-avatar" src="/avatar.jpeg" alt="yzz帅的一匹" /></a>
+      <h1></h1>
+      <p>yzz也想变成学霸</p>
+      <div class="app-header-social">
+        
+          <a target="_blank" href="https://github.com/yzz-git111" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg></a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">JavaSE知识点</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Nov 9, 2020
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          3 min read
+        </div></div>
+    </header>
+    <div class="post-content">
+      <p>面向对象语言的三大特性：<del>封装、继承、多态</del>。java作为一门面向对象的语言，将一切都抽象为 <em>类</em>，实现万物皆对象。<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></p>
+<h1 id="封装">封装</h1>
+<p>封装的好处：</p>
+<pre><code>* 提高数据的安全性。
+* 隐藏代码实现的细节
+* 便于维护代码
+</code></pre>
+<ol>
+<li><em><strong>使属性私有化，并且通过get(),set()方法来操作</strong></em>。</li>
+</ol>
+<p>实例：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Student</span>
+<span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> String id<span style="color:#f92672">;</span>  
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> age<span style="color:#f92672">;</span>
+
+    Student<span style="color:#f92672">()</span>
+    <span style="color:#f92672">{</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">getAge</span><span style="color:#f92672">()</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> age<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setAge</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> age<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>age<span style="color:#f92672">&lt;</span>0 <span style="color:#f92672">||</span> age<span style="color:#f92672">&gt;</span>25<span style="color:#f92672">)</span>
+        <span style="color:#f92672">{</span>
+            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;年龄不合法！&#34;</span><span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">age</span> <span style="color:#f92672">=</span> age<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">getId</span><span style="color:#f92672">(</span>String password<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span><span style="color:#f92672">(!</span>password<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;123456&#34;</span><span style="color:#f92672">))</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;没有权限!&#34;</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> id<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setId</span><span style="color:#f92672">(</span>String id<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">id</span> <span style="color:#f92672">=</span> id<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>对于上述的实例，在类中定义了两个成员age,id。为了保护隐私，将他们都设置为private。然后通过统一的set和get接口来操作这两个属性。</p>
+<p>对于setAge方法，假设age不能小于0或者大于25，那么在set时就可以进行一下判断是否合法，对于不合法的数值，就输出一个提示。合法才允许设定。</p>
+<p>同样的，对于getId方法，为了保护学生的id不泄露，必须特定的(假设有密码，密码通过才表示有权限访问)条件才能有效访问，那么可以在get方法传递一个参数(假定就是密码)来进行判断。</p>
+<p>通过简单的操作能够适当的保护数据的安全性。</p>
+<p>同时，对于他人，只知道输入有效数值才能够通过setAge()，通过输入密码才能getId(),但是这些操作的实现对于他们是透明的。隐藏了具体实现的细节。</p>
+<p>同时，统一的set(),get()接口便于代码的维护。提高可读性。</p>
+<ol start="2">
+<li><em><strong>对于类的封装</strong></em> <br>
+当我们需要多次重复的使用一个类，而类中有很多属性是重复的，这时候我们可以将类的各种属性都设定，将这个类封装成新的一个类，直接new这个类。这样做可以实现代码的复用。</li>
+</ol>
+<hr>
+<h1 id="继承">继承</h1>
+<p>假定已经实现了一个类A，而类B在A的基础上进行了增加，如果不使用继承，那么需要在B类重新写一下已经在A类写好的方法。而使用了继承之后，对于A类中已经实现的方法B默认拥有了。</p>
+<ul>
+<li>所以继承最大的优点就是：实现代码的可复用性。</li>
+</ul>
+<p>实例：假设将小学生定义了一个类PrimaryStudent，小学生会加法和减法，即在里面实现了方法add()，和sub()。现在又要定义一个高中生类HighschoolStudent,高中生会乘法和除法，除此之外高中生也一定会乘法和除法。当HighschoolStudent继承PrimaryStudent只需要实现方法multiple()和divi().</p>
+<ul>
+<li>子类继承父类的所有非private的对象和方法</li>
+<li>子类重写父类的方法后，调用super.调用被子类隐藏的方法和属性。</li>
+<li>子类调用父类构造方法时，要在子类构造方法的第一行调用super()。</li>
+</ul>
+<p>java中所有的类都继承了Object类。而Object类中实现了getClass(),toString(),hashCode()等方法。所以每个类都有这些方法。</p>
+<p>java只支持单继承。</p>
+<hr>
+<h1 id="多态">多态</h1>
+<p>多态即同一方法根据不同的对象而采用不同的实现。<br>
+多态存在的条件：</p>
+<ul>
+<li>有继承关系</li>
+<li>子类重写父类关系</li>
+<li><em><strong>父类的引用指向子类(子类类型的引用赋值给父类)</strong></em></li>
+</ul>
+<ol>
+<li>最基础的，以下面代码为例，son继承了father类。father定义了say方法。son的引用s1指向son类和father的引用f2指向son类，say方法都是输出father。   <br>
+虽然f2是father的引用，但是son也继承且为重写father的say，所以子类也默认有say方法。</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">father</span>
+<span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">say</span><span style="color:#f92672">()</span>
+    <span style="color:#f92672">{</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;father&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">son</span> <span style="color:#66d9ef">extends</span> father<span style="color:#f92672">{}</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span>
+<span style="color:#f92672">{</span>
+    son s1 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> son<span style="color:#f92672">();</span>
+    s1<span style="color:#f92672">.</span><span style="color:#a6e22e">say</span><span style="color:#f92672">();</span>   <span style="color:#75715e">//father
+</span><span style="color:#75715e"></span>    father f2 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> son<span style="color:#f92672">();</span>
+    f2<span style="color:#f92672">.</span><span style="color:#a6e22e">say</span><span style="color:#f92672">();</span>   <span style="color:#75715e">//father
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</code></pre></div><ol start="2">
+<li>在子类中重写父类的方法。那么会隐藏父类的方法，执行子类的方法。<br>
+这时s1和f2调用的都是子类的say方法，输出son。</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">son</span> <span style="color:#66d9ef">extends</span> father
+<span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">say</span><span style="color:#f92672">()</span>
+    <span style="color:#f92672">{</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;son&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><ol start="3">
+<li>在子类新实现一个方法eat()。由于这是子类独有的方法，所以父类的引用f2不能调用eat()。 <br>
+想要调用eat()，需要将f2强转为子类.</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">son</span> <span style="color:#66d9ef">extends</span> father
+<span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">say</span><span style="color:#f92672">()</span>
+    <span style="color:#f92672">{</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;son&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">eat</span><span style="color:#f92672">()</span>
+    <span style="color:#f92672">{</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;eat&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span>
+<span style="color:#f92672">{</span>
+    son s1 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> son<span style="color:#f92672">();</span>
+    father f2 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> son<span style="color:#f92672">();</span>
+
+    s1<span style="color:#f92672">.</span><span style="color:#a6e22e">say</span><span style="color:#f92672">();</span>
+    f2<span style="color:#f92672">.</span><span style="color:#a6e22e">say</span><span style="color:#f92672">();</span>
+
+    s1<span style="color:#f92672">.</span><span style="color:#a6e22e">eat</span><span style="color:#f92672">();</span>
+    <span style="color:#75715e">//f2.eat();不能调用
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">((</span>son<span style="color:#f92672">)</span>f2<span style="color:#f92672">).</span><span style="color:#a6e22e">eat</span><span style="color:#f92672">();</span> <span style="color:#75715e">//强转后才能调用。
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</code></pre></div><p>总结：对象能够调用那些方法，主要看引用(左边)的类型。（f3不能调用eat）<br>
+当子类的引用指向子类，对象可以调用子类自己实现的方法和继承的方法。（s1调用eat）<br>
+当父类的引用指向子类，子类重写了父类的方法，对象调用的也是子类的方法。（f2.say输出son）</p>
+<p>只有方法有多态，属性不存在多态。</p>
+<hr>
+<h1 id="抽象类和接口">抽象类和接口</h1>
+<ol>
+<li>相同点： <br>
+抽象类和接口都是对于类的抽象。</li>
+</ol>
+<p>都不能被实例化。</p>
+<p>都可以包含方法的声明。</p>
+<p>子类必须实现未实例化的方法。</p>
+<ol start="2">
+<li>不同点：<br>
+一个子类只能继承一个抽象类；一个子类可以实现多个接口(变相的多继承)。</li>
+</ol>
+<p>一个抽象类可以实现多接口；接口不能继承抽象类，只能继承多接口。</p>
+<p>抽象类可以包括常量，变量，方法的声明，普通方法，构造方法；而接口只能包含全局变量和方法的声明。</p>
+<p>接口只能定义声明；而抽象类可以包含方法声明和实现。接口比抽象类更抽象。</p>
+<p>接口的常量默认为public static final，方法默认为public abstract；而抽象类可以有各种权限，且子类的权限不能低于父类的。</p>
+<p><em><strong>应优先考虑接口，避免单继承的局限性</strong></em></p>
+<hr>
+<h1 id="上转型对象与接口回调">上转型对象与接口回调</h1>
+<ol>
+<li>上转型对象<br>
+父类 x(引用类型) = new 子类();   那么x就是子类的上转型对象。</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">test</span>
+<span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//animal1，animal2，animal3就是dog类的对象的上转型对象。
+</span><span style="color:#75715e"></span>        animal animal1 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> dog<span style="color:#f92672">();</span> <span style="color:#75715e">//第一种实现
+</span><span style="color:#75715e"></span>
+        animal animal2<span style="color:#f92672">;</span>     <span style="color:#75715e">//第二种实现
+</span><span style="color:#75715e"></span>        dog dog1 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> dog<span style="color:#f92672">();</span>
+        animal2 <span style="color:#f92672">=</span> dog1<span style="color:#f92672">;</span>
+
+        animal animal3<span style="color:#f92672">;</span>     <span style="color:#75715e">//第三种实现
+</span><span style="color:#75715e"></span>        animal3 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> dog<span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">animal</span>
+<span style="color:#f92672">{</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">dog</span> <span style="color:#66d9ef">extends</span> animal
+<span style="color:#f92672">{</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>注意点：<br>
+上转型对象不可以操作子类新增的成员和方法(和多态的f3不能调用eat一样)。对象能够调用那些方法，主要看引用(左边)的类型。</p>
+<p>可以将对象的上转型对象再强转成子类对象，这时该对象又具有了子类的所有属性和方法。(和多态的((son)f2).eat();一样)</p>
+<p>如果子类重写了父类的方法，当对象的上转型对象调用这个方法时一定调用的是子类重写的方法(和多态的f2.say输出son一样)</p>
+<p>可以父类 x(引用类型) = new 子类(); 但不可以子类 x(引用类型) = new 父类;</p>
+<ol start="2">
+<li>接口回调<br>
+接口回调指的是：实现某一接口的类 创建的对象 的引用 赋值给 该接口声明的接口变量，那么该接口变量就可以调用被类实现的接口方法。</li>
+</ol>
+<p>接口 x(引用类型) = new 实现接口的子类;</p>
+<p>这里的理解和上转型对象很类似。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">test</span>
+<span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print</span><span style="color:#f92672">(</span>merchandise m<span style="color:#f92672">)</span>    <span style="color:#75715e">//接口声明的变量为接口变量
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">{</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;price=&#34;</span><span style="color:#f92672">+</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">price</span><span style="color:#f92672">());</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        test test <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> test<span style="color:#f92672">();</span>
+        test<span style="color:#f92672">.</span><span style="color:#a6e22e">print</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> computer<span style="color:#f92672">());</span>     <span style="color:#75715e">//接口回调  
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//即merchandise m = new computer(new的匿名类为接口的类传教的对象的引用，m为该接口声明的接口变量)
+</span><span style="color:#75715e"></span>        test<span style="color:#f92672">.</span><span style="color:#a6e22e">print</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> book<span style="color:#f92672">());</span>         <span style="color:#75715e">//接口回调
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">merchandise</span>
+<span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">price</span><span style="color:#f92672">();</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">computer</span> <span style="color:#66d9ef">implements</span> merchandise
+<span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> price <span style="color:#f92672">=</span> 10000<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">price</span><span style="color:#f92672">()</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> price<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">book</span> <span style="color:#66d9ef">implements</span> merchandise
+<span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> price <span style="color:#f92672">=</span> 10<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">price</span><span style="color:#f92672">()</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> price<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><hr>
+<h1 id="重写和重载">重写和重载</h1>
+<ol>
+<li>重写<br>
+重写是子类对父类的允许访问的方法的实现过程进行重新编写, 返回值和形参都不能改变。  <br>
+重写的好处在于子类可以根据需要，定义特定于自己的行为。 也就是说子类能够根据需要实现父类的方法。</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Animal</span><span style="color:#f92672">{</span>
+   <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">move</span><span style="color:#f92672">(){</span>
+      System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;动物可以移动&#34;</span><span style="color:#f92672">);</span>
+   <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+ 
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Dog</span> <span style="color:#66d9ef">extends</span> Animal<span style="color:#f92672">{</span>
+   <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">move</span><span style="color:#f92672">(){</span>  <span style="color:#75715e">//子类重写move()
+</span><span style="color:#75715e"></span>      System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;狗可以跑和走&#34;</span><span style="color:#f92672">);</span>
+   <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>重写的规则：</p>
+<p>1.参数列表与被重写方法的参数列表必须完全相同。</p>
+<p>2.访问权限不能比父类中被重写的方法的访问权限更低。例如：如果父类的一个方法被声明为 public，那么在子类中重写该方法就不能声明为 protected。</p>
+<p>3.父类的成员方法只能被它的子类重写。</p>
+<p>4.声明为 final 的方法不能被重写。</p>
+<p>5.声明为 static 的方法不能被重写，但是能够被再次声明。</p>
+<p>6.子类和父类在同一个包中，那么子类可以重写父类所有方法，除了声明为 private 和 final 的方法。</p>
+<p>7.子类和父类不在同一个包中，那么子类只能够重写父类的声明为 public 和 protected 的非 final 方法。</p>
+<p>8.构造方法不能被重写。</p>
+<ol start="2">
+<li>重载</li>
+</ol>
+<p>重载(overloading) 是在一个类里面，方法名字相同，而参数不同。返回类型可以相同也可以不同。<br>
+每个重载的方法（或者构造函数）都必须有一个独一无二的参数类型列表。<br>
+最常用的地方就是构造器的重载。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">test</span><span style="color:#f92672">(){</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;test1&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> 1<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+ 
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">test</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> a<span style="color:#f92672">){</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;test2&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>   
+ 
+    <span style="color:#75715e">//以下两个参数类型顺序不同
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">test</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> a<span style="color:#f92672">,</span>String s<span style="color:#f92672">){</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;test3&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;returntest3&#34;</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>   
+ 
+    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">test</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">,</span><span style="color:#66d9ef">int</span> a<span style="color:#f92672">){</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;test4&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;returntest4&#34;</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>   
+</code></pre></div><hr>
+<h1 id="注意点">注意点</h1>
+<ol>
+<li>
+<p>java除了基本数据类型，其他都是引用类型。</p>
+</li>
+<li>
+<p>java只有值传递。</p>
+</li>
+</ol>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p>对JavaSE的总结，会不定时更新。 <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

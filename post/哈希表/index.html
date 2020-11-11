@@ -101,7 +101,7 @@ private int hash(Key x) { return (x.hashCode() &amp; 0x7ffffff) % M; } /*这段�
   <title>clock</title>
   <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
 </svg>
-          2 min read
+          4 min read
         </div></div>
     </header>
     <div class="post-content">
@@ -204,9 +204,22 @@ private int hash(Key x) { return (x.hashCode() &amp; 0x7ffffff) % M; } /*这段�
     <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>st<span style="color:#f92672">[</span>i<span style="color:#f92672">].</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>key<span style="color:#f92672">))</span> n<span style="color:#f92672">++;</span>
     st<span style="color:#f92672">[</span>i<span style="color:#f92672">].</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>key<span style="color:#f92672">,</span> val<span style="color:#f92672">);</span>
 <span style="color:#f92672">}</span>
+</code></pre></div><ol start="5">
+<li>删除</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">delete</span><span style="color:#f92672">(</span>Key key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;argument to delete() is null&#34;</span><span style="color:#f92672">);</span>
+
+    <span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> hash<span style="color:#f92672">(</span>key<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>st<span style="color:#f92672">[</span>i<span style="color:#f92672">].</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>key<span style="color:#f92672">))</span> n<span style="color:#f92672">--;</span>
+    st<span style="color:#f92672">[</span>i<span style="color:#f92672">].</span><span style="color:#a6e22e">delete</span><span style="color:#f92672">(</span>key<span style="color:#f92672">);</span>
+
+    <span style="color:#75715e">// halve table size if average length of list &lt;= 2
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>m <span style="color:#f92672">&gt;</span> INIT_CAPACITY <span style="color:#f92672">&amp;&amp;</span> n <span style="color:#f92672">&lt;=</span> 2<span style="color:#f92672">*</span>m<span style="color:#f92672">)</span> resize<span style="color:#f92672">(</span>m<span style="color:#f92672">/</span>2<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
 </code></pre></div><p><em><strong>命题：在均匀散列假设成立的前提下，任意一条链表中的键的数量均在N/M的常数因子范围内的概率无限趋向1.</strong></em></p>
 <p>但是在最坏情况下，散列函数不是均匀和独立的，那么查找和插入的成本就可能达到O(N),也就是退化成了链表的线性查找。</p>
-<ol start="5">
+<ol start="6">
 <li>
 <p>分析散列表的大小<br>
 当M足够大时，每个链表至多只有一个键值对，虽然这种情况会浪费许多数组的空间，但是可以保证查找很快。当内存紧张的时候，选取尽可能大的数组，也可以提高性能。<br>
@@ -229,12 +242,171 @@ private int hash(Key x) { return (x.hashCode() &amp; 0x7ffffff) % M; } /*这段�
     <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">n</span>  <span style="color:#f92672">=</span> temp<span style="color:#f92672">.</span><span style="color:#a6e22e">n</span><span style="color:#f92672">;</span>
     <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">st</span> <span style="color:#f92672">=</span> temp<span style="color:#f92672">.</span><span style="color:#a6e22e">st</span><span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
-</code></pre></div><hr>
+</code></pre></div><p><em><strong>性质：再一张含有M条链表和N个键的散列表中，未命中查找和插入所需的比较次数为~N/M</strong></em></p>
+<hr>
 <h2 id="2基于开放地址的散列表">2.基于开放地址的散列表</h2>
+<p>开放地址的思想：用大小M的数组保存N个键值对，且M&gt;N.用数组中多余的空位解决冲突。</p>
+<p>而开放地址的最典型最简单的方法叫线性探测法:当发生冲突时(一个键的散列值已经被其他键占用)，直接检查散列表数组下一个位置(计算出的散列值亦即数组索引 加1)。<br>
+此时有三种情况：</p>
+<ul>
+<li>命中，该位置的键和被查找的相同</li>
+<li>未命中，该位置没有键</li>
+<li>继续查找，该位置的键和被查找的键不同</li>
+</ul>
+<p>也就是说只有从散列值开始，当找到待查找的键或者找到第一个空的键才结束。<br>
+这里把空元素作为查找结束的标志。</p>
+<p><img src="/chapter3/3.4.2linear-probing.png" alt=""></p>
+<ol>
+<li>构造方法<br>
+分别用一对数组来对应地存放键值对。</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LinearProbingHashST</span><span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">,</span> Value<span style="color:#f92672">&gt;</span>
+<span style="color:#f92672">{</span>
+    
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> INIT_CAPACITY <span style="color:#f92672">=</span> 4<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> n<span style="color:#f92672">;</span>          
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> m<span style="color:#f92672">;</span>          
+    <span style="color:#66d9ef">private</span> Key<span style="color:#f92672">[]</span> keys<span style="color:#f92672">;</span>      <span style="color:#75715e">//存放键的数组
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> Value<span style="color:#f92672">[]</span> vals<span style="color:#f92672">;</span>    <span style="color:#75715e">//存放值的数组
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">LinearProbingHashST</span><span style="color:#f92672">()</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">(</span>INIT_CAPACITY<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">LinearProbingHashST</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> capacity<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        m <span style="color:#f92672">=</span> capacity<span style="color:#f92672">;</span>
+        n <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+        keys <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Key<span style="color:#f92672">[])</span> <span style="color:#66d9ef">new</span> Object<span style="color:#f92672">[</span>m<span style="color:#f92672">];</span>
+        vals <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Value<span style="color:#f92672">[])</span> <span style="color:#66d9ef">new</span> Object<span style="color:#f92672">[</span>m<span style="color:#f92672">];</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><ol start="2">
+<li>散列函数</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hashTextbook</span><span style="color:#f92672">(</span>Key key<span style="color:#f92672">)</span>
+<span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>key<span style="color:#f92672">.</span><span style="color:#a6e22e">hashCode</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;</span> 0x7fffffff<span style="color:#f92672">)</span> <span style="color:#f92672">%</span> m<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hash</span><span style="color:#f92672">(</span>Key key<span style="color:#f92672">)</span>
+<span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> h <span style="color:#f92672">=</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">hashCode</span><span style="color:#f92672">();</span>
+    h <span style="color:#f92672">^=</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">&gt;&gt;&gt;</span> 20<span style="color:#f92672">)</span> <span style="color:#f92672">^</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">&gt;&gt;&gt;</span> 12<span style="color:#f92672">)</span> <span style="color:#f92672">^</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">&gt;&gt;&gt;</span> 7<span style="color:#f92672">)</span> <span style="color:#f92672">^</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">&gt;&gt;&gt;</span> 4<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">return</span> h <span style="color:#f92672">&amp;</span> <span style="color:#f92672">(</span>m <span style="color:#f92672">-</span> 1<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><ol start="3">
+<li>查找</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> Value <span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>Key key<span style="color:#f92672">)</span>
+<span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;argument to get() is null&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> hash<span style="color:#f92672">(</span>key<span style="color:#f92672">);</span> keys<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span> i <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">%</span> m<span style="color:#f92672">)</span>   <span style="color:#75715e">//和循环队列类似，用i=(i+1)%m来使得循环查找
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>keys<span style="color:#f92672">[</span>i<span style="color:#f92672">].</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>key<span style="color:#f92672">))</span> 
+            <span style="color:#66d9ef">return</span> vals<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><ol start="4">
+<li>插入</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>Key key<span style="color:#f92672">,</span> Value val<span style="color:#f92672">)</span>
+<span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;first argument to put() is null&#34;</span><span style="color:#f92672">);</span>
+
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>val <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        delete<span style="color:#f92672">(</span>key<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">//如果散列因子α大于1/2 就需要扩容
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">&gt;=</span> m <span style="color:#f92672">/</span> 2<span style="color:#f92672">)</span> resize<span style="color:#f92672">(</span>2 <span style="color:#f92672">*</span> m<span style="color:#f92672">);</span>
+
+    <span style="color:#66d9ef">int</span> i<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">=</span> hash<span style="color:#f92672">(</span>key<span style="color:#f92672">);</span> keys<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span> i <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">%</span> m<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>keys<span style="color:#f92672">[</span>i<span style="color:#f92672">].</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>key<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+            vals<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> val<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    keys<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> key<span style="color:#f92672">;</span>
+    vals<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> val<span style="color:#f92672">;</span>
+    n<span style="color:#f92672">++;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><ol start="5">
+<li>删除<br>
+直接将键所在的位置置为null是不行的，因为这会引起其他键散列值的改变。所以如果删除某个键，就要把这个键往后直到第一个null的所有键都重新进行散列。</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">delete</span><span style="color:#f92672">(</span>Key key<span style="color:#f92672">)</span>
+<span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;argument to delete() is null&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>contains<span style="color:#f92672">(</span>key<span style="color:#f92672">))</span> <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+
+    <span style="color:#75715e">// find position i of key
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> hash<span style="color:#f92672">(</span>key<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>key<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>keys<span style="color:#f92672">[</span>i<span style="color:#f92672">]))</span> <span style="color:#f92672">{</span>
+        i <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">%</span> m<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    keys<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+    vals<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+
+    <span style="color:#75715e">// 重新散列
+</span><span style="color:#75715e"></span>    i <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">%</span> m<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>keys<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">// delete keys[i] an vals[i] and reinsert
+</span><span style="color:#75715e"></span>        Key keyToRehash <span style="color:#f92672">=</span> keys<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
+        Value valToRehash <span style="color:#f92672">=</span> vals<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
+        keys<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        vals<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        n<span style="color:#f92672">--;</span>
+        put<span style="color:#f92672">(</span>keyToRehash<span style="color:#f92672">,</span> valToRehash<span style="color:#f92672">);</span>
+        i <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">%</span> m<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    n<span style="color:#f92672">--;</span>
+
+    <span style="color:#75715e">//当α小于1/8，就缩小
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">&gt;</span> 0 <span style="color:#f92672">&amp;&amp;</span> n <span style="color:#f92672">&lt;=</span> m <span style="color:#f92672">/</span> 8<span style="color:#f92672">)</span> resize<span style="color:#f92672">(</span>m <span style="color:#f92672">/</span> 2<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><ol start="6">
+<li>
+<p>分析
+<em><strong>在一张大小为M并含有N=αM个键(α为散列因子)的基于线性探测的散列表，在均匀散列假设前提下，命中查找需要~(1+(1/1-α))/2次探测；未命中需要~(1+(1/1-α)^2)/2次</strong></em> <br>
+<em>所以α越大，探测次数越多。当α约为1/2时，命中需要约3/2次，未命中需要约5/2次。</em><br>
+当散列表快慢时(α接近1)，探测次数是很大的。当散列表满时，会一直散列。 <br>
+最好要保证α取值小于1/2.</p>
+</li>
+<li>
+<p>动态调整数组大小<br>
+对于拉链法，调整数组大小可能并不是必要的，但是对于开放地址一定要考虑。<br>
+如果不调整的话，考虑一个极端情况：当所有的空位都散列到了，那么再插入一个新的键值对的时候，探测的所有的键都不行，陷入死循环。当α越接近1，冲突发生的可能越大。 <br>
+当元素个数很少的时候，可能不会发生冲突，而用一个很大的数组就会浪费很多空间。 <br>
+当α在1/2左右时，是较为理想的一个状态。</p>
+</li>
+</ol>
+<p>但是需要注意的一点是：<em><strong>每一次动态调整数组大小都需要将所有键重新进行散列，因为M改变了，相应的散列值也会发生变化。</strong></em></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">resize</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> capacity<span style="color:#f92672">)</span>
+<span style="color:#f92672">{</span>
+    LinearProbingHashST<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">,</span> Value<span style="color:#f92672">&gt;</span> temp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinearProbingHashST<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">,</span> Value<span style="color:#f92672">&gt;(</span>capacity<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> m<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>keys<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            temp<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>keys<span style="color:#f92672">[</span>i<span style="color:#f92672">],</span> vals<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    keys <span style="color:#f92672">=</span> temp<span style="color:#f92672">.</span><span style="color:#a6e22e">keys</span><span style="color:#f92672">;</span>
+    vals <span style="color:#f92672">=</span> temp<span style="color:#f92672">.</span><span style="color:#a6e22e">vals</span><span style="color:#f92672">;</span>
+    m <span style="color:#f92672">=</span> temp<span style="color:#f92672">.</span><span style="color:#a6e22e">m</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><ol start="8">
+<li>其他方法 <br>
+除了最基本的线性探测法，还有二次探测法和再散列法。</li>
+</ol>
 <hr>
 <h1 id="总结分析">总结分析</h1>
-<p>缺点：<br>
-有序性：</p>
+<p><em><strong>优点：散列表是空间和时间的一种权衡。通过建立键和数组索引的一个映射关系，平均情况下在常数时间就可以查询</strong></em>。</p>
+<p><em><strong>缺点：由于均匀散列的假设，键值对在散列后完全没有顺序可以，对于于顺序相关的操作(rank,select,min,max)散列表都很难实现。</strong></em></p>
+<p><em><strong>难点：散列函数的选取</strong></em></p>
 
     </div>
     <div class="post-footer">

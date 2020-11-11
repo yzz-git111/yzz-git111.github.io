@@ -12,10 +12,56 @@
     
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="哈希表"/>
-<meta name="twitter:description" content="概述 散列函数 基于拉链法的散列表 基于线性探测的散列表 复杂度分析 "/>
+<meta name="twitter:description" content="概述 散列表即通过运算操作(散列函数)将键转化为数组的索引来访问数组中的键值对。 散列表的实现通常分为两步:
+ 用散列函数将被查找的键转化为一个数组的一个索引。 当多个键散列到相同的索引值时，就需要处理冲突碰撞  散列表是一种基于数组实现的符号表，但是它是将键转化为数组的索引。而不只是像最原始的基于顺序查找的链表或者基于二分查找的顺序表。
+散列表在 时间 和 空间上做出了权衡。
+当空间没有限制时，假设一个足够大的数组，我们可以直接将键作为数组的索引，那么对于给定的键key，可以直接用a[key]直接找到值，复杂度达到了O(1)。但是如果键的索引大于100，那么数组大小也需要上百，且浪费其中绝大部分。
+当时间没有限制时，可以使用无序数组遍历查找，查找和插入的实现都很简单。
+一个简单的散列表实例：键值对&lt;901,a&gt;&lt;904,b&gt;&lt;902,d&gt;&lt;903,s&gt;&lt;905,e&gt; 可以将键都减去900，得到键值对&lt;1,a&gt;&lt;2,d&gt;&lt;3,s&gt;&lt;4,b&gt;&lt;5,e&gt; 这时可以直接按顺序放到一个大小为5的数组中。而减去900就相当于一个简单的散列函数，key mod 900(M).
+散列表的查找和插入在均摊后拥有 常数级别O(N) 的复杂度，是最为理想的一种符号表。
+散列函数 为了将键转化为数组的索引，我们需要一个方法，即散列函数。
+而散列函数的选取要满足：对于任意键，大小为M的数组的0到M-1之间的每个整数都有 等可能 对应。
+最常见的散列函数就是 除留余数法
+选取大小为素数M的数组，
+当键是正整数时，对于任意整数k，计算 k mod M ，使得键能够均匀的分布在0~M-1的范围内。
+当键是0到1的浮点数时，可以将它乘以M并四舍五入到0~M-1之间的索引值。但是这样会使得键的高位权重较大。改进的方法就是将键的表示转化为二进制后再除留余数法。
+当键是字符，可以当作一个整数。对于字符串，可以给定一个很小的常数，然后计算所有字符的除留余数的值。
+对于java的是实现，由于java都是继承了类Object，都有一个默认的方法hashcode()。
+对于任意对象x，都可以调用x.hashcode()并认为有均等的机会得到一个2^32个不同整数中的任意一个。
+对于我们自己实现的数据类型的散列函数，需要重写hashcode()和equals()两个方法。
+因为我们需要的是数组的索引而不是32位的整数，实现中会将默认的hashcode()方法和除留余数法结合起来产生一个0~M-1的整数：
+private int hash(Key x) { return (x.hashCode() &amp; 0x7ffffff) % M; } /*这段代码会将符号位屏蔽（将32位整数转化为一个31位的非负整数） 且一般会将数组的大小M取为素数以充分利用所有位*/ 均匀散列假设： 我们使用散列函数能够均匀并独立地将所有的键散布于0到M-1中
+ 碰撞处理 选取好散列函数之后，就需要处理多个键的散列值相同(碰撞)的情况。且在键的数目很大的情况下，碰撞发生的概率也会很大。
+对于碰撞处理通常分为 基于拉链法的散列表 和 基于开放地址的散列表。
+ 1.基于拉链法的散列表 基于拉链表的基本思想是：将大小为M的数组中的每个元素都指向一条链表，每个链表存储不同的键但是散列值都相同(都是数组的该元素的索引)的键值对。
+当M足够大时，可以使得所有链表都尽可能的短(理想情况只存储一个键值对，即没有碰撞情况)。
+查找时：首先根据键计算散列值，找到散列值对应的数组的索引存放的链表。然后在这个链表中顺序查找相应的键。 插入时：首先计算散列值。然后再以散列值为索引的数组元素的链表中插入新的键值对。"/>
 
     <meta property="og:title" content="哈希表" />
-<meta property="og:description" content="概述 散列函数 基于拉链法的散列表 基于线性探测的散列表 复杂度分析 " />
+<meta property="og:description" content="概述 散列表即通过运算操作(散列函数)将键转化为数组的索引来访问数组中的键值对。 散列表的实现通常分为两步:
+ 用散列函数将被查找的键转化为一个数组的一个索引。 当多个键散列到相同的索引值时，就需要处理冲突碰撞  散列表是一种基于数组实现的符号表，但是它是将键转化为数组的索引。而不只是像最原始的基于顺序查找的链表或者基于二分查找的顺序表。
+散列表在 时间 和 空间上做出了权衡。
+当空间没有限制时，假设一个足够大的数组，我们可以直接将键作为数组的索引，那么对于给定的键key，可以直接用a[key]直接找到值，复杂度达到了O(1)。但是如果键的索引大于100，那么数组大小也需要上百，且浪费其中绝大部分。
+当时间没有限制时，可以使用无序数组遍历查找，查找和插入的实现都很简单。
+一个简单的散列表实例：键值对&lt;901,a&gt;&lt;904,b&gt;&lt;902,d&gt;&lt;903,s&gt;&lt;905,e&gt; 可以将键都减去900，得到键值对&lt;1,a&gt;&lt;2,d&gt;&lt;3,s&gt;&lt;4,b&gt;&lt;5,e&gt; 这时可以直接按顺序放到一个大小为5的数组中。而减去900就相当于一个简单的散列函数，key mod 900(M).
+散列表的查找和插入在均摊后拥有 常数级别O(N) 的复杂度，是最为理想的一种符号表。
+散列函数 为了将键转化为数组的索引，我们需要一个方法，即散列函数。
+而散列函数的选取要满足：对于任意键，大小为M的数组的0到M-1之间的每个整数都有 等可能 对应。
+最常见的散列函数就是 除留余数法
+选取大小为素数M的数组，
+当键是正整数时，对于任意整数k，计算 k mod M ，使得键能够均匀的分布在0~M-1的范围内。
+当键是0到1的浮点数时，可以将它乘以M并四舍五入到0~M-1之间的索引值。但是这样会使得键的高位权重较大。改进的方法就是将键的表示转化为二进制后再除留余数法。
+当键是字符，可以当作一个整数。对于字符串，可以给定一个很小的常数，然后计算所有字符的除留余数的值。
+对于java的是实现，由于java都是继承了类Object，都有一个默认的方法hashcode()。
+对于任意对象x，都可以调用x.hashcode()并认为有均等的机会得到一个2^32个不同整数中的任意一个。
+对于我们自己实现的数据类型的散列函数，需要重写hashcode()和equals()两个方法。
+因为我们需要的是数组的索引而不是32位的整数，实现中会将默认的hashcode()方法和除留余数法结合起来产生一个0~M-1的整数：
+private int hash(Key x) { return (x.hashCode() &amp; 0x7ffffff) % M; } /*这段代码会将符号位屏蔽（将32位整数转化为一个31位的非负整数） 且一般会将数组的大小M取为素数以充分利用所有位*/ 均匀散列假设： 我们使用散列函数能够均匀并独立地将所有的键散布于0到M-1中
+ 碰撞处理 选取好散列函数之后，就需要处理多个键的散列值相同(碰撞)的情况。且在键的数目很大的情况下，碰撞发生的概率也会很大。
+对于碰撞处理通常分为 基于拉链法的散列表 和 基于开放地址的散列表。
+ 1.基于拉链法的散列表 基于拉链表的基本思想是：将大小为M的数组中的每个元素都指向一条链表，每个链表存储不同的键但是散列值都相同(都是数组的该元素的索引)的键值对。
+当M足够大时，可以使得所有链表都尽可能的短(理想情况只存储一个键值对，即没有碰撞情况)。
+查找时：首先根据键计算散列值，找到散列值对应的数组的索引存放的链表。然后在这个链表中顺序查找相应的键。 插入时：首先计算散列值。然后再以散列值为索引的数组元素的链表中插入新的键值对。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://yzz-git111.github.io/post/%E5%93%88%E5%B8%8C%E8%A1%A8/" />
 <meta property="article:published_time" content="2020-11-07T21:21:31+08:00" />
@@ -55,15 +101,140 @@
   <title>clock</title>
   <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
 </svg>
-          1 min read
+          2 min read
         </div></div>
     </header>
     <div class="post-content">
       <h1 id="概述">概述</h1>
+<p>散列表即通过运算操作(散列函数)将键转化为数组的索引来访问数组中的键值对。 <br>
+散列表的实现通常分为两步:</p>
+<ol>
+<li><em><strong>用散列函数将被查找的键转化为一个数组的一个索引。</strong></em></li>
+<li><em><strong>当多个键散列到相同的索引值时，就需要处理冲突碰撞</strong></em></li>
+</ol>
+<p>散列表是一种基于数组实现的符号表，但是它是将键转化为数组的索引。而不只是像最原始的基于顺序查找的链表或者基于二分查找的顺序表。</p>
+<p>散列表在 时间 和 空间上做出了权衡。<br>
+当空间没有限制时，假设一个足够大的数组，我们可以直接将键作为数组的索引，那么对于给定的键key，可以直接用a[key]直接找到值，复杂度达到了O(1)。但是如果键的索引大于100，那么数组大小也需要上百，且浪费其中绝大部分。<br>
+当时间没有限制时，可以使用无序数组遍历查找，查找和插入的实现都很简单。</p>
+<p>一个简单的散列表实例：键值对&lt;901,a&gt;&lt;904,b&gt;&lt;902,d&gt;&lt;903,s&gt;&lt;905,e&gt; <br>
+可以将键都减去900，得到键值对&lt;1,a&gt;&lt;2,d&gt;&lt;3,s&gt;&lt;4,b&gt;&lt;5,e&gt; 这时可以直接按顺序放到一个大小为5的数组中。而减去900就相当于一个简单的散列函数，key mod 900(M).</p>
+<p>散列表的查找和插入在均摊后拥有 <em><strong>常数级别O(N)</strong></em> 的复杂度，是最为理想的一种符号表。</p>
 <h1 id="散列函数">散列函数</h1>
-<h1 id="基于拉链法的散列表">基于拉链法的散列表</h1>
-<h1 id="基于线性探测的散列表">基于线性探测的散列表</h1>
-<h1 id="复杂度分析">复杂度分析</h1>
+<p>为了将键转化为数组的索引，我们需要一个方法，即散列函数。<br>
+而散列函数的选取要满足：对于任意键，大小为M的数组的0到M-1之间的每个整数都有 <em><strong>等可能</strong></em> 对应。</p>
+<p>最常见的散列函数就是 <em><strong>除留余数法</strong></em></p>
+<p>选取大小为素数M的数组，<br>
+当键是正整数时，对于任意整数k，计算 k mod M ，使得键能够均匀的分布在0~M-1的范围内。<br>
+当键是0到1的浮点数时，可以将它乘以M并四舍五入到0~M-1之间的索引值。但是这样会使得键的高位权重较大。改进的方法就是将键的表示转化为二进制后再除留余数法。<br>
+当键是字符，可以当作一个整数。对于字符串，可以给定一个很小的常数，然后计算所有字符的除留余数的值。</p>
+<p>对于java的是实现，由于java都是继承了类Object，都有一个默认的方法hashcode()。<br>
+对于任意对象x，都可以调用x.hashcode()并认为有均等的机会得到一个2^32个不同整数中的任意一个。<br>
+对于我们自己实现的数据类型的散列函数，需要重写hashcode()和equals()两个方法。</p>
+<p>因为我们需要的是数组的索引而不是32位的整数，实现中会将默认的hashcode()方法和除留余数法结合起来产生一个0~M-1的整数：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hash</span><span style="color:#f92672">(</span>Key x<span style="color:#f92672">)</span>
+<span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">hashCode</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;</span> 0x7ffffff<span style="color:#f92672">)</span> <span style="color:#f92672">%</span> M<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+<span style="color:#75715e">/*这段代码会将符号位屏蔽（将32位整数转化为一个31位的非负整数）
+</span><span style="color:#75715e">且一般会将数组的大小M取为素数以充分利用所有位*/</span>
+
+</code></pre></div><p><em><strong>均匀散列假设： 我们使用散列函数能够均匀并独立地将所有的键散布于0到M-1中</strong></em></p>
+<hr>
+<h1 id="碰撞处理">碰撞处理</h1>
+<p>选取好散列函数之后，就需要处理多个键的散列值相同(碰撞)的情况。且在键的数目很大的情况下，碰撞发生的概率也会很大。</p>
+<p>对于碰撞处理通常分为 基于拉链法的散列表 和 基于开放地址的散列表。</p>
+<hr>
+<h2 id="1基于拉链法的散列表">1.基于拉链法的散列表</h2>
+<p>基于拉链表的基本思想是：<em><strong>将大小为M的数组中的每个元素都指向一条链表，每个链表存储不同的键但是散列值都相同(都是数组的该元素的索引)的键值对</strong></em>。<br>
+当M足够大时，可以使得所有链表都尽可能的短(理想情况只存储一个键值对，即没有碰撞情况)。</p>
+<p><em><strong>查找时：首先根据键计算散列值，找到散列值对应的数组的索引存放的链表。然后在这个链表中顺序查找相应的键。</strong></em>  <br>
+<em><strong>插入时：首先计算散列值。然后再以散列值为索引的数组元素的链表中插入新的键值对。</strong></em></p>
+<p>拉链表的实现可以使用原始的链表，也可以继续用散列表来实现链表。</p>
+<p><img src="/chapter3/3.4.1separate-chaining.png" alt=""></p>
+<ol>
+<li>构造方法：调用了之前实现的基于链表顺序查询的符号表SequentialSearchST <br>
+注意：在创建st[]时要进行类型转化st = (SequentialSearchST&lt;Key, Value&gt;[]) new SequentialSearchST[m];因为Java不允许泛型的数组。</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SeparateChainingHashST</span><span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">,</span> Value<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> INIT_CAPACITY <span style="color:#f92672">=</span> 4<span style="color:#f92672">;</span> <span style="color:#75715e">//定义一个常量，设为默认的散列表的大小
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> n<span style="color:#f92672">;</span>         <span style="color:#75715e">//键值对的数目
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> m<span style="color:#f92672">;</span>         <span style="color:#75715e">//散列表数组大小
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> SequentialSearchST<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">,</span> Value<span style="color:#f92672">&gt;[]</span> st<span style="color:#f92672">;</span>  <span style="color:#75715e">//存放链表对象的数组
+</span><span style="color:#75715e"></span>
+    <span style="color:#75715e">//通过this调用另一个重载的构造方法
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">SeparateChainingHashST</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">(</span>INIT_CAPACITY<span style="color:#f92672">);</span>    <span style="color:#75715e">//默认的散列表大小为INIT_CAPACITY
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">SeparateChainingHashST</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> m<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">m</span> <span style="color:#f92672">=</span> m<span style="color:#f92672">;</span>
+        st <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>SequentialSearchST<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">,</span> Value<span style="color:#f92672">&gt;[])</span> <span style="color:#66d9ef">new</span> SequentialSearchST<span style="color:#f92672">[</span>m<span style="color:#f92672">];</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> m<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span>
+            st<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> SequentialSearchST<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">,</span> Value<span style="color:#f92672">&gt;();</span>
+            <span style="color:#75715e">//为每个数组都new一个SequentialSearchST的基于链表的符号表的对象
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</code></pre></div><ol start="2">
+<li>散列函数</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hash</span><span style="color:#f92672">(</span>Key key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>key<span style="color:#f92672">.</span><span style="color:#a6e22e">hashCode</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;</span> 0x7fffffff<span style="color:#f92672">)</span> <span style="color:#f92672">%</span> m<span style="color:#f92672">;</span>   <span style="color:#75715e">//除留余数法
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</code></pre></div><ol start="3">
+<li>查找</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> Value <span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>Key key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;argument to get() is null&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> hash<span style="color:#f92672">(</span>key<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">return</span> st<span style="color:#f92672">[</span>i<span style="color:#f92672">].</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>key<span style="color:#f92672">);</span>  <span style="color:#75715e">//调用SequentialSearchST的get方法
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</code></pre></div><ol start="4">
+<li>插入新的键值对</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>Key key<span style="color:#f92672">,</span> Value val<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;first argument to put() is null&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>val <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        delete<span style="color:#f92672">(</span>key<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">&gt;=</span> 10<span style="color:#f92672">*</span>m<span style="color:#f92672">)</span> resize<span style="color:#f92672">(</span>2<span style="color:#f92672">*</span>m<span style="color:#f92672">);</span> <span style="color:#75715e">//调整数组大小。
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> hash<span style="color:#f92672">(</span>key<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>st<span style="color:#f92672">[</span>i<span style="color:#f92672">].</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>key<span style="color:#f92672">))</span> n<span style="color:#f92672">++;</span>
+    st<span style="color:#f92672">[</span>i<span style="color:#f92672">].</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>key<span style="color:#f92672">,</span> val<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p><em><strong>命题：在均匀散列假设成立的前提下，任意一条链表中的键的数量均在N/M的常数因子范围内的概率无限趋向1.</strong></em></p>
+<p>但是在最坏情况下，散列函数不是均匀和独立的，那么查找和插入的成本就可能达到O(N),也就是退化成了链表的线性查找。</p>
+<ol start="5">
+<li>
+<p>分析散列表的大小<br>
+当M足够大时，每个链表至多只有一个键值对，虽然这种情况会浪费许多数组的空间，但是可以保证查找很快。当内存紧张的时候，选取尽可能大的数组，也可以提高性能。<br>
+所以需要选取一个适当的数组大小M。</p>
+</li>
+<li>
+<p>改进： <br>
+对于最坏情况的可能，可以动态的调整链表数组的大小。当有多个键都散列到同一个数组元素时，可以扩大数组的大小M，使得链表的平均长度始终很小，也就避免了退化为线性查找。<br>
+扩容后还需要重新将原来的键值对进行散列。</p>
+</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">resize</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> chains<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    SeparateChainingHashST<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">,</span> Value<span style="color:#f92672">&gt;</span> temp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> SeparateChainingHashST<span style="color:#f92672">&lt;</span>Key<span style="color:#f92672">,</span> Value<span style="color:#f92672">&gt;(</span>chains<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> m<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Key key <span style="color:#f92672">:</span> st<span style="color:#f92672">[</span>i<span style="color:#f92672">].</span><span style="color:#a6e22e">keys</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            temp<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>key<span style="color:#f92672">,</span> st<span style="color:#f92672">[</span>i<span style="color:#f92672">].</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>key<span style="color:#f92672">));</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">m</span>  <span style="color:#f92672">=</span> temp<span style="color:#f92672">.</span><span style="color:#a6e22e">m</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">n</span>  <span style="color:#f92672">=</span> temp<span style="color:#f92672">.</span><span style="color:#a6e22e">n</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">st</span> <span style="color:#f92672">=</span> temp<span style="color:#f92672">.</span><span style="color:#a6e22e">st</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><hr>
+<h2 id="2基于开放地址的散列表">2.基于开放地址的散列表</h2>
+<hr>
+<h1 id="总结分析">总结分析</h1>
+<p>缺点：<br>
+有序性：</p>
 
     </div>
     <div class="post-footer">

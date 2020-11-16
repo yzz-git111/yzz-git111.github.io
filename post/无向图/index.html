@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>无向图 // </title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.74.3" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="yzz帅的一匹" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://yzz-git111.github.io/css/main.min.88e7083eff65effb7485b6e6f38d10afbec25093a6fac42d734ce9024d3defbd.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="无向图"/>
+<meta name="twitter:description" content="基础知识 图的定义：图是由一组顶点和一组能够将两个顶点相连的边组成的。
+假设有V个顶点，那么一般使用0~V-1来表示。这样的好处是为了 方便使用数组的索引来快速访问顶点。对于不同的数据类型，可以用 符号表将顶点的名字和0到V-1的整数值建立一一对应的关系。
+图通常可以分为：无向图，有向图，无向带权图，有向带权图。这几类对应的应用都有所不同。
+特别的，树是图的特殊情况，我们可以将树看作是无环连通图。当一幅含有V个顶点的图G满足任意一个条件:1.G有V-1条边且没有环。2.G有V-1条边是连通的。3.G中再任意加一条边都构成环路。4.G中删除任意一条边都不在连通。5.G中任意一对顶点之间有且仅有一条简单路径。它都是一棵树。 同样的，连通图的生成树是它的一幅子图，它含有图中的所有顶点且是一棵树。图的生成树森林是它的所有连通子图的生成树的集合。
+图的3种数据结构表示  *(稀疏图))邻接表：我们可以定义一个数组，将数组的索引和顶点之间建立一一对应关系，用这个数组存放顶点。且数组的每个元素都存放一个链表对象，链表中存放与这个顶点相连的顶点(两个顶点确定一条边)。 这种数据结构的特点是：   适用于稀疏图，且我们所遇到的大部分都是稀疏图。
+  无向图在这种数据结构中每条边都会出现两次(v-w和w-v)。
+有向图只出现一次(v-&gt;w)。
+  使用的空间和V&#43;E成正比(数组V，链表结点2E)。
+  添加一条边所需时间为常数(先根据索引找到顶点，然后链表的插入，都为O(1))。
+  遍历顶点v的所有相邻顶点所需时间和v的度数成正比。
+    public class AdjListGraph { //其中调用了Java自带的链表类LinkedList  private final int V; //默认不对顶点进行修改  private int E; //仅仅对边进行操作  //如果对顶点进行修改，可以对这个数据结构进行扩展，大差不差  private LinkedList&lt;Integer&gt;[] adj; public AdjListGraph(int V) { if (V &lt; 0) throw new IllegalArgumentException(&#34;Number of vertices must be nonnegative&#34;); this."/>
+
+    <meta property="og:title" content="无向图" />
+<meta property="og:description" content="基础知识 图的定义：图是由一组顶点和一组能够将两个顶点相连的边组成的。
+假设有V个顶点，那么一般使用0~V-1来表示。这样的好处是为了 方便使用数组的索引来快速访问顶点。对于不同的数据类型，可以用 符号表将顶点的名字和0到V-1的整数值建立一一对应的关系。
+图通常可以分为：无向图，有向图，无向带权图，有向带权图。这几类对应的应用都有所不同。
+特别的，树是图的特殊情况，我们可以将树看作是无环连通图。当一幅含有V个顶点的图G满足任意一个条件:1.G有V-1条边且没有环。2.G有V-1条边是连通的。3.G中再任意加一条边都构成环路。4.G中删除任意一条边都不在连通。5.G中任意一对顶点之间有且仅有一条简单路径。它都是一棵树。 同样的，连通图的生成树是它的一幅子图，它含有图中的所有顶点且是一棵树。图的生成树森林是它的所有连通子图的生成树的集合。
+图的3种数据结构表示  *(稀疏图))邻接表：我们可以定义一个数组，将数组的索引和顶点之间建立一一对应关系，用这个数组存放顶点。且数组的每个元素都存放一个链表对象，链表中存放与这个顶点相连的顶点(两个顶点确定一条边)。 这种数据结构的特点是：   适用于稀疏图，且我们所遇到的大部分都是稀疏图。
+  无向图在这种数据结构中每条边都会出现两次(v-w和w-v)。
+有向图只出现一次(v-&gt;w)。
+  使用的空间和V&#43;E成正比(数组V，链表结点2E)。
+  添加一条边所需时间为常数(先根据索引找到顶点，然后链表的插入，都为O(1))。
+  遍历顶点v的所有相邻顶点所需时间和v的度数成正比。
+    public class AdjListGraph { //其中调用了Java自带的链表类LinkedList  private final int V; //默认不对顶点进行修改  private int E; //仅仅对边进行操作  //如果对顶点进行修改，可以对这个数据结构进行扩展，大差不差  private LinkedList&lt;Integer&gt;[] adj; public AdjListGraph(int V) { if (V &lt; 0) throw new IllegalArgumentException(&#34;Number of vertices must be nonnegative&#34;); this." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yzz-git111.github.io/post/%E6%97%A0%E5%90%91%E5%9B%BE/" />
+<meta property="article:published_time" content="2020-11-15T14:10:06+08:00" />
+<meta property="article:modified_time" content="2020-11-15T14:10:06+08:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://yzz-git111.github.io/"><img class="app-header-avatar" src="/avatar.jpeg" alt="yzz帅的一匹" /></a>
+      <h1></h1>
+      <p>yzz也想变成学霸</p>
+      <div class="app-header-social">
+        
+          <a target="_blank" href="https://github.com/yzz-git111" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg></a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">无向图</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Nov 15, 2020
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          6 min read
+        </div></div>
+    </header>
+    <div class="post-content">
+      <h1 id="基础知识">基础知识</h1>
+<p>图的定义：图是由一组顶点和一组能够将两个顶点相连的边组成的。</p>
+<p>假设有V个顶点，那么一般使用0~V-1来表示。这样的好处是为了 <em><strong>方便使用数组的索引来快速访问顶点</strong></em>。对于不同的数据类型，可以用 <em><strong>符号表</strong></em>将顶点的名字和0到V-1的整数值建立一一对应的关系。</p>
+<p>图通常可以分为：无向图，有向图，无向带权图，有向带权图。这几类对应的应用都有所不同。</p>
+<p>特别的，树是图的特殊情况，我们可以将树看作是无环连通图。当一幅含有V个顶点的图G满足任意一个条件:1.G有V-1条边且没有环。2.G有V-1条边是连通的。3.G中再任意加一条边都构成环路。4.G中删除任意一条边都不在连通。5.G中任意一对顶点之间有且仅有一条简单路径。它都是一棵树。   <br>
+同样的，连通图的生成树是它的一幅子图，它含有图中的所有顶点且是一棵树。图的生成树森林是它的所有连通子图的生成树的集合。</p>
+<p><img src="/chapter4/4.1.1tree.png" alt=""><br>
+<img src="/chapter4/4.1.2forest.png" alt=""></p>
+<h1 id="图的3种数据结构表示">图的3种数据结构表示</h1>
+<ol>
+<li>*(稀疏图))邻接表：我们可以定义一个数组，将数组的索引和顶点之间建立一一对应关系，用这个数组存放顶点。且数组的每个元素都存放一个链表对象，链表中存放与这个顶点相连的顶点(两个顶点确定一条边)。 <br>
+这种数据结构的特点是：
+<ul>
+<li>
+<p>适用于稀疏图，且我们所遇到的大部分都是稀疏图。</p>
+</li>
+<li>
+<p>无向图在这种数据结构中每条边都会出现两次(v-w和w-v)。<br>
+有向图只出现一次(v-&gt;w)。</p>
+</li>
+<li>
+<p>使用的空间和V+E成正比(数组V，链表结点2E)。</p>
+</li>
+<li>
+<p>添加一条边所需时间为常数(先根据索引找到顶点，然后链表的插入，都为O(1))。</p>
+</li>
+<li>
+<p>遍历顶点v的所有相邻顶点所需时间和v的度数成正比。</p>
+</li>
+</ul>
+</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">AdjListGraph</span>
+<span style="color:#f92672">{</span>
+    <span style="color:#75715e">//其中调用了Java自带的链表类LinkedList
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> V<span style="color:#f92672">;</span>    <span style="color:#75715e">//默认不对顶点进行修改
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> E<span style="color:#f92672">;</span>          <span style="color:#75715e">//仅仅对边进行操作
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">//如果对顶点进行修改，可以对这个数据结构进行扩展，大差不差
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">private</span> LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;[]</span> adj<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">AdjListGraph</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> V<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>V <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Number of vertices must be nonnegative&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">V</span> <span style="color:#f92672">=</span> V<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">E</span> <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+        adj <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;[])</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">[</span>V<span style="color:#f92672">];</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> v <span style="color:#f92672">&lt;</span> V<span style="color:#f92672">;</span> v<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            adj<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;();</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p><img src="/chapter4/4.1.3adjacency-lists.png" alt=""></p>
+<ol start="2">
+<li>
+<p>(稠密图))邻接矩阵：定义一个V*V的二维布尔型矩阵，若两个顶点v,w有边相连，就将矩阵的[v,w]置为true，否则就为false。 <br>
+这种数据结构的注意点：</p>
+<ul>
+<li>
+<p>适用于稠密图。</p>
+</li>
+<li>
+<p>对于无向图来说，它的邻接矩阵是一个V阶的对称矩阵。所以构造时可以先构造一半，然后对称的赋值。 <br>
+对于有向图，矩阵并不对称。</p>
+</li>
+<li>
+<p>当边较少时可以将所有的元素初值都设为false(默认就是false)，边很多时(接近完全图)可以设初值为true。</p>
+</li>
+<li>
+<p>邻接矩阵在查找和添加一条边时只需要O(1)的时间，但是需要O(V^2)的空间。</p>
+</li>
+</ul>
+</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">AdjMatrixGraph</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> V<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> E<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[][]</span> adj<span style="color:#f92672">;</span>    <span style="color:#75715e">//V*V的二维布尔型矩阵
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">AdjMatrixGraph</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> V<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>V <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Too few vertices&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">V</span> <span style="color:#f92672">=</span> V<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">E</span> <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">adj</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>V<span style="color:#f92672">][</span>V<span style="color:#f92672">];</span>   <span style="color:#75715e">//初值设为false
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><ol start="3">
+<li>(很少使用)边的数组，实现一个Edge类，含有两个int变量来表示边的两个顶点。 <br>
+但是由于这种数据结构不能返回某个顶点的所有相邻的边，所有有很大缺点。</li>
+</ol>
+<p>一些其他的操作（以邻接表为例）：</p>
+<ul>
+<li>构造方法的重写。 <br>
+默认的构造方法传递一个顶点数V，创建一个大小为V的LinkedList的数组，数组的索引0~V-代表顶点。而初始时边的数目还是0。 <br>
+现重写构造方法，通过输入确定顶点和边的数目。再确定边连接的顶点。或者通过传递一个已经存在的图，初始化一个一样的图。</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">validateVertex</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">//判断顶点是否有效
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>v <span style="color:#f92672">&lt;</span> 0 <span style="color:#f92672">||</span> v <span style="color:#f92672">&gt;=</span> V<span style="color:#f92672">)</span>
+        <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;vertex &#34;</span> <span style="color:#f92672">+</span> v <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; is not between 0 and &#34;</span> <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>V<span style="color:#f92672">-</span>1<span style="color:#f92672">));</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">AdjListGraph</span><span style="color:#f92672">(</span>In in<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">//通过输入确定顶点和边的数目
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>in <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;argument is null&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">V</span> <span style="color:#f92672">=</span> in<span style="color:#f92672">.</span><span style="color:#a6e22e">readInt</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>V <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;number of vertices in a Graph must be nonnegative&#34;</span><span style="color:#f92672">);</span>
+        adj <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;[])</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">[</span>V<span style="color:#f92672">];</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> v <span style="color:#f92672">&lt;</span> V<span style="color:#f92672">;</span> v<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            adj<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;();</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">int</span> E <span style="color:#f92672">=</span> in<span style="color:#f92672">.</span><span style="color:#a6e22e">readInt</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>E <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;number of edges in a Graph must be nonnegative&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> E<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">//再确定边连接的顶点
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> in<span style="color:#f92672">.</span><span style="color:#a6e22e">readInt</span><span style="color:#f92672">();</span>
+            <span style="color:#66d9ef">int</span> w <span style="color:#f92672">=</span> in<span style="color:#f92672">.</span><span style="color:#a6e22e">readInt</span><span style="color:#f92672">();</span>
+            validateVertex<span style="color:#f92672">(</span>v<span style="color:#f92672">);</span>
+            validateVertex<span style="color:#f92672">(</span>w<span style="color:#f92672">);</span>
+            addEdge<span style="color:#f92672">(</span>v<span style="color:#f92672">,</span> w<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>NoSuchElementException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;invalid input format in Graph constructor&#34;</span><span style="color:#f92672">,</span> e<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">AdjListGraph</span><span style="color:#f92672">(</span>AdjListGraph G<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">//传递一个已经有的图来进行构造
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">V</span> <span style="color:#f92672">=</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">();</span>
+    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">E</span> <span style="color:#f92672">=</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">E</span><span style="color:#f92672">();</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>V <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Number of vertices must be nonnegative&#34;</span><span style="color:#f92672">);</span>
+
+    adj <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;[])</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">[</span>V<span style="color:#f92672">];</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> v <span style="color:#f92672">&lt;</span> V<span style="color:#f92672">;</span> v<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        adj<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;();</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> v <span style="color:#f92672">&lt;</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">();</span> v<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">// reverse so that adjacency list is in same order as original
+</span><span style="color:#75715e"></span>        Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> reverse <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;();</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> w <span style="color:#f92672">:</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">adj</span><span style="color:#f92672">[</span>v<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+            reverse<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>w<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> w <span style="color:#f92672">:</span> reverse<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            adj<span style="color:#f92672">[</span>v<span style="color:#f92672">].</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>w<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><ul>
+<li>插入新的边。<br>
+假设边e连接了顶点v和w。对于无向图需要w加到v且v加到w中。对于有向图只需要将终点加到起点即可。</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">addEdge</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> w<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    validateVertex<span style="color:#f92672">(</span>v<span style="color:#f92672">);</span>
+    validateVertex<span style="color:#f92672">(</span>w<span style="color:#f92672">);</span>  <span style="color:#75715e">//判断给定的顶点是否有效
+</span><span style="color:#75715e"></span>    E<span style="color:#f92672">++;</span>    <span style="color:#75715e">//边数加1
+</span><span style="color:#75715e"></span>                
+    <span style="color:#75715e">//无向图
+</span><span style="color:#75715e"></span>    adj<span style="color:#f92672">[</span>v<span style="color:#f92672">].</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>w<span style="color:#f92672">);</span>      
+    adj<span style="color:#f92672">[</span>w<span style="color:#f92672">].</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>v<span style="color:#f92672">);</span>
+    
+    <span style="color:#75715e">//有向图只需要
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">//adj[v].add(w);
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</code></pre></div><ul>
+<li>返回顶点v的所有相邻的顶点<br>
+因为变量adj[v]是LinkedList&lt;&gt;类型的，而LinkedList类实现了接口List，接口List又继承了接口Collection，又Collection接口继承了接口Iterable。直接来看就是adj已经实现了Iterable，所以可以直接返回adj[v]。 <br>
+实现返回与v通过边连接起来的所有的顶点。</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-JAVA" data-lang="JAVA"><span style="color:#66d9ef">public</span> Iterable<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">adj</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    validateVertex<span style="color:#f92672">(</span>v<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">return</span> adj<span style="color:#f92672">[</span>v<span style="color:#f92672">];</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>此外，Iterable接口定义了方法：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">default</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">forEach</span><span style="color:#f92672">(</span>Consumer<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">super</span> T<span style="color:#f92672">&gt;</span> action<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    Objects<span style="color:#f92672">.</span><span style="color:#a6e22e">requireNonNull</span><span style="color:#f92672">(</span>action<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>T t <span style="color:#f92672">:</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        action<span style="color:#f92672">.</span><span style="color:#a6e22e">accept</span><span style="color:#f92672">(</span>t<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><ul>
+<li>图的输出</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">//类的私有静态常量 NEWLINE  另起一行
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String NEWLINE <span style="color:#f92672">=</span> System<span style="color:#f92672">.</span><span style="color:#a6e22e">getProperty</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;line.separator&#34;</span><span style="color:#f92672">);</span>
+
+<span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">toString</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    StringBuilder s <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">();</span>
+    s<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>V <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; vertices, &#34;</span> <span style="color:#f92672">+</span> E <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; edges &#34;</span> <span style="color:#f92672">+</span> NEWLINE<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> v <span style="color:#f92672">&lt;</span> V<span style="color:#f92672">;</span> v<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        s<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>v <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;: &#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> w <span style="color:#f92672">:</span> adj<span style="color:#f92672">[</span>v<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+            s<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>w <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; &#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+        s<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>NEWLINE<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">();</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><blockquote>
+<p>注意：我们还可以使用符号表来代替由顶点索引构成的数组，这样修改之后就不需要约定顶点名必须是整数了。</p>
+<blockquote>
+<p>由于我们碰到的大多数图稀疏图，索引基于邻接表实现的图的使用最为广泛。</p>
+</blockquote>
+</blockquote>
+<p><img src="/chapter4/4.1.4.jpg" alt=""></p>
+<h1 id="深度优先搜索算法">深度优先搜索算法</h1>
+<p>算法思想：当访问一个顶点时，遍历它的所有相邻的顶点，当找到第一个没被访问的顶点x时，将目光转移到x上。当某个顶点的所有相邻顶点都被访问了，就返回。</p>
+<p>那么某个顶点是否访问怎么表示呢？<br>
+建立一个boolean型的数组marked[]，数组的元素与顶点数组一一对应，初始值都为false，代表所有的顶点都没被访问。当访问一个新的顶点时，就先将这个顶点置为true。然后遍历它所有相邻的顶点，找到第一个false的顶点，然后访问这个新的顶点。若新的顶点的所有相邻的点都是true，就返回到原来的顶点，找下一个false的点。若所有的点都被访问过，会一直返回到起点，然后结束。</p>
+<p>对于多个连通分量的图，只会深度遍历给定起点所在的连通分量。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DepthFirstSearch</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> marked<span style="color:#f92672">;</span>    <span style="color:#75715e">// 用来标记是否被访问过
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> count<span style="color:#f92672">;</span>           <span style="color:#75715e">// 用count==V判断是否是连通图
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">DepthFirstSearch</span><span style="color:#f92672">(</span>Graph G<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    marked <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">()];</span>
+    validateVertex<span style="color:#f92672">(</span>s<span style="color:#f92672">);</span>
+    <span style="color:#75715e">//从s开始访问。
+</span><span style="color:#75715e"></span>    dfs<span style="color:#f92672">(</span>G<span style="color:#f92672">,</span> s<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">// depth first search from v
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span>Graph G<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> v<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    count<span style="color:#f92672">++;</span>    <span style="color:#75715e">//被访问的顶点数多了1
+</span><span style="color:#75715e"></span>    marked<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>   <span style="color:#75715e">//对于起点，先置为true
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> w <span style="color:#f92672">:</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">adj</span><span style="color:#f92672">(</span>v<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//遍历找到第一个false的点
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>marked<span style="color:#f92672">[</span>w<span style="color:#f92672">])</span> 
+        <span style="color:#f92672">{</span>   <span style="color:#75715e">//递归访问
+</span><span style="color:#75715e"></span>            dfs<span style="color:#f92672">(</span>G<span style="color:#f92672">,</span> w<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p><img src="/chapter4/4.1.5.jpg" alt=""></p>
+<p>值得注意的是：</p>
+<ul>
+<li>
+<p>算法遍历边和访问顶点的顺序和图的表示是有关的。若y为起点x邻接表的第一个顶点，那么y将会第一个被访问。</p>
+</li>
+<li>
+<p><em><strong>深度优先搜索中的每条边都会被访问两次，且在第二次时总会发现这个顶点已经被访问过</strong></em>。</p>
+</li>
+</ul>
+<h2 id="dfs的应用">DFS的应用</h2>
+<ol>
+<li><strong>连通性问题：给定一幅图，判断两个给定的顶点是否连通/判断图中有多少个连通子图</strong></li>
+<li><strong>单点路径问题：给定一幅图和一个起点s，回答从s到给定的目的顶点v是否存在一条路径，如果有请给出这条路径。</strong></li>
+</ol>
+<p>其中第一个问题在之前的Union-Find算法已经可以解决了，只需要查看这两个顶点所在的连通分量是否一样即可。但是这并不能给出具体的路径。 <br>
+对于第二个问题，判断是否有路径可以看作第一个问题的特殊情况。但是第二个问题的关键在于给出这条路径。</p>
+<p>思路：问题的关键在于要给出这条路径，就需要保存路径上的每个点。<br>
+现在我们假设这条路径已经知道了，那么我们只要保证从起点到终点的每个顶点都是正确的即可。和走迷宫一样，我们要保证每一步走的都是对的，就需要有一根绳子，当我们走到了一个死胡同，可以按照绳子原路返回到保证对的那个点。  <br>
+那么怎么知道哪个点是对的呢？或者说我们可以 <em><strong>排查不对的点</strong></em>。对于某个点x，如果这个点有未被标记的点y，那么就需要记录下x，当进入未被标记的点y发现不通时，就需要返回到上一个点(x)进行下一个未被标记的点z的查找。当这个点x的所有的相邻的点都被标记了，但并未找到给定的点，说明这个点不是对的点，就返回这个点x的上一个点w。即使最坏的情况也不过到起点。因为起点一定是路径上对的那个点。</p>
+<p>其实这个方法就是靠遍历，最坏情况需要找到所有不行的路径才能成功。最好的情况每次都会找到正确路径的点，虽然可能性很小。<br>
+这还有一点动态规划的思想，对于起点s，终点w，对于正确路径的任意一点v，由s-&gt;w必须通过v，当找到了v时，只需要保证v-&gt;w正确即可。因为v被记录下来，不需要再次找s-&gt;v的路径。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DepthFirstPaths</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> marked<span style="color:#f92672">;</span>    <span style="color:#75715e">// 用于标记的数组
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> edgeTo<span style="color:#f92672">;</span>        <span style="color:#75715e">// 用于存放上一个顶点的数组，记录每个顶点到起点的路径
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> s<span style="color:#f92672">;</span>         <span style="color:#75715e">// 起点
+</span><span style="color:#75715e"></span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">DepthFirstPaths</span><span style="color:#f92672">(</span>Graph G<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">s</span> <span style="color:#f92672">=</span> s<span style="color:#f92672">;</span>
+        edgeTo <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">()];</span>
+        marked <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">()];</span>
+        validateVertex<span style="color:#f92672">(</span>s<span style="color:#f92672">);</span>
+        dfs<span style="color:#f92672">(</span>G<span style="color:#f92672">,</span> s<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span>Graph G<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> v<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        marked<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> w <span style="color:#f92672">:</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">adj</span><span style="color:#f92672">(</span>v<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>marked<span style="color:#f92672">[</span>w<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+                edgeTo<span style="color:#f92672">[</span>w<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> v<span style="color:#f92672">;</span>  <span style="color:#75715e">//记录这个顶点的上一个顶点，用于记录当前顶点到起点的路径
+</span><span style="color:#75715e"></span>                dfs<span style="color:#f92672">(</span>G<span style="color:#f92672">,</span> w<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>判断是否有路径，连通性问题：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">hasPathTo</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        validateVertex<span style="color:#f92672">(</span>v<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> marked<span style="color:#f92672">[</span>v<span style="color:#f92672">];</span>   <span style="color:#75715e">//若终点被标记了就说明有这样的一条路径
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</code></pre></div><p>给出这样的一条路径，单点路径问题： <br>
+遍历edgeTo[]数组，终点v对应的点(假设是w)是s-&gt;v上的最后一个中间点，然后找w的edgeTo[] (假设是w)，那么w是路径中的倒数第二个中间的点，递归直到起点v。但这样的顺序是反的，所有要用一个栈让顺序变正。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> Iterable<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">pathTo</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    validateVertex<span style="color:#f92672">(</span>v<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>hasPathTo<span style="color:#f92672">(</span>v<span style="color:#f92672">))</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+    Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> path <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;();</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> v<span style="color:#f92672">;</span> x <span style="color:#f92672">!=</span> s<span style="color:#f92672">;</span> x <span style="color:#f92672">=</span> edgeTo<span style="color:#f92672">[</span>x<span style="color:#f92672">])</span>
+        path<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>x<span style="color:#f92672">);</span>   <span style="color:#75715e">//一直压入栈 直到遇到起点
+</span><span style="color:#75715e"></span>    path<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>s<span style="color:#f92672">);</span>       <span style="color:#75715e">//起点入栈
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> path<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">//调用实例
+</span><span style="color:#75715e"></span>    Scanner scanner <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Scanner<span style="color:#f92672">(</span>System<span style="color:#f92672">.</span><span style="color:#a6e22e">in</span><span style="color:#f92672">);</span>
+    Graph G <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Graph<span style="color:#f92672">(</span>scanner<span style="color:#f92672">);</span>   <span style="color:#75715e">//构造一个图G，传递进去
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> s <span style="color:#f92672">=</span> scanner<span style="color:#f92672">.</span><span style="color:#a6e22e">nextInt</span><span style="color:#f92672">();</span>
+    DepthFirstPaths dfs <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> DepthFirstPaths<span style="color:#f92672">(</span>G<span style="color:#f92672">,</span> s<span style="color:#f92672">);</span>
+
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> v <span style="color:#f92672">&lt;</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">();</span> v<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>dfs<span style="color:#f92672">.</span><span style="color:#a6e22e">hasPathTo</span><span style="color:#f92672">(</span>v<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+            StdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">printf</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;%d to %d:  &#34;</span><span style="color:#f92672">,</span> s<span style="color:#f92672">,</span> v<span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> x <span style="color:#f92672">:</span> dfs<span style="color:#f92672">.</span><span style="color:#a6e22e">pathTo</span><span style="color:#f92672">(</span>v<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">==</span> s<span style="color:#f92672">)</span> StdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">print</span><span style="color:#f92672">(</span>x<span style="color:#f92672">);</span>
+                <span style="color:#66d9ef">else</span>        StdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">print</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;-&#34;</span> <span style="color:#f92672">+</span> x<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+            StdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            StdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">printf</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;%d to %d:  not connected\n&#34;</span><span style="color:#f92672">,</span> s<span style="color:#f92672">,</span> v<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p><img src="/chapter4/4.1.6.jpg" alt="">
+<img src="/chapter4/4.1.7.jpg" alt=""></p>
+<p><strong>命题：DFS算法得到的从给定起点到任意标记顶点的路径所需的时间和路径长度成正比</strong></p>
+<hr>
+<h1 id="广度优先搜索算法">广度优先搜索算法</h1>
+<p><strong>单点最短路径问题：给定一幅图和一个起点s，若s到v有路径(依靠DFS可以解决)，那么给出最短的那条路径</strong>。</p>
+<p>而广度优先算法就是为了解决这一问题。要找到从s到v的最短路径，就从s开始，在所有由一条边就可以到达的顶点中找是否有v。如果没有，就找所有由两条边可以到达的顶点。递归下去，直到第一次找到了v，这时就是最短的路径。</p>
+<ol>
+<li>可以借助树的层次遍历的思想，先遍历树的第一层的顶点，然后遍历第二层，依次下去。这里就要借助队列。同样的，图的广度优先搜索算法也需要使用队列来保存所有已经被标记过但是其邻接表华为被检查过的顶点。 <br>
+具体的实现：先将起点入队列，重复操作下面操作直到队列为空：</li>
+</ol>
+<ul>
+<li>取队列的下一个顶点 并 标记它。</li>
+<li>将与v相邻的所有 未被标记的 顶点加入队列。</li>
+</ul>
+<ol start="2">
+<li>那么该如何保存那条最短的路径呢？<br>
+和DFS一样，借助一个edgeTo[]数组。但是不同的是：DFS的edgeTo[]数组保存的是第一次访问的顶点的上一个顶点，而BFS的edgeTo[]数组保存的是路径长度逐渐变大时第一次访问的顶点的上一个顶点。</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BreadthFirstPaths</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> INFINITY <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> marked<span style="color:#f92672">;</span>  <span style="color:#75715e">//标记是否访问的数组
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> edgeTo<span style="color:#f92672">;</span>      <span style="color:#75715e">//标记路径长度逐渐变大时第一次访问的顶点的上一个顶点。
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> distTo<span style="color:#f92672">;</span>      <span style="color:#75715e">//保存路径长度
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">BreadthFirstPaths</span><span style="color:#f92672">(</span>Graph G<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        marked <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">()];</span>
+        distTo <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">()];</span>
+        edgeTo <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">()];</span>
+        validateVertex<span style="color:#f92672">(</span>s<span style="color:#f92672">);</span>
+        bfs<span style="color:#f92672">(</span>G<span style="color:#f92672">,</span> s<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">bfs</span><span style="color:#f92672">(</span>Graph G<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        Queue<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> q <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Queue<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;();</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> v <span style="color:#f92672">&lt;</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">();</span> v<span style="color:#f92672">++)</span>
+            distTo<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> INFINITY<span style="color:#f92672">;</span>   <span style="color:#75715e">//初始值默认不可达
+</span><span style="color:#75715e"></span>        distTo<span style="color:#f92672">[</span>s<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>  <span style="color:#75715e">//从起点开始 ，路径长度由0逐渐增加
+</span><span style="color:#75715e"></span>        marked<span style="color:#f92672">[</span>s<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>   <span style="color:#75715e">//从起点s开始
+</span><span style="color:#75715e"></span>        q<span style="color:#f92672">.</span><span style="color:#a6e22e">enqueue</span><span style="color:#f92672">(</span>s<span style="color:#f92672">);</span>   <span style="color:#75715e">//先将起点入队列
+</span><span style="color:#75715e"></span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>q<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> q<span style="color:#f92672">.</span><span style="color:#a6e22e">dequeue</span><span style="color:#f92672">();</span>
+            <span style="color:#75715e">//取队列的下一个顶点 并 标记它
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> w <span style="color:#f92672">:</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">adj</span><span style="color:#f92672">(</span>v<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">//将与v相邻的所有 未被标记的 顶点加入队列。
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>marked<span style="color:#f92672">[</span>w<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+                    edgeTo<span style="color:#f92672">[</span>w<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> v<span style="color:#f92672">;</span>
+                    distTo<span style="color:#f92672">[</span>w<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> distTo<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+                    marked<span style="color:#f92672">[</span>w<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+                    q<span style="color:#f92672">.</span><span style="color:#a6e22e">enqueue</span><span style="color:#f92672">(</span>w<span style="color:#f92672">);</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#75715e">// 判断是否从起点s由到顶点v的路径
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">hasPathTo</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        validateVertex<span style="color:#f92672">(</span>v<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> marked<span style="color:#f92672">[</span>v<span style="color:#f92672">];</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">//返回起点s到顶点v的路径长度
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">distTo</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        validateVertex<span style="color:#f92672">(</span>v<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> distTo<span style="color:#f92672">[</span>v<span style="color:#f92672">];</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">//用队列来正向保存路径
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> Iterable<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">pathTo</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        validateVertex<span style="color:#f92672">(</span>v<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>hasPathTo<span style="color:#f92672">(</span>v<span style="color:#f92672">))</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> path <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;();</span>
+        <span style="color:#66d9ef">int</span> x<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">=</span> v<span style="color:#f92672">;</span> distTo<span style="color:#f92672">[</span>x<span style="color:#f92672">]</span> <span style="color:#f92672">!=</span> 0<span style="color:#f92672">;</span> x <span style="color:#f92672">=</span> edgeTo<span style="color:#f92672">[</span>x<span style="color:#f92672">])</span>
+            path<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>x<span style="color:#f92672">);</span>
+        path<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>x<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> path<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+</code></pre></div><p><img src="/chapter4/4.1.8.jpg" alt="">
+<img src="/chapter4/4.1.10.jpg" alt=""></p>
+<p><strong>命题：BFS算法所需的时间再最坏情况下与V+E成正比</strong>。</p>
+<hr>
+<h2 id="dfs和bfs的总结">DFS和BFS的总结</h2>
+<ol>
+<li>
+<p>DFS用于解决：</p>
+<ol>
+<li><strong>连通性问题：给定一幅图，判断两个给定的顶点是否连通/判断图中有多少个连通子图</strong></li>
+<li><strong>单点路径问题：给定一幅图和一个起点s，回答从s到给定的目的顶点v是否存在一条路径，如果有请给出这条路径。</strong></li>
+</ol>
+<p>BFS用于解决：<br>
+<strong>单点最短路径问题：给定一幅图和一个起点s，若s到v有路径(依靠DFS可以解决)，那么给出最短的那条路径</strong>。</p>
+<p>当然，BFS也可以用于解决连通性问题。</p>
+</li>
+<li>
+<p>DFS和BFS的不同在于获取下一顶点的规则：广度优先搜索是最早加入的顶点；深度优先搜索是最晚加入的顶点。<br>
+深度优先搜索思想是寻找离起点更远的顶点，只有在碰到死胡同是才访问进出的顶点；广度优先搜索则是先覆盖起点附近的顶点，只有在附近的顶点都被访问过了才向前进。</p>
+</li>
+</ol>
+<hr>
+<h2 id="应用1连通分量">应用1：连通分量</h2>
+<p>给出问题：如何找一个图所有的连通分量？</p>
+<p>“与……连通”是一种<em>等价关系</em>，将所有的顶点切分成为<em>等价类（连通分量）</em></p>
+<p>首先回顾之前的union-find算法，它实现的就是判断两个顶点是否处于同一连通分量并可以将两个连通分量通过connect()方法连接起来。而它是通过一个id[]来标识每个顶点所处的连通分量，当对应的id[]的值相同表明处于同一个连通分量。</p>
+<p>借助这个思想，可以利用深度优先搜索算法：从起点0开始。初始时，其他的顶点都没被标识，对0开始调用深度优先搜索。而顶点0深度优先搜索第一次标识的点都一定和它处于同一连通分量(假设id为1)。当0的深度优先搜索结束时，判断是否还有顶点处于未被标识状态(一个大的外循环)。若还有未被标识的，就说明它是独立于0所在的连通分量(id为1).那么以这个顶点为起点再次深度优先搜索(连通分量id自加1)。搜索完成回到外循环检测是否还有未被标识的顶点。一直进行，直到所有顶点都被标识了。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// 连通分量ConnectedComponents
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CC</span>
+<span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> marked<span style="color:#f92672">;</span> <span style="color:#75715e">//标记数组
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> id<span style="color:#f92672">;</span> <span style="color:#75715e">//连通分量数组
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> count <span style="color:#f92672">;</span> <span style="color:#75715e">//记录连通分量的总树
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">CC</span><span style="color:#f92672">(</span>Graph G<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        marked <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">()];</span>
+        id <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">()];</span>
+        <span style="color:#66d9ef">for</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> s<span style="color:#f92672">=</span>0<span style="color:#f92672">;</span>s<span style="color:#f92672">&lt;</span>G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">();</span>s<span style="color:#f92672">++)</span>    <span style="color:#75715e">//外循环保证每个点都被标记，对没有标记的顶点重新调用dfs
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span><span style="color:#f92672">(!</span>marked<span style="color:#f92672">[</span>s<span style="color:#f92672">])</span>
+            <span style="color:#f92672">{</span>
+                dfs<span style="color:#f92672">(</span>G<span style="color:#f92672">,</span>s<span style="color:#f92672">);</span>
+                count<span style="color:#f92672">++;</span>    <span style="color:#75715e">//不同的连通分量的id不同
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span>Graph G<span style="color:#f92672">,</span><span style="color:#66d9ef">int</span> v<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        marked<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+        id<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> count<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> w<span style="color:#f92672">:</span>G<span style="color:#f92672">.</span><span style="color:#a6e22e">adj</span><span style="color:#f92672">(</span>v<span style="color:#f92672">))</span>
+        <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>marked<span style="color:#f92672">[</span>w<span style="color:#f92672">])</span>
+                dfs<span style="color:#f92672">(</span>G<span style="color:#f92672">,</span>w<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">connected</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v<span style="color:#f92672">,</span><span style="color:#66d9ef">int</span> w<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//判断是否属于同一连通分量
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> id<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> id<span style="color:#f92672">[</span>w<span style="color:#f92672">];</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//返回顶点v的连通分量的id
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> id<span style="color:#f92672">[</span>v<span style="color:#f92672">];</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">count</span><span style="color:#f92672">()</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//返回图的连通分量的总个数
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> count<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p><img src="/chapter4/4.1.9.jpg" alt=""></p>
+<p>与union-find算法比较：union-find算法不需要完整的构造并表示一幅图。并且union-find算法是一种动态算法，能在任何时候用接近常数的时间检查两个顶点是否相连。<br>
+因此我们在只需要判断连通性或者是需要有大量连通性查询和插入操作混合等类似任务的时候，更倾向于union-find算法。而深度优先搜索更适合于实现图的抽象数据类型。</p>
+<h2 id="应用2检测环">应用2：检测环</h2>
+<p>问题：给定的图是无环图吗？</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Cycle</span>
+<span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> marked<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> hasCycle<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Cycle</span><span style="color:#f92672">(</span>Graph G<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        marked <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">()];</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> s <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> s <span style="color:#f92672">&lt;</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">();</span> s<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span><span style="color:#f92672">(!</span>marked<span style="color:#f92672">[</span>s<span style="color:#f92672">])</span>
+                dfs<span style="color:#f92672">(</span>G<span style="color:#f92672">,</span>s<span style="color:#f92672">,</span>s<span style="color:#f92672">);</span> <span style="color:#75715e">//判断深度优先会不会再次访问到当前顶点
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span>Graph G<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> v<span style="color:#f92672">,</span><span style="color:#66d9ef">int</span> u<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        marked<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> w <span style="color:#f92672">:</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">adj</span><span style="color:#f92672">(</span>v<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>marked<span style="color:#f92672">[</span>w<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+                dfs<span style="color:#f92672">(</span>G<span style="color:#f92672">,</span> w<span style="color:#f92672">,</span>v<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>w<span style="color:#f92672">!=</span>u<span style="color:#f92672">)</span>   <span style="color:#75715e">//v的某个顶点当w被访问过了，且这个顶点不是当前顶点
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">{</span>               <span style="color:#75715e">//那么说明有环
+</span><span style="color:#75715e"></span>                hasCycle <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">hasCycle</span><span style="color:#f92672">()</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> hasCycle<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">//O(V+E)  for循环O(V)  深度优先遍历O(E)
+</span></code></pre></div><hr>
+<h2 id="应用3二分图">应用3：二分图</h2>
+<p>问题：给定的图G是二分图吗(顶点集V可分割为两个互不相交的子集，并且图中每条边依附的两个顶点都分属于这两个互不相交的子集，两个子集内的顶点不相邻)？</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TwoColor</span>
+<span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> marked<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> color<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> isTwoColorable <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">TwoColor</span><span style="color:#f92672">(</span>Graph G<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        marked <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">()];</span>
+        color <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">()];</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> s <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> s <span style="color:#f92672">&lt;</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">();</span> s<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span><span style="color:#f92672">(!</span>marked<span style="color:#f92672">[</span>s<span style="color:#f92672">])</span>
+                dfs<span style="color:#f92672">(</span>G<span style="color:#f92672">,</span>s<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span>Graph G<span style="color:#f92672">,</span><span style="color:#66d9ef">int</span> v<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        marked<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> w<span style="color:#f92672">:</span>G<span style="color:#f92672">.</span><span style="color:#a6e22e">adj</span><span style="color:#f92672">(</span>v<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span><span style="color:#f92672">(!</span>marked<span style="color:#f92672">[</span>w<span style="color:#f92672">])</span>
+            <span style="color:#f92672">{</span>
+                color<span style="color:#f92672">[</span>w<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">!</span>color<span style="color:#f92672">[</span>v<span style="color:#f92672">];</span>   <span style="color:#75715e">//保证相邻的两个顶点颜色都不同
+</span><span style="color:#75715e"></span>                dfs<span style="color:#f92672">(</span>G<span style="color:#f92672">,</span>w<span style="color:#f92672">);</span>   <span style="color:#75715e">//继续进行dfs
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>color<span style="color:#f92672">[</span>w<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> color<span style="color:#f92672">[</span>v<span style="color:#f92672">])</span>   <span style="color:#75715e">//如果两个颜色相同
+</span><span style="color:#75715e"></span>                isTwoColorable <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>     <span style="color:#75715e">//则说明不是二分图
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isBipartite</span><span style="color:#f92672">()</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> isTwoColorable<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+</code></pre></div>
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

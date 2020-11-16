@@ -5,10 +5,29 @@
     <link>https://yzz-git111.github.io/post/</link>
     <description>Recent content in Posts on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 09 Nov 2020 18:37:30 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 15 Nov 2020 14:10:06 +0800</lastBuildDate>
     
 	<atom:link href="https://yzz-git111.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>无向图</title>
+      <link>https://yzz-git111.github.io/post/%E6%97%A0%E5%90%91%E5%9B%BE/</link>
+      <pubDate>Sun, 15 Nov 2020 14:10:06 +0800</pubDate>
+      
+      <guid>https://yzz-git111.github.io/post/%E6%97%A0%E5%90%91%E5%9B%BE/</guid>
+      <description>基础知识 图的定义：图是由一组顶点和一组能够将两个顶点相连的边组成的。
+假设有V个顶点，那么一般使用0~V-1来表示。这样的好处是为了 方便使用数组的索引来快速访问顶点。对于不同的数据类型，可以用 符号表将顶点的名字和0到V-1的整数值建立一一对应的关系。
+图通常可以分为：无向图，有向图，无向带权图，有向带权图。这几类对应的应用都有所不同。
+特别的，树是图的特殊情况，我们可以将树看作是无环连通图。当一幅含有V个顶点的图G满足任意一个条件:1.G有V-1条边且没有环。2.G有V-1条边是连通的。3.G中再任意加一条边都构成环路。4.G中删除任意一条边都不在连通。5.G中任意一对顶点之间有且仅有一条简单路径。它都是一棵树。 同样的，连通图的生成树是它的一幅子图，它含有图中的所有顶点且是一棵树。图的生成树森林是它的所有连通子图的生成树的集合。
+图的3种数据结构表示  *(稀疏图))邻接表：我们可以定义一个数组，将数组的索引和顶点之间建立一一对应关系，用这个数组存放顶点。且数组的每个元素都存放一个链表对象，链表中存放与这个顶点相连的顶点(两个顶点确定一条边)。 这种数据结构的特点是：   适用于稀疏图，且我们所遇到的大部分都是稀疏图。
+  无向图在这种数据结构中每条边都会出现两次(v-w和w-v)。
+有向图只出现一次(v-&amp;gt;w)。
+  使用的空间和V+E成正比(数组V，链表结点2E)。
+  添加一条边所需时间为常数(先根据索引找到顶点，然后链表的插入，都为O(1))。
+  遍历顶点v的所有相邻顶点所需时间和v的度数成正比。
+    public class AdjListGraph { //其中调用了Java自带的链表类LinkedList  private final int V; //默认不对顶点进行修改  private int E; //仅仅对边进行操作  //如果对顶点进行修改，可以对这个数据结构进行扩展，大差不差  private LinkedList&amp;lt;Integer&amp;gt;[] adj; public AdjListGraph(int V) { if (V &amp;lt; 0) throw new IllegalArgumentException(&amp;#34;Number of vertices must be nonnegative&amp;#34;); this.</description>
+    </item>
     
     <item>
       <title>JavaSE知识点</title>

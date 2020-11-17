@@ -12,16 +12,12 @@
     
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="JavaSE知识点"/>
-<meta name="twitter:description" content="面向对象语言的三大特性：封装、继承、多态。java作为一门面向对象的语言，将一切都抽象为 类，实现万物皆对象。1
-封装 封装的好处：
-* 提高数据的安全性。 * 隐藏代码实现的细节 * 便于维护代码   使属性私有化，并且通过get(),set()方法来操作。  实例：
-class Student { private String id; private int age; Student() { } public int getAge() { return age; } public void setAge(int age) { if(age&lt;0 || age&gt;25) { System.out.println(&#34;年龄不合法！&#34;); return; } this.age = age; } public String getId(String password) { if(!password.equals(&#34;123456&#34;)) return &#34;没有权限!&#34;; return id; } public void setId(String id) { this.id = id; } } 对于上述的实例，在类中定义了两个成员age,id。为了保护隐私，将他们都设置为private。然后通过统一的set和get接口来操作这两个属性。"/>
+<meta name="twitter:description" content="面向对象思想 一个简单的实例
+//定义了一个Fish类 class Fish { int weight = 1; } //定义了一个Lake类 class Lake { //Lake类中 有一个Fish类的对象fish作为类的属性  Fish fish; void setFish(Fish s){ fish = s; } void foodFish(int m) { fish.weight=fish.weight&#43;m; } } public class E { public static void main(String args[]) { Fish redFish = new Fish(); System.out.println(redFish.weight); //【代码1】 答案是1  Lake lake = new Lake(); lake.setFish(redFish); lake.foodFish(120); System.out.println(redFish.weight); //【代码2】答案是121  System.out.println(lake.fish.weight); //【代码3】答案是121 (redFish和fish指向同一块内存)  } } 这段代码实现的是在一个池塘里面喂鱼的功能。 采用面向过程来写的话，大概率会实现两个函数void setFish(),void foodFish()."/>
 
     <meta property="og:title" content="JavaSE知识点" />
-<meta property="og:description" content="面向对象语言的三大特性：封装、继承、多态。java作为一门面向对象的语言，将一切都抽象为 类，实现万物皆对象。1
-封装 封装的好处：
-* 提高数据的安全性。 * 隐藏代码实现的细节 * 便于维护代码   使属性私有化，并且通过get(),set()方法来操作。  实例：
-class Student { private String id; private int age; Student() { } public int getAge() { return age; } public void setAge(int age) { if(age&lt;0 || age&gt;25) { System.out.println(&#34;年龄不合法！&#34;); return; } this.age = age; } public String getId(String password) { if(!password.equals(&#34;123456&#34;)) return &#34;没有权限!&#34;; return id; } public void setId(String id) { this.id = id; } } 对于上述的实例，在类中定义了两个成员age,id。为了保护隐私，将他们都设置为private。然后通过统一的set和get接口来操作这两个属性。" />
+<meta property="og:description" content="面向对象思想 一个简单的实例
+//定义了一个Fish类 class Fish { int weight = 1; } //定义了一个Lake类 class Lake { //Lake类中 有一个Fish类的对象fish作为类的属性  Fish fish; void setFish(Fish s){ fish = s; } void foodFish(int m) { fish.weight=fish.weight&#43;m; } } public class E { public static void main(String args[]) { Fish redFish = new Fish(); System.out.println(redFish.weight); //【代码1】 答案是1  Lake lake = new Lake(); lake.setFish(redFish); lake.foodFish(120); System.out.println(redFish.weight); //【代码2】答案是121  System.out.println(lake.fish.weight); //【代码3】答案是121 (redFish和fish指向同一块内存)  } } 这段代码实现的是在一个池塘里面喂鱼的功能。 采用面向过程来写的话，大概率会实现两个函数void setFish(),void foodFish()." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://yzz-git111.github.io/post/javase%E7%9F%A5%E8%AF%86%E7%82%B9/" />
 <meta property="article:published_time" content="2020-11-09T18:37:30+08:00" />
@@ -65,7 +61,41 @@ class Student { private String id; private int age; Student() { } public int get
         </div></div>
     </header>
     <div class="post-content">
-      <p>面向对象语言的三大特性：<del>封装、继承、多态</del>。java作为一门面向对象的语言，将一切都抽象为 <em>类</em>，实现万物皆对象。<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></p>
+      <h1 id="面向对象思想">面向对象思想</h1>
+<p>一个简单的实例</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">//定义了一个Fish类
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Fish</span> <span style="color:#f92672">{</span>
+   <span style="color:#66d9ef">int</span> weight <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">//定义了一个Lake类
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Lake</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">//Lake类中 有一个Fish类的对象fish作为类的属性
+</span><span style="color:#75715e"></span>   Fish fish<span style="color:#f92672">;</span>
+   <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setFish</span><span style="color:#f92672">(</span>Fish s<span style="color:#f92672">){</span>
+       fish <span style="color:#f92672">=</span> s<span style="color:#f92672">;</span>
+   <span style="color:#f92672">}</span>
+   <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">foodFish</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> m<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+      fish<span style="color:#f92672">.</span><span style="color:#a6e22e">weight</span><span style="color:#f92672">=</span>fish<span style="color:#f92672">.</span><span style="color:#a6e22e">weight</span><span style="color:#f92672">+</span>m<span style="color:#f92672">;</span>
+   <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">E</span> <span style="color:#f92672">{</span>
+   <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String args<span style="color:#f92672">[])</span> <span style="color:#f92672">{</span>
+       Fish  redFish <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Fish<span style="color:#f92672">();</span>
+       System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>redFish<span style="color:#f92672">.</span><span style="color:#a6e22e">weight</span><span style="color:#f92672">);</span>  <span style="color:#75715e">//【代码1】 答案是1
+</span><span style="color:#75715e"></span>       Lake lake <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Lake<span style="color:#f92672">();</span>
+       lake<span style="color:#f92672">.</span><span style="color:#a6e22e">setFish</span><span style="color:#f92672">(</span>redFish<span style="color:#f92672">);</span>
+       lake<span style="color:#f92672">.</span><span style="color:#a6e22e">foodFish</span><span style="color:#f92672">(</span>120<span style="color:#f92672">);</span>
+       System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>redFish<span style="color:#f92672">.</span><span style="color:#a6e22e">weight</span><span style="color:#f92672">);</span>  <span style="color:#75715e">//【代码2】答案是121
+</span><span style="color:#75715e"></span>       System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>lake<span style="color:#f92672">.</span><span style="color:#a6e22e">fish</span><span style="color:#f92672">.</span><span style="color:#a6e22e">weight</span><span style="color:#f92672">);</span>  <span style="color:#75715e">//【代码3】答案是121  (redFish和fish指向同一块内存)
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>这段代码实现的是在一个池塘里面喂鱼的功能。 <br>
+采用面向过程来写的话，大概率会实现两个函数void setFish(),void foodFish().创建一个变量或者结构体代表🐟，然后调用这两个函数实现养鱼并且给它喂食使🐟的体重增长。</p>
+<p>而面向对象思想：把鱼抽象成为一个类，同时池塘也抽象成为一个类。鱼这个类只有鱼自身的属性weight。而养鱼和给鱼喂食由于都是在池塘里进行的，可以将这两个方法在Lake类中实现，只需要在Lake类有一个Fish类的对象作为属性(池塘中有鱼)。调用时，需要先new一个Lake的对象(先有个池塘),new一个Fish的对象(先要有鱼)。然后调用Lake的方法setFish(),把new的Fish的对象传递进去，意味着将鱼放到池塘中喂养。然后喂食时调用Lake的foodFish()方法，传递一个Fish的对象，意味着对池塘中的某个鱼进行喂食。</p>
+<p>个人觉得面向对象需要将所有的东西都抽象成为一个类，结合实际来编程。目前理解还不是很深。</p>
+<hr>
+<p>面向对象语言的三大特性：<del>封装、继承、多态</del>。java作为一门面向对象的语言，将一切都抽象为 <em>类</em>，实现万物皆对象。<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></p>
 <h1 id="封装">封装</h1>
 <p>封装的好处：</p>
 <pre><code>* 提高数据的安全性。

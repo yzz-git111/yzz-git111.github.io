@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>无向图的一般实现 // </title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.74.3" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="yzz帅的一匹" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://yzz-git111.github.io/css/main.min.88e7083eff65effb7485b6e6f38d10afbec25093a6fac42d734ce9024d3defbd.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="无向图的一般实现"/>
+<meta name="twitter:description" content="符号图 之前提到的无向图的实现都是默认用0到V-1来代替，即用数组的索引来存储顶点。 但是对于具体应用，顶点很可能是用一个字符或者字符串表示，那么怎么将它转化为数组的索引呢？ 这就需要用到之前学过的 符号表：通过将顶点名的字符串作为键，并按顺序赋予一个0~V-1的值插入到符号表st中。再通过反向索引可以快速地根据数组的索引(抽象出来的顶点)返回真实顶点的信息。
+或者可以使用散列表,将顶点的名字通过散列函数散列计算出散列值。这时就不需要再用一个反向索引了。只需要知道每个顶点被散列到数组的哪个索引即可。
+给定一个问题：如何实现顶点是字符串的图？
+参考《算法四》，将这种 顶点名为字符串 的实例定义为符号图。
+符号图在日常生活很常见。
+  如何实现不同车站之间的路线图？这里的顶点是车站的名字。 符号图可以给出某个站台和哪些站台是连通的。
+  如何实现一个人际关系图？这里的顶点是每个人的名字。 符号图可以给出某个人a和某个人b是否认识，或者某人c认识哪些人。
+  如何实现一个网络的图判断两台主机是否连通？ 等等……
+  实现   用一个符号表st,键的类型为String,值的类型为int;
+  用一个数组keys[]作为反向索引，保存每个顶点索引对应的顶点名;
+  用一个Graph对象G存储这个无向图的信息。
+  public class SymbolGraph { private HashMap&lt;String, Integer&gt; st; // 符号表st实现String类型的顶点到int型的索引  private String[] keys; // 反向索引，保存每个顶点索引对应的顶点名  private Graph graph; // 图作为基础来存放顶点与边的信息  public SymbolGraph(String filename, String delimiter) { st = new SequentialSearchST&lt;String, Integer&gt;(); In in = new In(filename); while (!"/>
+
+    <meta property="og:title" content="无向图的一般实现" />
+<meta property="og:description" content="符号图 之前提到的无向图的实现都是默认用0到V-1来代替，即用数组的索引来存储顶点。 但是对于具体应用，顶点很可能是用一个字符或者字符串表示，那么怎么将它转化为数组的索引呢？ 这就需要用到之前学过的 符号表：通过将顶点名的字符串作为键，并按顺序赋予一个0~V-1的值插入到符号表st中。再通过反向索引可以快速地根据数组的索引(抽象出来的顶点)返回真实顶点的信息。
+或者可以使用散列表,将顶点的名字通过散列函数散列计算出散列值。这时就不需要再用一个反向索引了。只需要知道每个顶点被散列到数组的哪个索引即可。
+给定一个问题：如何实现顶点是字符串的图？
+参考《算法四》，将这种 顶点名为字符串 的实例定义为符号图。
+符号图在日常生活很常见。
+  如何实现不同车站之间的路线图？这里的顶点是车站的名字。 符号图可以给出某个站台和哪些站台是连通的。
+  如何实现一个人际关系图？这里的顶点是每个人的名字。 符号图可以给出某个人a和某个人b是否认识，或者某人c认识哪些人。
+  如何实现一个网络的图判断两台主机是否连通？ 等等……
+  实现   用一个符号表st,键的类型为String,值的类型为int;
+  用一个数组keys[]作为反向索引，保存每个顶点索引对应的顶点名;
+  用一个Graph对象G存储这个无向图的信息。
+  public class SymbolGraph { private HashMap&lt;String, Integer&gt; st; // 符号表st实现String类型的顶点到int型的索引  private String[] keys; // 反向索引，保存每个顶点索引对应的顶点名  private Graph graph; // 图作为基础来存放顶点与边的信息  public SymbolGraph(String filename, String delimiter) { st = new SequentialSearchST&lt;String, Integer&gt;(); In in = new In(filename); while (!" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yzz-git111.github.io/post/%E6%97%A0%E5%90%91%E5%9B%BE%E7%9A%84%E4%B8%80%E8%88%AC%E5%AE%9E%E7%8E%B0/" />
+<meta property="article:published_time" content="2020-11-17T16:06:09+08:00" />
+<meta property="article:modified_time" content="2020-11-17T16:06:09+08:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://yzz-git111.github.io/"><img class="app-header-avatar" src="/avatar.jpeg" alt="yzz帅的一匹" /></a>
+      <h1></h1>
+      <p>yzz也想变成学霸</p>
+      <div class="app-header-social">
+        
+          <a target="_blank" href="https://github.com/yzz-git111" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg></a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">无向图的一般实现</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Nov 17, 2020
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          2 min read
+        </div></div>
+    </header>
+    <div class="post-content">
+      <h1 id="符号图">符号图</h1>
+<p>之前提到的无向图的实现都是默认用0到V-1来代替，即用数组的索引来存储顶点。 <br>
+但是对于具体应用，顶点很可能是用一个字符或者字符串表示，那么怎么将它转化为数组的索引呢？  <br>
+这就需要用到之前学过的 <em><strong>符号表</strong></em>：通过将顶点名的字符串作为键，并按顺序赋予一个0~V-1的值插入到符号表st中。再通过反向索引可以快速地根据数组的索引(抽象出来的顶点)返回真实顶点的信息。<br>
+或者可以使用散列表,将顶点的名字通过散列函数散列计算出散列值。这时就不需要再用一个反向索引了。只需要知道每个顶点被散列到数组的哪个索引即可。</p>
+<p>给定一个问题：如何实现顶点是字符串的图？<br>
+参考《算法四》，将这种 <em>顶点名为字符串</em> 的实例定义为符号图。</p>
+<p>符号图在日常生活很常见。</p>
+<ul>
+<li>
+<p>如何实现不同车站之间的路线图？这里的顶点是车站的名字。 <br>
+符号图可以给出某个站台和哪些站台是连通的。</p>
+</li>
+<li>
+<p>如何实现一个人际关系图？这里的顶点是每个人的名字。 <br>
+符号图可以给出某个人a和某个人b是否认识，或者某人c认识哪些人。</p>
+</li>
+<li>
+<p>如何实现一个网络的图判断两台主机是否连通？    等等……</p>
+</li>
+</ul>
+<h2 id="实现">实现</h2>
+<ol>
+<li>
+<p>用一个符号表st,键的类型为String,值的类型为int;</p>
+</li>
+<li>
+<p>用一个数组keys[]作为反向索引，保存每个顶点索引对应的顶点名;</p>
+</li>
+<li>
+<p>用一个Graph对象G存储这个无向图的信息。</p>
+</li>
+</ol>
+<p><img src="/chapter4/4.1.11symbol-graph.png" alt=""></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SymbolGraph</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> HashMap<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> st<span style="color:#f92672">;</span>  <span style="color:#75715e">// 符号表st实现String类型的顶点到int型的索引
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> String<span style="color:#f92672">[]</span> keys<span style="color:#f92672">;</span>           <span style="color:#75715e">// 反向索引，保存每个顶点索引对应的顶点名
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> Graph graph<span style="color:#f92672">;</span>             <span style="color:#75715e">// 图作为基础来存放顶点与边的信息
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">SymbolGraph</span><span style="color:#f92672">(</span>String filename<span style="color:#f92672">,</span> String delimiter<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        st <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> SequentialSearchST<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;();</span>
+
+        In in <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> In<span style="color:#f92672">(</span>filename<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>in<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">//构造索引
+</span><span style="color:#75715e"></span>            String<span style="color:#f92672">[]</span> a <span style="color:#f92672">=</span> in<span style="color:#f92672">.</span><span style="color:#a6e22e">readLine</span><span style="color:#f92672">().</span><span style="color:#a6e22e">split</span><span style="color:#f92672">(</span>delimiter<span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> a<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>st<span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>a<span style="color:#f92672">[</span>i<span style="color:#f92672">]))</span>
+                    <span style="color:#75715e">//将每个顶点的String字符名作为键，0~V-1作为值
+</span><span style="color:#75715e"></span>                    <span style="color:#75715e">//把V个键值对插入到符号表
+</span><span style="color:#75715e"></span>                    st<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>a<span style="color:#f92672">[</span>i<span style="color:#f92672">],</span> st<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">());</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+
+        keys <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> String<span style="color:#f92672">[</span>st<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()];</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String name <span style="color:#f92672">:</span> st<span style="color:#f92672">.</span><span style="color:#a6e22e">keys</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">//反向索引
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">//通过数组的索引可以直接返回顶点的名字
+</span><span style="color:#75715e"></span>            keys<span style="color:#f92672">[</span>st<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>name<span style="color:#f92672">)]</span> <span style="color:#f92672">=</span> name<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+
+        graph <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Graph<span style="color:#f92672">(</span>st<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">());</span>
+        in <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> In<span style="color:#f92672">(</span>filename<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>in<span style="color:#f92672">.</span><span style="color:#a6e22e">hasNextLine</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">//将顶点与边的信息都存储到图中
+</span><span style="color:#75715e"></span>            String<span style="color:#f92672">[]</span> a <span style="color:#f92672">=</span> in<span style="color:#f92672">.</span><span style="color:#a6e22e">readLine</span><span style="color:#f92672">().</span><span style="color:#a6e22e">split</span><span style="color:#f92672">(</span>delimiter<span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> st<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>a<span style="color:#f92672">[</span>0<span style="color:#f92672">]);</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> a<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">int</span> w <span style="color:#f92672">=</span> st<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>a<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
+                graph<span style="color:#f92672">.</span><span style="color:#a6e22e">addEdge</span><span style="color:#f92672">(</span>v<span style="color:#f92672">,</span> w<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">//判断是否含有顶点名为s的顶点
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> st<span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>s<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">//返回顶点名为s的顶点的键
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">index</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> st<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>s<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">//通过反向索引，给定抽象的顶点（数组的索引0~V-1）来返回顶点的名字
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">name</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        validateVertex<span style="color:#f92672">(</span>v<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> keys<span style="color:#f92672">[</span>v<span style="color:#f92672">];</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> Graph <span style="color:#a6e22e">G</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> graph<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">validateVertex</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> V <span style="color:#f92672">=</span> graph<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>v <span style="color:#f92672">&lt;</span> 0 <span style="color:#f92672">||</span> v <span style="color:#f92672">&gt;=</span> V<span style="color:#f92672">)</span>
+            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;vertex &#34;</span> <span style="color:#f92672">+</span> v <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; is not between 0 and &#34;</span> <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>V<span style="color:#f92672">-</span>1<span style="color:#f92672">));</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        Scanner scanner <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Scanner<span style="color:#f92672">(</span>System<span style="color:#f92672">.</span><span style="color:#a6e22e">in</span><span style="color:#f92672">);</span>
+        String filename <span style="color:#f92672">=</span> scanner<span style="color:#f92672">.</span><span style="color:#a6e22e">nextLine</span><span style="color:#f92672">();</span>
+        String delimiter <span style="color:#f92672">=</span> scanner<span style="color:#f92672">.</span><span style="color:#a6e22e">nextLine</span><span style="color:#f92672">();</span>  <span style="color:#75715e">//测试 给定文件与分割符
+</span><span style="color:#75715e"></span>        SymbolGraph sg <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> SymbolGraph<span style="color:#f92672">(</span>filename<span style="color:#f92672">,</span> delimiter<span style="color:#f92672">);</span>
+        Graph graph <span style="color:#f92672">=</span> sg<span style="color:#f92672">.</span><span style="color:#a6e22e">graph</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>StdIn<span style="color:#f92672">.</span><span style="color:#a6e22e">hasNextLine</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>   <span style="color:#75715e">//给定某个顶点的名字 返回与它相连的所有其他顶点
+</span><span style="color:#75715e"></span>            String source <span style="color:#f92672">=</span> StdIn<span style="color:#f92672">.</span><span style="color:#a6e22e">readLine</span><span style="color:#f92672">();</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>sg<span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>source<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">int</span> s <span style="color:#f92672">=</span> sg<span style="color:#f92672">.</span><span style="color:#a6e22e">index</span><span style="color:#f92672">(</span>source<span style="color:#f92672">);</span>
+                <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v <span style="color:#f92672">:</span> graph<span style="color:#f92672">.</span><span style="color:#a6e22e">adj</span><span style="color:#f92672">(</span>s<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+                    StdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;   &#34;</span> <span style="color:#f92672">+</span> sg<span style="color:#f92672">.</span><span style="color:#a6e22e">name</span><span style="color:#f92672">(</span>v<span style="color:#f92672">));</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+                StdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;input not contain &#39;&#34;</span> <span style="color:#f92672">+</span> source <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;&#39;&#34;</span><span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="无向图的一般实现">无向图的一般实现</h1>
+<p>对于现实生活所接触到的很多情况，顶点都是用字符串来表示的，而我们的标准的邻接表以及邻接矩阵实现的图都是依靠数组的索引来表示顶点。 <br>
+所以我们关键的点就是将字符串抽象成为数组的索引。 <br>
+即借助符号表来实现：</p>
+<ol>
+<li>将字符串作为键，0~V-1的索引作为值，利用这些键值对构造一个符号表;</li>
+<li>建立一个反向索引：数组的每个索引都对应一个顶点名;</li>
+<li>调用已经实现的基于邻接表(或者邻接矩阵)的图存储上述信息;</li>
+</ol>
+<ul>
+<li>
+<p>可以将上述实现好的图(这时的图已经是之前的标准的图)作为参数传递给深度优先算法来解决连通性问题或者传递给广度优先算法来解决连通的路径长度问题。</p>
+<p>具体的：new一个SymbolGraph的对象，并通过类的方法public Graph G() 将构造的标准的图返回。  然后new一个BreadthFirstPaths对象，然后将标准的图传递给这个对象的某个方法既可以了。 <br>
+(这是面向对象思想，将深度/广度优先搜索算法都抽象成为了一个类，利用代码复用)</p>
+</li>
+<li>
+<p>或者可以在SymbolGraph类中也实现一个深度/广度优先方法，然后将图传递进去。 <br>
+(这就是面向过程的思想)</p>
+</li>
+</ul>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

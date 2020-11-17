@@ -5,10 +5,39 @@
     <link>https://yzz-git111.github.io/post/</link>
     <description>Recent content in Posts on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 15 Nov 2020 14:10:06 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 17 Nov 2020 16:06:47 +0800</lastBuildDate>
     
 	<atom:link href="https://yzz-git111.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>有向图</title>
+      <link>https://yzz-git111.github.io/post/%E6%9C%89%E5%90%91%E5%9B%BE/</link>
+      <pubDate>Tue, 17 Nov 2020 16:06:47 +0800</pubDate>
+      
+      <guid>https://yzz-git111.github.io/post/%E6%9C%89%E5%90%91%E5%9B%BE/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>无向图的一般实现</title>
+      <link>https://yzz-git111.github.io/post/%E6%97%A0%E5%90%91%E5%9B%BE%E7%9A%84%E4%B8%80%E8%88%AC%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 17 Nov 2020 16:06:09 +0800</pubDate>
+      
+      <guid>https://yzz-git111.github.io/post/%E6%97%A0%E5%90%91%E5%9B%BE%E7%9A%84%E4%B8%80%E8%88%AC%E5%AE%9E%E7%8E%B0/</guid>
+      <description>符号图 之前提到的无向图的实现都是默认用0到V-1来代替，即用数组的索引来存储顶点。 但是对于具体应用，顶点很可能是用一个字符或者字符串表示，那么怎么将它转化为数组的索引呢？ 这就需要用到之前学过的 符号表：通过将顶点名的字符串作为键，并按顺序赋予一个0~V-1的值插入到符号表st中。再通过反向索引可以快速地根据数组的索引(抽象出来的顶点)返回真实顶点的信息。
+或者可以使用散列表,将顶点的名字通过散列函数散列计算出散列值。这时就不需要再用一个反向索引了。只需要知道每个顶点被散列到数组的哪个索引即可。
+给定一个问题：如何实现顶点是字符串的图？
+参考《算法四》，将这种 顶点名为字符串 的实例定义为符号图。
+符号图在日常生活很常见。
+  如何实现不同车站之间的路线图？这里的顶点是车站的名字。 符号图可以给出某个站台和哪些站台是连通的。
+  如何实现一个人际关系图？这里的顶点是每个人的名字。 符号图可以给出某个人a和某个人b是否认识，或者某人c认识哪些人。
+  如何实现一个网络的图判断两台主机是否连通？ 等等……
+  实现   用一个符号表st,键的类型为String,值的类型为int;
+  用一个数组keys[]作为反向索引，保存每个顶点索引对应的顶点名;
+  用一个Graph对象G存储这个无向图的信息。
+  public class SymbolGraph { private HashMap&amp;lt;String, Integer&amp;gt; st; // 符号表st实现String类型的顶点到int型的索引  private String[] keys; // 反向索引，保存每个顶点索引对应的顶点名  private Graph graph; // 图作为基础来存放顶点与边的信息  public SymbolGraph(String filename, String delimiter) { st = new SequentialSearchST&amp;lt;String, Integer&amp;gt;(); In in = new In(filename); while (!</description>
+    </item>
     
     <item>
       <title>无向图</title>
@@ -35,10 +64,8 @@
       <pubDate>Mon, 09 Nov 2020 18:37:30 +0800</pubDate>
       
       <guid>https://yzz-git111.github.io/post/javase%E7%9F%A5%E8%AF%86%E7%82%B9/</guid>
-      <description>面向对象语言的三大特性：封装、继承、多态。java作为一门面向对象的语言，将一切都抽象为 类，实现万物皆对象。1
-封装 封装的好处：
-* 提高数据的安全性。 * 隐藏代码实现的细节 * 便于维护代码   使属性私有化，并且通过get(),set()方法来操作。  实例：
-class Student { private String id; private int age; Student() { } public int getAge() { return age; } public void setAge(int age) { if(age&amp;lt;0 || age&amp;gt;25) { System.out.println(&amp;#34;年龄不合法！&amp;#34;); return; } this.age = age; } public String getId(String password) { if(!password.equals(&amp;#34;123456&amp;#34;)) return &amp;#34;没有权限!&amp;#34;; return id; } public void setId(String id) { this.id = id; } } 对于上述的实例，在类中定义了两个成员age,id。为了保护隐私，将他们都设置为private。然后通过统一的set和get接口来操作这两个属性。</description>
+      <description>面向对象思想 一个简单的实例
+//定义了一个Fish类 class Fish { int weight = 1; } //定义了一个Lake类 class Lake { //Lake类中 有一个Fish类的对象fish作为类的属性  Fish fish; void setFish(Fish s){ fish = s; } void foodFish(int m) { fish.weight=fish.weight+m; } } public class E { public static void main(String args[]) { Fish redFish = new Fish(); System.out.println(redFish.weight); //【代码1】 答案是1  Lake lake = new Lake(); lake.setFish(redFish); lake.foodFish(120); System.out.println(redFish.weight); //【代码2】答案是121  System.out.println(lake.fish.weight); //【代码3】答案是121 (redFish和fish指向同一块内存)  } } 这段代码实现的是在一个池塘里面喂鱼的功能。 采用面向过程来写的话，大概率会实现两个函数void setFish(),void foodFish().</description>
     </item>
     
     <item>
@@ -79,7 +106,9 @@ class Student { private String id; private int age; Student() { } public int get
       <pubDate>Sat, 07 Nov 2020 21:21:31 +0800</pubDate>
       
       <guid>https://yzz-git111.github.io/post/%E5%93%88%E5%B8%8C%E8%A1%A8/</guid>
-      <description>概述 散列表即通过运算操作(散列函数)将键转化为数组的索引来访问数组中的键值对。 散列表的实现通常分为两步:
+      <description>概述 散列表即通过运算操作(散列函数)将键转化为数组的索引来访问数组中的键值对。
+索引快速的原因在于将键和值建立了一一对应的关系。利用数组的索引来访问即将键与数组的下标建立了关系，只要给出键，就能计算出下标，计算了下标，直接通过下标访问数组的那个元素。
+散列表的实现通常分为两步:
  用散列函数将被查找的键转化为一个数组的一个索引。 当多个键散列到相同的索引值时，就需要处理冲突碰撞  散列表是一种基于数组实现的符号表，但是它是将键转化为数组的索引。而不只是像最原始的基于顺序查找的链表或者基于二分查找的顺序表。
 散列表在 时间 和 空间上做出了权衡。
 当空间没有限制时，假设一个足够大的数组，我们可以直接将键作为数组的索引，那么对于给定的键key，可以直接用a[key]直接找到值，复杂度达到了O(1)。但是如果键的索引大于100，那么数组大小也需要上百，且浪费其中绝大部分。

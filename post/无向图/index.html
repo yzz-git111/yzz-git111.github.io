@@ -291,6 +291,7 @@
 <p>算法思想：当访问一个顶点时，遍历它的所有相邻的顶点，当找到第一个没被访问的顶点x时，将目光转移到x上。当某个顶点的所有相邻顶点都被访问了，就返回。</p>
 <p>那么某个顶点是否访问怎么表示呢？<br>
 建立一个boolean型的数组marked[]，数组的元素与顶点数组一一对应，初始值都为false，代表所有的顶点都没被访问。当访问一个新的顶点时，就先将这个顶点置为true。然后遍历它所有相邻的顶点，找到第一个false的顶点，然后访问这个新的顶点。若新的顶点的所有相邻的点都是true，就返回到原来的顶点，找下一个false的点。若所有的点都被访问过，会一直返回到起点，然后结束。</p>
+<p>时间复杂度O(E + V)</p>
 <p>对于多个连通分量的图，只会深度遍历给定起点所在的连通分量。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DepthFirstSearch</span> <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> marked<span style="color:#f92672">;</span>    <span style="color:#75715e">// 用来标记是否被访问过
@@ -481,7 +482,7 @@
 
 </code></pre></div><p><img src="/chapter4/4.1.8.jpg" alt="">
 <img src="/chapter4/4.1.10.jpg" alt=""></p>
-<p><strong>命题：BFS算法所需的时间再最坏情况下与V+E成正比</strong>。</p>
+<p><strong>命题：BFS算法所需的时间再最坏情况下与V+E成正比</strong>。即时间复杂度O(E + V)</p>
 <hr>
 <h2 id="dfs和bfs的总结">DFS和BFS的总结</h2>
 <ol>
@@ -509,6 +510,7 @@
 <p>“与……连通”是一种<em>等价关系</em>，将所有的顶点切分成为<em>等价类（连通分量）</em></p>
 <p>首先回顾之前的union-find算法，它实现的就是判断两个顶点是否处于同一连通分量并可以将两个连通分量通过connect()方法连接起来。而它是通过一个id[]来标识每个顶点所处的连通分量，当对应的id[]的值相同表明处于同一个连通分量。</p>
 <p>借助这个思想，可以利用深度优先搜索算法：从起点0开始。初始时，其他的顶点都没被标识，对0开始调用深度优先搜索。而顶点0深度优先搜索第一次标识的点都一定和它处于同一连通分量(假设id为1)。当0的深度优先搜索结束时，判断是否还有顶点处于未被标识状态(一个大的外循环)。若还有未被标识的，就说明它是独立于0所在的连通分量(id为1).那么以这个顶点为起点再次深度优先搜索(连通分量id自加1)。搜索完成回到外循环检测是否还有未被标识的顶点。一直进行，直到所有顶点都被标识了。</p>
+<p>时间复杂度O(E + V)</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// 连通分量ConnectedComponents
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CC</span>
 <span style="color:#f92672">{</span>
@@ -564,6 +566,7 @@
 因此我们在只需要判断连通性或者是需要有大量连通性查询和插入操作混合等类似任务的时候，更倾向于union-find算法。而深度优先搜索更适合于实现图的抽象数据类型。</p>
 <h2 id="应用2检测环">应用2：检测环</h2>
 <p>问题：给定的图是无环图吗？</p>
+<p>时间复杂度O(E + V)</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Cycle</span>
 <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> marked<span style="color:#f92672">;</span>
@@ -600,6 +603,7 @@
 </span></code></pre></div><hr>
 <h2 id="应用3二分图">应用3：二分图</h2>
 <p>问题：给定的图G是二分图吗(顶点集V可分割为两个互不相交的子集，并且图中每条边依附的两个顶点都分属于这两个互不相交的子集，两个子集内的顶点不相邻)？</p>
+<p>时间复杂度O(E + V)</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TwoColor</span>
 <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> marked<span style="color:#f92672">;</span>

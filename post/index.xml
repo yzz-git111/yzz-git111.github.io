@@ -16,7 +16,12 @@
       <pubDate>Tue, 17 Nov 2020 16:06:47 +0800</pubDate>
       
       <guid>https://yzz-git111.github.io/post/%E6%9C%89%E5%90%91%E5%9B%BE/</guid>
-      <description></description>
+      <description>引入 在生活中有这样的一些例子：
+ 食物链中，存在捕食者和被捕食者。顶点代表物种，边代表捕食关系。 计算机与服务器的连接。顶点代表不同的计算机，边代表连接被连接关系……  对于这些关系的抽象，用无向图将顶点连接起来并不能有效的表示内在的关系。我们需要用一种单向边来连接两个顶点。 有向图和无向图的区别在于无向图的边是双向的，而有向图的边代表了起点与终点的一种特定的关系。
+约定：每个顶点都能达到它自己。 简单有向环是一条起点和终点相同且不含有重复的顶点和边的环。路径或者环的长度即为其中所包含的边数。
+ 数据结构 有向图和无向图类似，都可以用邻接表、邻接矩阵等数据结构表示。唯一不同的就是有向图的边都是由起点指向终点的，这也就是说，在邻接表表示的有向图中每条边只会出现以此，在邻接矩阵表示的有向图中邻接矩阵不是对称矩阵。
+邻接矩阵
+public class AdjMatrixDigraph { private int V; private int E; private boolean[][] adj; //V*V的boolean型的矩阵 } public AdjMatrixDigraph(int V) { //边为空的构造方法  if (V &amp;lt; 0) throw new RuntimeException(&amp;#34;Number of vertices must be nonnegative&amp;#34;); this.V = V; this.E = 0; this.adj = new boolean[V][V]; } public AdjMatrixDigraph(int V, int E) { //随机E条边的构造方法  this(V); if (E &amp;lt; 0) throw new RuntimeException(&amp;#34;Number of edges must be nonnegative&amp;#34;); if (E &amp;gt; V*V) throw new RuntimeException(&amp;#34;Too many edges&amp;#34;); while (this.</description>
     </item>
     
     <item>

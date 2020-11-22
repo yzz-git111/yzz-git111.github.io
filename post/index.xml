@@ -5,10 +5,33 @@
     <link>https://yzz-git111.github.io/post/</link>
     <description>Recent content in Posts on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 17 Nov 2020 16:06:47 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 19 Nov 2020 21:20:20 +0800</lastBuildDate>
     
 	<atom:link href="https://yzz-git111.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>加权无向图</title>
+      <link>https://yzz-git111.github.io/post/%E5%8A%A0%E6%9D%83%E6%97%A0%E5%90%91%E5%9B%BE/</link>
+      <pubDate>Thu, 19 Nov 2020 21:20:20 +0800</pubDate>
+      
+      <guid>https://yzz-git111.github.io/post/%E5%8A%A0%E6%9D%83%E6%97%A0%E5%90%91%E5%9B%BE/</guid>
+      <description>加权无向图 对于之前学习的图，都默认边不含任何属性。但是现实生活中很多时候边都被赋予了一定的意义。比如地图上边的长度代表了距离;调度问题边的长度代表任务执行所需要的时间。所以引入加权图很有必要。 加权图：是一种为每条边都关联一个 权值 或是 成本 的图模型。
+先学习加权无向图，并利用 加权无向图 来解决经典的 最小生成树 问题。
+一些约定   只考虑连通图。最小生成树只可能存在于连通图。若一幅图是非连通的，我们只能使用这个算法计算它的所有连通分量的各自的最小生成树，合在一起即是最小生成森林。
+  边的权重不一定表示距离。在几何问题中，我们给边赋予的权值一般都是指距离。但是在实际生活中我们赋予的权值可以是时间，费用或其他任何的属性。
+  边的权重可能是0或者是负数。
+  所有边的权值都各不相同。如果不同边的权值相同，那么最小生成树就不唯一了。
+   原理 对于树有两个基本的性质：
+ 用一条边连接树的任意两个顶点都会产生一个环。 从树中删除任一一条边都会得到两棵独立的树。  而最小生成树的目的就是找到由V-1条边组成的既满足连通图中所有顶点又满足权值之和最小的集合。
+切分定理 切分：将图的所有顶点分为两个 非空 且 不重叠 的集合。 横切边：连接切分所得的两个不同集合的顶点的边(连接该集合的一个顶点和不在该集合的另一个顶点的一条边)
+切分定理：在一幅加权图中，给定任意的切分，它的横切边中权重最小者必然属于图的最小生成树 证明：反证法。假设一种切分所得的最小边e不在最小生成树T中，那么如果将e加入T，得到的图必然含有一条经过e的环，且这个环至少含有另一条横切边(设为f),f的权重大于e，那么我们删除f而保留e就可以得到。
+实际上，这就是 贪心算法 的一种：使用切分定理找到最小生成树的一条边，不断重复直到找到最小生成树的所有边。
+ 数据结构   利用邻接矩阵存储。和无向图的邻接矩阵表示一致，只是用边的权值代替布尔值来作为矩阵的元素。
+  回顾之前无向图数据结构的实现：将V个顶点用0~V-1代替，用一个大小为V的数组的索引(0~V-1)对应于V个顶点。对于数组的每个元素都存放了一个集合数据类型Bag的引用。Bag用链表实现，链表的每个结点都只存储了一个顶点和指向下个结点的指针。Bag里每个结点的顶点数据都表示和当前数组索引代表的顶点相邻的顶点。即用两个边的两个顶点确定一条边。 对于加权无向图，可以扩展Bag的链表的结点域，让它存储另一个顶点和这两个顶点确定的边的权重。
+  Edge对象。与方法2类似，将V个顶点用0~V-1代替，用一个大小为V的数组的索引(0~V-1)对应于V个顶点。对于数组的每个元素都存放了一个集合数据类型Bag的引用。这与邻接表的实现都是一样的。 但是不同的是Bag存放的是新定义的一个类Edge。而Edge包括了边的另一个顶点和边的权重。即将方法2扩充的Bag的顶点新封装成一个类存储。 除此之外，在Edge中定义了方法either()/other()用于返回边的两个顶点，定义了比较权重的方法compareTo().(通过实现接口Comparable并实现方法)
+  //边的数据结构 class Edge implements Comparable&amp;lt;Edge&amp;gt; { private final int v; //边的一个顶点v  private final int w; //边的另一个顶点w  private final double weight; //边的权重  public Edge(int v, int w, double weight) { if (v &amp;lt; 0) throw new IllegalArgumentException(&amp;#34;vertex index must be a nonnegative integer&amp;#34;); if (w &amp;lt; 0) throw new IllegalArgumentException(&amp;#34;vertex index must be a nonnegative integer&amp;#34;); if (Double.</description>
+    </item>
     
     <item>
       <title>有向图</title>
@@ -111,23 +134,22 @@ public class AdjMatrixDigraph { private int V; private int E; private boolean[][
       <pubDate>Sat, 07 Nov 2020 21:21:31 +0800</pubDate>
       
       <guid>https://yzz-git111.github.io/post/%E5%93%88%E5%B8%8C%E8%A1%A8/</guid>
-      <description>概述 散列表即通过运算操作(散列函数)将键转化为数组的索引来访问数组中的键值对。
-索引快速的原因在于将键和值建立了一一对应的关系。利用数组的索引来访问即将键与数组的下标建立了关系，只要给出键，就能计算出下标，计算了下标，直接通过下标访问数组的那个元素。
+      <description>概述 散列表即通过运算(散列函数)将键转化为数组的索引来访问数组中的键值对。
+散列表快速的原因在于将数组的索引和键建立了一一对应的关系。只要给出键，就能计算出索引(数组的下标)，计算出了索引，就可以直接通过下标访问数组的那个键值对。
 散列表的实现通常分为两步:
- 用散列函数将被查找的键转化为一个数组的一个索引。 当多个键散列到相同的索引值时，就需要处理冲突碰撞  散列表是一种基于数组实现的符号表，但是它是将键转化为数组的索引。而不只是像最原始的基于顺序查找的链表或者基于二分查找的顺序表。
-散列表在 时间 和 空间上做出了权衡。
-当空间没有限制时，假设一个足够大的数组，我们可以直接将键作为数组的索引，那么对于给定的键key，可以直接用a[key]直接找到值，复杂度达到了O(1)。但是如果键的索引大于100，那么数组大小也需要上百，且浪费其中绝大部分。
+ 用散列函数将被查找的键转化为一个数组的一个索引。 当多个键散列到相同的索引值时，就需要处理冲突碰撞  散列表在 时间 和 空间上做出了权衡。
+当空间没有限制时，假设一个足够大的数组，我们可以直接将键作为数组的索引(将数组的第键个位置放这个键值对)，那么对于给定的键key，可以直接用a[key]直接找到值，复杂度达到了O(1)。但是如果键的索引大于100，那么数组大小也需要上百，且浪费其中绝大部分。
 当时间没有限制时，可以使用无序数组遍历查找，查找和插入的实现都很简单。
-一个简单的散列表实例：键值对&amp;lt;901,a&amp;gt;&amp;lt;904,b&amp;gt;&amp;lt;902,d&amp;gt;&amp;lt;903,s&amp;gt;&amp;lt;905,e&amp;gt; 可以将键都减去900，得到键值对&amp;lt;1,a&amp;gt;&amp;lt;2,d&amp;gt;&amp;lt;3,s&amp;gt;&amp;lt;4,b&amp;gt;&amp;lt;5,e&amp;gt; 这时可以直接按顺序放到一个大小为5的数组中。而减去900就相当于一个简单的散列函数，key mod 900(M).
-散列表的查找和插入在均摊后拥有 常数级别O(N) 的复杂度，是最为理想的一种符号表。
+一个简单的散列表实例：键值对&amp;lt;901,a&amp;gt;&amp;lt;904,b&amp;gt;&amp;lt;902,d&amp;gt;&amp;lt;903,s&amp;gt;&amp;lt;905,e&amp;gt; 可以将键都减去900，得到键值对&amp;lt;1,a&amp;gt;&amp;lt;2,d&amp;gt;&amp;lt;3,s&amp;gt;&amp;lt;4,b&amp;gt;&amp;lt;5,e&amp;gt; 这时可以直接按顺序放到一个大小为5的数组中。而减去900就相当于一个简单的散列函数，key-900.
+散列表的查找和插入在均摊后拥有 常数级别O(1) 的复杂度，是最为理想的一种符号表。
 散列函数 为了将键转化为数组的索引，我们需要一个方法，即散列函数。
-而散列函数的选取要满足：对于任意键，大小为M的数组的0到M-1之间的每个整数都有 等可能 对应。
+理想情况下散列函数能够满足：对于任意键，大小为M的数组的0到M-1之间的每个整数都有 等可能 对应。
 最常见的散列函数就是 除留余数法
 选取大小为素数M的数组，
 当键是正整数时，对于任意整数k，计算 k mod M ，使得键能够均匀的分布在0~M-1的范围内。
 当键是0到1的浮点数时，可以将它乘以M并四舍五入到0~M-1之间的索引值。但是这样会使得键的高位权重较大。改进的方法就是将键的表示转化为二进制后再除留余数法。
 当键是字符，可以当作一个整数。对于字符串，可以给定一个很小的常数，然后计算所有字符的除留余数的值。
-对于java的是实现，由于java都是继承了类Object，都有一个默认的方法hashcode()。
+对于Java的是实现，由于Java都是继承了类Object，都有一个默认的方法hashcode()。
 对于任意对象x，都可以调用x.hashcode()并认为有均等的机会得到一个2^32个不同整数中的任意一个。
 对于我们自己实现的数据类型的散列函数，需要重写hashcode()和equals()两个方法。
 因为我们需要的是数组的索引而不是32位的整数，实现中会将默认的hashcode()方法和除留余数法结合起来产生一个0~M-1的整数：
@@ -136,7 +158,9 @@ private int hash(Key x) { return (x.hashCode() &amp;amp; 0x7ffffff) % M; } /*这
 对于碰撞处理通常分为 基于拉链法的散列表 和 基于开放地址的散列表。
  1.基于拉链法的散列表 基于拉链表的基本思想是：将大小为M的数组中的每个元素都指向一条链表，每个链表存储不同的键但是散列值都相同(都是数组的该元素的索引)的键值对。
 当M足够大时，可以使得所有链表都尽可能的短(理想情况只存储一个键值对，即没有碰撞情况)。
-查找时：首先根据键计算散列值，找到散列值对应的数组的索引存放的链表。然后在这个链表中顺序查找相应的键。 插入时：首先计算散列值。然后再以散列值为索引的数组元素的链表中插入新的键值对。</description>
+查找时：首先根据键计算散列值，找到与散列值相同的数组的索引的位置存放的链表。然后在这个链表中顺序查找相应的键。 插入时：首先计算散列值。然后再在以散列值为索引的数组元素的链表中插入新的键值对。
+拉链法的实现可以使用原始的链表，也可以为数组的M个元素分别构建之前实现过的符号表(基于二分查找的数组实现的符号表，基于二叉查找树的符号表，基于红黑树的符号表等)来保存相同的散列值的键。
+ 构造方法：调用了之前实现的基于链表顺序查询的符号表SequentialSearchST 注意：在创建st[]时要进行类型转化st = (SequentialSearchST&amp;lt;Key, Value&amp;gt;[]) new SequentialSearchST[m]; 因为Java不允许泛型的数组。  public class SeparateChainingHashST&amp;lt;Key, Value&amp;gt; { private static final int INIT_CAPACITY = 4; //定义一个常量，设为默认的散列表的大小  private int n; //键值对的数目  private int m; //散列表数组大小  private SequentialSearchST&amp;lt;Key, Value&amp;gt;[] st; //存放链表对象的数组  //通过this调用另一个重载的构造方法  public SeparateChainingHashST() { this(INIT_CAPACITY); //默认的散列表大小为INIT_CAPACITY  } public SeparateChainingHashST(int m) { this.</description>
     </item>
     
     <item>
@@ -231,7 +255,7 @@ private int hash(Key x) { return (x.hashCode() &amp;amp; 0x7ffffff) % M; } /*这
       <description>根据书中的定义：符号表是一种存储键值对的数据结构。支持插入操作：将一组新的键值对存入表中。和查找操作：根据给定的键得到相对应的值
 典型的符号表的应用：查字典时，单词就是键，释义就是值。通过单词来找到意思。
 网络搜索时，关键字就是键，网页名称就是值，通过关键字来找到网页。
-约定  每个键只对应一个值(而一个值可以对应于多个键)。即索引是唯一的。 键不能为空。 查找成功成为命中，不成功返回null为不命中 采用泛型的设计思想，在具体实现时在规定特定的类型。  最基本的符号表的API：
+约定  每个键只对应一个值(不允许存在重复的键)。 键不能为空。 值不能为空，插入一个空的值意味着删除这个键值对。 查找成功成为命中，不成功返回null为不命中 采用泛型的设计思想，在具体实现时在规定特定的类型。  最基本的符号表的API：
 基于链表实现 符号表作为一种数据结构可以通过最基本的链表来实现。
 public class SequentialSearchST&amp;lt;Key,Value&amp;gt; { private Node first; //相当于头结点指针  private class Node { Key key; Value val; Node next; public Node(Key key, Value val, Node next) { this.key=key; this.val=val; this.next=next; } } } 这里给出了链表实现的方法：使用一个内部私有类Node来存放键和值。链表只有一个私有成员first，类型为私有内部类Node，用来指示下一个结点的位置，初始值是null。
 /*这是根据键查找值 以及 插入一对新的键值对的方法*/ public Value get(Key key) { for(Node x=first;x!=null;x=x.next) { if(key.equals(x.key)) { return x.val; } } return null; } public void put(Key key,Value val) { for(Node x=first;x!</description>

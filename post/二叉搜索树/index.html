@@ -125,7 +125,7 @@
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><p><img src="/chapter3/3.2.1bst-subtree-count.png" alt=""><br>
-二叉树有先序，中序，后续和层次遍历4种方法。其中通过<strong>中序遍历</strong>一颗二叉查找树可以得到一个<strong>有序序列</strong>。</p>
+二叉树有先序，中序，后续和层次遍历4种方法。其中通过<strong>中序遍历</strong>一棵二叉查找树可以得到一个<strong>有序序列</strong>。</p>
 <hr>
 <h2 id="基本方法-递归">基本方法 递归</h2>
 <p>对于树的方法的实现，一定要有 <em><strong>递归</strong></em> 的思想。</p>
@@ -185,7 +185,7 @@
 <img src="/chapter3/3.2.5bst-typical.png" alt="">
 <img src="/chapter3/3.2.6bst-worst.png" alt=""></p>
 <hr>
-<p>下面学习一些二叉查找树的其他操作，也都用到了<strong>递归</strong>的方法</p>
+<p>二叉树由于其性质，也支持有序性的操作，也都用到了<strong>递归</strong>的方法</p>
 <h2 id="最大键和最小键">最大键和最小键</h2>
 <p>回顾二叉查找树的性质：<strong>左子树所有结点的键值比根结点小，右子树比根结点大。</strong><br>
 那么查找二叉查找树的最大/最小结点方法：<strong>如当前根结点左子树为空，则这棵二叉查找树最小结点就是根结点。如果左子树不为空。那么就是左子树的最小结点</strong>。这个方法有递归性质，<strong>只有在以某一个结点为根结点的左子树为空才会一层层返回。</strong></p>
@@ -350,6 +350,47 @@ if (x.left == null) return x.right;遇到最小的结点就会返回最小结点
     <span style="color:#f92672">}</span>
 </code></pre></div><p><img src="/chapter3/3.2.10bst-delete.png" alt=""></p>
 <hr>
+<h2 id="范围查找">范围查找</h2>
+<p>由于二叉查找树的左子树结点的键均小于根结点的键，而右子树的所有结点的键均大于根结点的键。  <br>
+利用二叉树的中序遍历便可以得到二叉查找树所有结点的键的非递减排序。那么如何做才能返回所有结点有序序列的一部分(给出最小的键low和最大的键high，返回low..high的所有的键)?</p>
+<p>回顾二叉树的中序遍历：</p>
+<ul>
+<li>递归实现：先递归到最左下的顶点(没有左子树的结点为止)。然后输出这个结点的键。接着在递归的对右子树遍历。</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">//伪代码
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">inorderTraverse</span><span style="color:#f92672">(</span>Node x<span style="color:#f92672">)</span>
+<span style="color:#f92672">{</span>
+    inorderTraverse<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">);</span>
+    printf<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">key</span><span style="color:#f92672">);</span>
+    inorderTraverse<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><ul>
+<li>非递归实现：由于中序遍历按照LDR的顺序进行遍历，所以要先输出最小的结点(最左下角的没有左子树的结点)，然后遍历当前访问结点的右子树(如果有的话)，然后逐层返回。这就是要从下往上输出，而给定的根结点位于最上方，所以需要一个栈。将根结点一直到最左下角的顶点压入栈，在依次以栈顶元素为根进行遍历。</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">nonRecursiveInorderTraverse</span><span style="color:#f92672">(</span>Node root<span style="color:#f92672">)</span>
+<span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">while</span><span style="color:#f92672">(</span>1<span style="color:#f92672">):</span>
+        <span style="color:#66d9ef">while</span> 有左子树<span style="color:#f92672">:</span>
+        stack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>当前结点<span style="color:#f92672">);</span>   <span style="color:#75715e">//根结点及左侧的结点入栈
+</span><span style="color:#75715e"></span>    
+        <span style="color:#66d9ef">if</span> 栈不空<span style="color:#960050;background-color:#1e0010">：</span>
+        取栈顶元素并访问
+
+        <span style="color:#66d9ef">if</span> 栈顶元素有右子树<span style="color:#960050;background-color:#1e0010">：</span>
+            <span style="color:#66d9ef">while</span> 有左子树<span style="color:#f92672">:</span>
+            stack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>当前结点<span style="color:#f92672">);</span>   <span style="color:#75715e">//以当前为根结点的树的左侧结点入栈
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</code></pre></div><p>同样的，对于范围查找也需要利用中序遍历。首先沿着左子树找到最小的结点。然后按照中序遍历的顺序依次访问每个属于这个范围的结点(小于等于low且大于等于high)。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">keys</span><span style="color:#f92672">(</span>Node x<span style="color:#f92672">,</span> Key lo<span style="color:#f92672">,</span> Key hi<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> cmplo <span style="color:#f92672">=</span> lo<span style="color:#f92672">.</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">key</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">int</span> cmphi <span style="color:#f92672">=</span> hi<span style="color:#f92672">.</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">key</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>cmplo <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> keys<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">,</span> lo<span style="color:#f92672">,</span> hi<span style="color:#f92672">);</span>   <span style="color:#75715e">//沿着左子树找到最小的结点
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>cmplo <span style="color:#f92672">&lt;=</span> 0 <span style="color:#f92672">&amp;&amp;</span> cmphi <span style="color:#f92672">&gt;=</span> 0<span style="color:#f92672">)</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">print</span><span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">key</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;   &#34;</span><span style="color:#f92672">);</span>    <span style="color:#75715e">//访问每个属于这个范围的结点(小于等于low且大于等于high)。
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>cmphi <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> keys<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">,</span> lo<span style="color:#f92672">,</span> hi<span style="color:#f92672">);</span>   <span style="color:#75715e">//遍历当前访问结点的右子树(如果有的话)
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</code></pre></div><hr>
 <h2 id="注意点">注意点</h2>
 <p>这里的每个方法都对应着一个私有方法，私有方法额外接受一个链接作为参数指向某个结点。<strong>目的是方便递归的调用，且别人在使用时只需要给出键不需要输入根结点。对别人来说是透明的。</strong></p>
 <hr>

@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>加权无向图 // </title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.74.3" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="yzz帅的一匹" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://yzz-git111.github.io/css/main.min.88e7083eff65effb7485b6e6f38d10afbec25093a6fac42d734ce9024d3defbd.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="加权无向图"/>
+<meta name="twitter:description" content="加权无向图 对于之前学习的图，都默认边不含任何属性。但是现实生活中很多时候边都被赋予了一定的意义。比如地图上边的长度代表了距离;调度问题边的长度代表任务执行所需要的时间。所以引入加权图很有必要。 加权图：是一种为每条边都关联一个 权值 或是 成本 的图模型。
+先学习加权无向图，并利用 加权无向图 来解决经典的 最小生成树 问题。
+一些约定   只考虑连通图。最小生成树只可能存在于连通图。若一幅图是非连通的，我们只能使用这个算法计算它的所有连通分量的各自的最小生成树，合在一起即是最小生成森林。
+  边的权重不一定表示距离。在几何问题中，我们给边赋予的权值一般都是指距离。但是在实际生活中我们赋予的权值可以是时间，费用或其他任何的属性。
+  边的权重可能是0或者是负数。
+  所有边的权值都各不相同。如果不同边的权值相同，那么最小生成树就不唯一了。
+   原理 对于树有两个基本的性质：
+ 用一条边连接树的任意两个顶点都会产生一个环。 从树中删除任一一条边都会得到两棵独立的树。  而最小生成树的目的就是找到由V-1条边组成的既满足连通图中所有顶点又满足权值之和最小的集合。
+切分定理 切分：将图的所有顶点分为两个 非空 且 不重叠 的集合。 横切边：连接切分所得的两个不同集合的顶点的边(连接该集合的一个顶点和不在该集合的另一个顶点的一条边)
+切分定理：在一幅加权图中，给定任意的切分，它的横切边中权重最小者必然属于图的最小生成树 证明：反证法。假设一种切分所得的最小边e不在最小生成树T中，那么如果将e加入T，得到的图必然含有一条经过e的环，且这个环至少含有另一条横切边(设为f),f的权重大于e，那么我们删除f而保留e就可以得到。
+实际上，这就是 贪心算法 的一种：使用切分定理找到最小生成树的一条边，不断重复直到找到最小生成树的所有边。
+ 数据结构   利用邻接矩阵存储。和无向图的邻接矩阵表示一致，只是用边的权值代替布尔值来作为矩阵的元素。
+  回顾之前无向图数据结构的实现：将V个顶点用0~V-1代替，用一个大小为V的数组的索引(0~V-1)对应于V个顶点。对于数组的每个元素都存放了一个集合数据类型Bag的引用。Bag用链表实现，链表的每个结点都只存储了一个顶点和指向下个结点的指针。Bag里每个结点的顶点数据都表示和当前数组索引代表的顶点相邻的顶点。即用两个边的两个顶点确定一条边。 对于加权无向图，可以扩展Bag的链表的结点域，让它存储另一个顶点和这两个顶点确定的边的权重。
+  Edge对象。与方法2类似，将V个顶点用0~V-1代替，用一个大小为V的数组的索引(0~V-1)对应于V个顶点。对于数组的每个元素都存放了一个集合数据类型Bag的引用。这与邻接表的实现都是一样的。 但是不同的是Bag存放的是新定义的一个类Edge。而Edge包括了边的另一个顶点和边的权重。即将方法2扩充的Bag的顶点新封装成一个类存储。 除此之外，在Edge中定义了方法either()/other()用于返回边的两个顶点，定义了比较权重的方法compareTo().(通过实现接口Comparable并实现方法)
+  //边的数据结构 class Edge implements Comparable&lt;Edge&gt; { private final int v; //边的一个顶点v  private final int w; //边的另一个顶点w  private final double weight; //边的权重  public Edge(int v, int w, double weight) { if (v &lt; 0) throw new IllegalArgumentException(&#34;vertex index must be a nonnegative integer&#34;); if (w &lt; 0) throw new IllegalArgumentException(&#34;vertex index must be a nonnegative integer&#34;); if (Double."/>
+
+    <meta property="og:title" content="加权无向图" />
+<meta property="og:description" content="加权无向图 对于之前学习的图，都默认边不含任何属性。但是现实生活中很多时候边都被赋予了一定的意义。比如地图上边的长度代表了距离;调度问题边的长度代表任务执行所需要的时间。所以引入加权图很有必要。 加权图：是一种为每条边都关联一个 权值 或是 成本 的图模型。
+先学习加权无向图，并利用 加权无向图 来解决经典的 最小生成树 问题。
+一些约定   只考虑连通图。最小生成树只可能存在于连通图。若一幅图是非连通的，我们只能使用这个算法计算它的所有连通分量的各自的最小生成树，合在一起即是最小生成森林。
+  边的权重不一定表示距离。在几何问题中，我们给边赋予的权值一般都是指距离。但是在实际生活中我们赋予的权值可以是时间，费用或其他任何的属性。
+  边的权重可能是0或者是负数。
+  所有边的权值都各不相同。如果不同边的权值相同，那么最小生成树就不唯一了。
+   原理 对于树有两个基本的性质：
+ 用一条边连接树的任意两个顶点都会产生一个环。 从树中删除任一一条边都会得到两棵独立的树。  而最小生成树的目的就是找到由V-1条边组成的既满足连通图中所有顶点又满足权值之和最小的集合。
+切分定理 切分：将图的所有顶点分为两个 非空 且 不重叠 的集合。 横切边：连接切分所得的两个不同集合的顶点的边(连接该集合的一个顶点和不在该集合的另一个顶点的一条边)
+切分定理：在一幅加权图中，给定任意的切分，它的横切边中权重最小者必然属于图的最小生成树 证明：反证法。假设一种切分所得的最小边e不在最小生成树T中，那么如果将e加入T，得到的图必然含有一条经过e的环，且这个环至少含有另一条横切边(设为f),f的权重大于e，那么我们删除f而保留e就可以得到。
+实际上，这就是 贪心算法 的一种：使用切分定理找到最小生成树的一条边，不断重复直到找到最小生成树的所有边。
+ 数据结构   利用邻接矩阵存储。和无向图的邻接矩阵表示一致，只是用边的权值代替布尔值来作为矩阵的元素。
+  回顾之前无向图数据结构的实现：将V个顶点用0~V-1代替，用一个大小为V的数组的索引(0~V-1)对应于V个顶点。对于数组的每个元素都存放了一个集合数据类型Bag的引用。Bag用链表实现，链表的每个结点都只存储了一个顶点和指向下个结点的指针。Bag里每个结点的顶点数据都表示和当前数组索引代表的顶点相邻的顶点。即用两个边的两个顶点确定一条边。 对于加权无向图，可以扩展Bag的链表的结点域，让它存储另一个顶点和这两个顶点确定的边的权重。
+  Edge对象。与方法2类似，将V个顶点用0~V-1代替，用一个大小为V的数组的索引(0~V-1)对应于V个顶点。对于数组的每个元素都存放了一个集合数据类型Bag的引用。这与邻接表的实现都是一样的。 但是不同的是Bag存放的是新定义的一个类Edge。而Edge包括了边的另一个顶点和边的权重。即将方法2扩充的Bag的顶点新封装成一个类存储。 除此之外，在Edge中定义了方法either()/other()用于返回边的两个顶点，定义了比较权重的方法compareTo().(通过实现接口Comparable并实现方法)
+  //边的数据结构 class Edge implements Comparable&lt;Edge&gt; { private final int v; //边的一个顶点v  private final int w; //边的另一个顶点w  private final double weight; //边的权重  public Edge(int v, int w, double weight) { if (v &lt; 0) throw new IllegalArgumentException(&#34;vertex index must be a nonnegative integer&#34;); if (w &lt; 0) throw new IllegalArgumentException(&#34;vertex index must be a nonnegative integer&#34;); if (Double." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yzz-git111.github.io/post/%E5%8A%A0%E6%9D%83%E6%97%A0%E5%90%91%E5%9B%BE/" />
+<meta property="article:published_time" content="2020-11-19T21:20:20+08:00" />
+<meta property="article:modified_time" content="2020-11-19T21:20:20+08:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://yzz-git111.github.io/"><img class="app-header-avatar" src="/avatar.jpeg" alt="yzz帅的一匹" /></a>
+      <h1></h1>
+      <p>yzz也想变成学霸</p>
+      <div class="app-header-social">
+        
+          <a target="_blank" href="https://github.com/yzz-git111" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg></a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">加权无向图</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Nov 19, 2020
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          6 min read
+        </div></div>
+    </header>
+    <div class="post-content">
+      <h1 id="加权无向图">加权无向图</h1>
+<p>对于之前学习的图，都默认边不含任何属性。但是现实生活中很多时候边都被赋予了一定的意义。比如地图上边的长度代表了距离;调度问题边的长度代表任务执行所需要的时间。所以引入加权图很有必要。  <br>
+加权图：是一种为每条边都关联一个 <em><strong>权值</strong></em> 或是 <em><strong>成本</strong></em> 的图模型。</p>
+<p>先学习加权无向图，并利用 <em><strong>加权无向图</strong></em> 来解决经典的 <em><strong>最小生成树</strong></em> 问题。</p>
+<h2 id="一些约定">一些约定</h2>
+<ul>
+<li>
+<p>只考虑连通图。最小生成树只可能存在于连通图。若一幅图是非连通的，我们只能使用这个算法计算它的所有连通分量的各自的最小生成树，合在一起即是最小生成森林。</p>
+</li>
+<li>
+<p>边的权重不一定表示距离。在几何问题中，我们给边赋予的权值一般都是指距离。但是在实际生活中我们赋予的权值可以是时间，费用或其他任何的属性。</p>
+</li>
+<li>
+<p>边的权重可能是0或者是负数。</p>
+</li>
+<li>
+<p>所有边的权值都各不相同。如果不同边的权值相同，那么最小生成树就不唯一了。</p>
+</li>
+</ul>
+<hr>
+<h1 id="原理">原理</h1>
+<p>对于树有两个基本的性质：</p>
+<ul>
+<li>用一条边连接树的任意两个顶点都会产生一个环。</li>
+<li>从树中删除任一一条边都会得到两棵独立的树。</li>
+</ul>
+<p>而最小生成树的目的就是找到由V-1条边组成的既满足连通图中所有顶点又满足权值之和最小的集合。</p>
+<h2 id="切分定理">切分定理</h2>
+<p>切分：将图的所有顶点分为两个 <em>非空</em> 且 <em>不重叠</em> 的集合。  <br>
+横切边：连接切分所得的两个不同集合的顶点的边(连接该集合的一个顶点和不在该集合的另一个顶点的一条边)</p>
+<p><em><strong>切分定理：在一幅加权图中，给定任意的切分，它的横切边中权重最小者必然属于图的最小生成树</strong></em> <br>
+证明：反证法。假设一种切分所得的最小边e不在最小生成树T中，那么如果将e加入T，得到的图必然含有一条经过e的环，且这个环至少含有另一条横切边(设为f),f的权重大于e，那么我们删除f而保留e就可以得到。</p>
+<p><img src="/chapter4/4.3.2cut-property.png" alt=""></p>
+<p>实际上，这就是 <em><strong>贪心算法</strong></em> 的一种：使用切分定理找到最小生成树的一条边，不断重复直到找到最小生成树的所有边。</p>
+<p><img src="/chapter4/4.3.1mst-greedy.png" alt=""></p>
+<hr>
+<h1 id="数据结构">数据结构</h1>
+<ol>
+<li>
+<p>利用邻接矩阵存储。和无向图的邻接矩阵表示一致，只是用边的权值代替布尔值来作为矩阵的元素。</p>
+</li>
+<li>
+<p>回顾之前无向图数据结构的实现：将V个顶点用0~V-1代替，用一个大小为V的数组的索引(0~V-1)对应于V个顶点。对于数组的每个元素都存放了一个集合数据类型Bag的引用。Bag用链表实现，链表的每个结点都只存储了一个顶点和指向下个结点的指针。Bag里每个结点的顶点数据都表示和当前数组索引代表的顶点相邻的顶点。即用两个边的两个顶点确定一条边。 <br>
+对于加权无向图，可以扩展Bag的链表的结点域，让它存储另一个顶点和这两个顶点确定的边的权重。</p>
+</li>
+<li>
+<p>Edge对象。与方法2类似，将V个顶点用0~V-1代替，用一个大小为V的数组的索引(0~V-1)对应于V个顶点。对于数组的每个元素都存放了一个集合数据类型Bag的引用。这与邻接表的实现都是一样的。  <br>
+但是不同的是Bag存放的是新定义的一个类Edge。而Edge包括了边的另一个顶点和边的权重。即将方法2扩充的Bag的顶点新封装成一个类存储。  <br>
+除此之外，在Edge中定义了方法either()/other()用于返回边的两个顶点，定义了比较权重的方法compareTo().(通过实现接口Comparable并实现方法)</p>
+</li>
+</ol>
+<p><img src="/chapter4/4.3.4edge-weighted-graph-representation.png" alt=""></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">//边的数据结构
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Edge</span> <span style="color:#66d9ef">implements</span> Comparable<span style="color:#f92672">&lt;</span>Edge<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> v<span style="color:#f92672">;</span>    <span style="color:#75715e">//边的一个顶点v
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> w<span style="color:#f92672">;</span>    <span style="color:#75715e">//边的另一个顶点w
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">double</span> weight<span style="color:#f92672">;</span>    <span style="color:#75715e">//边的权重
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Edge</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> w<span style="color:#f92672">,</span> <span style="color:#66d9ef">double</span> weight<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>v <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;vertex index must be a nonnegative integer&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>w <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;vertex index must be a nonnegative integer&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>Double<span style="color:#f92672">.</span><span style="color:#a6e22e">isNaN</span><span style="color:#f92672">(</span>weight<span style="color:#f92672">))</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Weight is NaN&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">v</span> <span style="color:#f92672">=</span> v<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">w</span> <span style="color:#f92672">=</span> w<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">weight</span> <span style="color:#f92672">=</span> weight<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">either</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//返回边的一个顶点
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> v<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">other</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> vertex<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//返回边的另一个顶点
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span>      <span style="color:#f92672">(</span>vertex <span style="color:#f92672">==</span> v<span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> w<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>vertex <span style="color:#f92672">==</span> w<span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> v<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Illegal endpoint&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>Edge that<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> Double<span style="color:#f92672">.</span><span style="color:#a6e22e">compare</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">weight</span><span style="color:#f92672">,</span> that<span style="color:#f92672">.</span><span style="color:#a6e22e">weight</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">//加权无向图的数据结构
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">EdgeWeightedGraph</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> V<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> E<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> Bag<span style="color:#f92672">&lt;</span>Edge<span style="color:#f92672">&gt;[]</span> adj<span style="color:#f92672">;</span> <span style="color:#75715e">//用一个大小为V的数组的索引(0~V-1)对应于V个顶点。
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">EdgeWeightedGraph</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> V<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//只初始化V个点
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>V <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Number of vertices must be nonnegative&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">V</span> <span style="color:#f92672">=</span> V<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">E</span> <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> <span style="color:#75715e">//不初始化边
+</span><span style="color:#75715e"></span>        adj <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Bag<span style="color:#f92672">&lt;</span>Edge<span style="color:#f92672">&gt;[])</span> <span style="color:#66d9ef">new</span> Bag<span style="color:#f92672">[</span>V<span style="color:#f92672">];</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> v <span style="color:#f92672">&lt;</span> V<span style="color:#f92672">;</span> v<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            adj<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Bag<span style="color:#f92672">&lt;</span>Edge<span style="color:#f92672">&gt;();</span> <span style="color:#75715e">//对于数组的每个元素都存放了一个集合数据类型Bag的引用。
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">EdgeWeightedGraph</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> V<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> E<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//重载构造方法
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">(</span>V<span style="color:#f92672">);</span>    <span style="color:#75715e">//调用EdgeWeightedGraph(int V)
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>E <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Number of edges must be nonnegative&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> E<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">//随机构造E条边
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> StdRandom<span style="color:#f92672">.</span><span style="color:#a6e22e">uniform</span><span style="color:#f92672">(</span>V<span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">int</span> w <span style="color:#f92672">=</span> StdRandom<span style="color:#f92672">.</span><span style="color:#a6e22e">uniform</span><span style="color:#f92672">(</span>V<span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">double</span> weight <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">round</span><span style="color:#f92672">(</span>100 <span style="color:#f92672">*</span> StdRandom<span style="color:#f92672">.</span><span style="color:#a6e22e">uniform</span><span style="color:#f92672">())</span> <span style="color:#f92672">/</span> 100<span style="color:#f92672">.</span><span style="color:#a6e22e">0</span><span style="color:#f92672">;</span>
+            Edge e <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Edge<span style="color:#f92672">(</span>v<span style="color:#f92672">,</span> w<span style="color:#f92672">,</span> weight<span style="color:#f92672">);</span>
+            addEdge<span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">EdgeWeightedGraph</span><span style="color:#f92672">(</span>In in<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//重载构造方法  通过输入构造
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>in <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;argument is null&#34;</span><span style="color:#f92672">);</span>
+
+        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+            V <span style="color:#f92672">=</span> in<span style="color:#f92672">.</span><span style="color:#a6e22e">readInt</span><span style="color:#f92672">();</span>
+            adj <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Bag<span style="color:#f92672">&lt;</span>Edge<span style="color:#f92672">&gt;[])</span> <span style="color:#66d9ef">new</span> Bag<span style="color:#f92672">[</span>V<span style="color:#f92672">];</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> v <span style="color:#f92672">&lt;</span> V<span style="color:#f92672">;</span> v<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+                adj<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Bag<span style="color:#f92672">&lt;</span>Edge<span style="color:#f92672">&gt;();</span>
+            <span style="color:#f92672">}</span>
+
+            <span style="color:#66d9ef">int</span> E <span style="color:#f92672">=</span> in<span style="color:#f92672">.</span><span style="color:#a6e22e">readInt</span><span style="color:#f92672">();</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>E <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Number of edges must be nonnegative&#34;</span><span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> E<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> in<span style="color:#f92672">.</span><span style="color:#a6e22e">readInt</span><span style="color:#f92672">();</span>
+                <span style="color:#66d9ef">int</span> w <span style="color:#f92672">=</span> in<span style="color:#f92672">.</span><span style="color:#a6e22e">readInt</span><span style="color:#f92672">();</span>
+                validateVertex<span style="color:#f92672">(</span>v<span style="color:#f92672">);</span>
+                validateVertex<span style="color:#f92672">(</span>w<span style="color:#f92672">);</span>
+                <span style="color:#66d9ef">double</span> weight <span style="color:#f92672">=</span> in<span style="color:#f92672">.</span><span style="color:#a6e22e">readDouble</span><span style="color:#f92672">();</span>
+                Edge e <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Edge<span style="color:#f92672">(</span>v<span style="color:#f92672">,</span> w<span style="color:#f92672">,</span> weight<span style="color:#f92672">);</span>
+                addEdge<span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>NoSuchElementException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;invalid input format in EdgeWeightedGraph constructor&#34;</span><span style="color:#f92672">,</span> e<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">EdgeWeightedGraph</span><span style="color:#f92672">(</span>EdgeWeightedGraph G<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//重载构造方法  通过已有的图G构造
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">(</span>G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">());</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">E</span> <span style="color:#f92672">=</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">E</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> v <span style="color:#f92672">&lt;</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">();</span> v<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">// reverse so that adjacency list is in same order as original
+</span><span style="color:#75715e"></span>            Stack<span style="color:#f92672">&lt;</span>Edge<span style="color:#f92672">&gt;</span> reverse <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;</span>Edge<span style="color:#f92672">&gt;();</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Edge e <span style="color:#f92672">:</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">adj</span><span style="color:#f92672">[</span>v<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+                reverse<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Edge e <span style="color:#f92672">:</span> reverse<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                adj<span style="color:#f92672">[</span>v<span style="color:#f92672">].</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><h2 id="加权无向图的一些基础方法">加权无向图的一些基础方法</h2>
+<ol>
+<li>加入一条加权边。由于是无向图，所以一个边存储了两次：如果一条边连接了顶点v和w，那么它既会出现在v的链表也会出现在w的链表中。</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">addEdge</span><span style="color:#f92672">(</span>Edge e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">either</span><span style="color:#f92672">();</span>
+    <span style="color:#66d9ef">int</span> w <span style="color:#f92672">=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">other</span><span style="color:#f92672">(</span>v<span style="color:#f92672">);</span>
+    validateVertex<span style="color:#f92672">(</span>v<span style="color:#f92672">);</span>
+    validateVertex<span style="color:#f92672">(</span>w<span style="color:#f92672">);</span>
+    adj<span style="color:#f92672">[</span>v<span style="color:#f92672">].</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+    adj<span style="color:#f92672">[</span>w<span style="color:#f92672">].</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+    E<span style="color:#f92672">++;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><ol start="2">
+<li>返回和某个顶点v相连的所有边</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> Iterable<span style="color:#f92672">&lt;</span>Edge<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">adj</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    validateVertex<span style="color:#f92672">(</span>v<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">return</span> adj<span style="color:#f92672">[</span>v<span style="color:#f92672">];</span>  <span style="color:#75715e">//adj为Bag类型
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</code></pre></div><ol start="3">
+<li>返回顶点v的入度</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">degree</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    validateVertex<span style="color:#f92672">(</span>v<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">return</span> adj<span style="color:#f92672">[</span>v<span style="color:#f92672">].</span><span style="color:#a6e22e">size</span><span style="color:#f92672">();</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><ol start="4">
+<li>遍历加权无向图的所有边  <br>
+注意：每个Edge边都存储了两次，但只需要输出一次。</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> Iterable<span style="color:#f92672">&lt;</span>Edge<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">edges</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    Bag<span style="color:#f92672">&lt;</span>Edge<span style="color:#f92672">&gt;</span> list <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Bag<span style="color:#f92672">&lt;</span>Edge<span style="color:#f92672">&gt;();</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> v <span style="color:#f92672">&lt;</span> V<span style="color:#f92672">;</span> v<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> selfLoops <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Edge e <span style="color:#f92672">:</span> adj<span style="color:#f92672">(</span>v<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>e<span style="color:#f92672">.</span><span style="color:#a6e22e">other</span><span style="color:#f92672">(</span>v<span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> v<span style="color:#f92672">)</span>    <span style="color:#75715e">//为了相同的边只遍历一次
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">{</span>
+                list<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#75715e">// 允许自环
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>e<span style="color:#f92672">.</span><span style="color:#a6e22e">other</span><span style="color:#f92672">(</span>v<span style="color:#f92672">)</span> <span style="color:#f92672">==</span> v<span style="color:#f92672">)</span>   
+            <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>selfLoops <span style="color:#f92672">%</span> 2 <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#75715e">//保证自环也只遍历一次
+</span><span style="color:#75715e"></span>                list<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+                selfLoops<span style="color:#f92672">++;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> list<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><hr>
+<h1 id="最小生成树">最小生成树</h1>
+<p>图的生成树是它的一棵含有其 <em><strong>所有顶点</strong></em> 的 <em><strong>无环连通</strong></em> 子图。  <br>
+一幅加权图的最小生成树(MST)是它的一棵权值(树中所有边的权值之和)最小的生成树。</p>
+<p><img src="/chapter4/4.3.3mst.png" alt=""></p>
+<p>由于图G的最小生成树既是G的一幅子图又是一棵树，所以有很多种表示:</p>
+<ul>
+<li>一组边的列表(用集合存储)</li>
+<li>一幅加权无向图(图的表示)</li>
+<li>一个以顶点为索引且含有父结点链接的数组(树的表示)</li>
+</ul>
+<hr>
+<h1 id="prim算法">Prim算法</h1>
+<h2 id="思想">思想</h2>
+<p>一开始这棵树只有一个顶点，然后向它添加V-1条边，每次总是将下一条连接树中的顶点与不在树中的顶点且权重最小的边加入树中(即由树中的顶点所定义的切分中的一条横切边)。</p>
+<p><img src="/chapter4/4.3.5prim.png" alt=""></p>
+<h2 id="prim算法的延时实现">Prim算法的延时实现</h2>
+<ul>
+<li>额外的数据结构
+<ul>
+<li>存储顶点。用marked[]数组。如果顶点v在树中，则marked[v]的值为true。</li>
+<li>存储边。用一条队列来保存 或者 一个由顶点索引的Edge对象的数组edgeTo(edgeTo[v]将v连接到树中的Edge对象)</li>
+<li>求最小的横切边。用一条优先队列MinPQ&lt; Edge &gt;来根据权重比较所有边。</li>
+</ul>
+</li>
+</ul>
+<p>采用优先队列MinPQ是因为我们的目标是权重最小的横切边，使用优先队列的话每次调用delMin就可以得到最小的边，而不需要每次都将所有的横切边都排序。</p>
+<ul>
+<li>具体做法 <br>
+初始时最小生成树只有一个根（默认顶点0），将起点与其他顶点的构成的集合的横切边都进入优先队列MinPQ，然后delMin返回权重最小的横切边。  <br>
+对于最小的横切边，判断是否两个顶点都已经在最小生成树中(marked[]数组)，若都在则表示这条横切边无效，就继续判断下一条次最小的横切边。 <br>
+当找到最小且满足条件的横切边，那么这条边就是最小生成树的边，加入到保存边的队列mst中并将另一个顶点标记在树中(marked[]=true)。同时更新MinPQ：加入新的顶点的相接的边，如果边的两个顶点都在树中，那么由新加入结点引入的横切边无效；否则就是满足新的最小生成树和其他顶点集合的横切边，加入到MinPQ中。循环找每次加入边和一个顶点后最小的横切边。  <br>
+当找到V-1条边时才结束循环。</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LazyPrimMST</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">double</span> FLOATING_POINT_EPSILON <span style="color:#f92672">=</span> 1E<span style="color:#f92672">-</span>12<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">double</span> weight<span style="color:#f92672">;</span>       <span style="color:#75715e">// 最小生成树所有边的权重之和
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> Queue<span style="color:#f92672">&lt;</span>Edge<span style="color:#f92672">&gt;</span> mst<span style="color:#f92672">;</span>     <span style="color:#75715e">// mst队列存放最小生成树的边
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> marked<span style="color:#f92672">;</span>    <span style="color:#75715e">// marked[v]代表顶点v以及在树中了
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> MinPQ<span style="color:#f92672">&lt;</span>Edge<span style="color:#f92672">&gt;</span> pq<span style="color:#f92672">;</span>      <span style="color:#75715e">// 存储树和其他顶点的横切边
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> mstcount<span style="color:#f92672">;</span>       <span style="color:#75715e">// 记录最小生成树边的数量 控制循环结束
+</span><span style="color:#75715e"></span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">LazyPrimMST</span><span style="color:#f92672">(</span>EdgeWeightedGraph G<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        mst <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Queue<span style="color:#f92672">&lt;</span>Edge<span style="color:#f92672">&gt;();</span>
+        pq <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> MinPQ<span style="color:#f92672">&lt;</span>Edge<span style="color:#f92672">&gt;();</span>
+        marked <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">()];</span>
+        mstcount <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>       <span style="color:#75715e">//最开始只有一个顶点  没有边
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> v <span style="color:#f92672">&lt;</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">();</span> v<span style="color:#f92672">++)</span>     <span style="color:#75715e">// 每个顶点都要在最小生成树中  
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>marked<span style="color:#f92672">[</span>v<span style="color:#f92672">])</span> prim<span style="color:#f92672">(</span>G<span style="color:#f92672">,</span> v<span style="color:#f92672">);</span><span style="color:#75715e">//由多个不同的连通分量就是生成最小生成树森林
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">prim</span><span style="color:#f92672">(</span>EdgeWeightedGraph G<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        scan<span style="color:#f92672">(</span>G<span style="color:#f92672">,</span> s<span style="color:#f92672">);</span> <span style="color:#75715e">//最开始将根与其他点集合构成的横切边加入
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">while</span><span style="color:#f92672">(</span>mstcount<span style="color:#f92672">&lt;</span>G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">()-</span>1<span style="color:#f92672">)</span> <span style="color:#75715e">//循环跳出的条件
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">{</span>                      
+            Edge e <span style="color:#f92672">=</span> pq<span style="color:#f92672">.</span><span style="color:#a6e22e">delMin</span><span style="color:#f92672">();</span>                      <span style="color:#75715e">// 返回最小的横切边
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">either</span><span style="color:#f92672">(),</span> w <span style="color:#f92672">=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">other</span><span style="color:#f92672">(</span>v<span style="color:#f92672">);</span>        <span style="color:#75715e">// v,w为边的两个顶点
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>marked<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">&amp;&amp;</span> marked<span style="color:#f92672">[</span>w<span style="color:#f92672">])</span> <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// 如果两个顶点都在树中，那么这条横切边就失效了
+</span><span style="color:#75715e"></span>            mst<span style="color:#f92672">.</span><span style="color:#a6e22e">enqueue</span><span style="color:#f92672">(</span>e<span style="color:#f92672">);</span><span style="color:#75715e">// 直到找到了第一条满足条件且权重最小的横切边 加入存储最小生成树边的集合队列mst
+</span><span style="color:#75715e"></span>            mstcount<span style="color:#f92672">++;</span>
+            weight <span style="color:#f92672">+=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">weight</span><span style="color:#f92672">();</span>       <span style="color:#75715e">//维护边的数量和总权重
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>marked<span style="color:#f92672">[</span>v<span style="color:#f92672">])</span> scan<span style="color:#f92672">(</span>G<span style="color:#f92672">,</span> v<span style="color:#f92672">);</span>    <span style="color:#75715e">//不能确定哪个顶点是新加入的
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>marked<span style="color:#f92672">[</span>w<span style="color:#f92672">])</span> scan<span style="color:#f92672">(</span>G<span style="color:#f92672">,</span> w<span style="color:#f92672">);</span>    <span style="color:#75715e">//两个都要调用
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">//将所有有效的横切边加入MinPQ
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">//一个在树中一个不在树中才算有效的横切边
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">scan</span><span style="color:#f92672">(</span>EdgeWeightedGraph G<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> v<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">assert</span> <span style="color:#f92672">!</span>marked<span style="color:#f92672">[</span>v<span style="color:#f92672">];</span>
+        marked<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Edge e <span style="color:#f92672">:</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">adj</span><span style="color:#f92672">(</span>v<span style="color:#f92672">))</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>marked<span style="color:#f92672">[</span>e<span style="color:#f92672">.</span><span style="color:#a6e22e">other</span><span style="color:#f92672">(</span>v<span style="color:#f92672">)])</span> pq<span style="color:#f92672">.</span><span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> Iterable<span style="color:#f92672">&lt;</span>Edge<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">edges</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> mst<span style="color:#f92672">;</span> <span style="color:#75715e">//返回存储边的集合  一个队列mst
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">weight</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> weight<span style="color:#f92672">;</span>  <span style="color:#75715e">//返回树的所有边的总权重weight
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</code></pre></div><p><img src="/chapter4/4.3.6prim-lazy.png" alt=""></p>
+<ul>
+<li>复杂度：Prime延迟实现计算一幅含有V个顶点和E条边的连通加权无向图的最小生成树所需空间为O(E).所需时间为O(ElogE)。  <br>
+复杂度主要在于优先队列的insert插入新的边和delMin后的sink方法。最坏时insert()要O(logE),delMin()要O(logE),最多插入E条边。</li>
+</ul>
+<p>这个算法将新加入顶点所有的相接的边都加入到了MinPQ中，在寻找下一条横切边的时候依次返回权重最小的边才判断这条横切边是否失效。也就是说，这种延迟实现会在MinPQ保留失效的边。</p>
+<p>改进(Prim的即时实现)： <br>
+改进延迟实现的话可以删除失效的边。更重要的是，我们只需要连接树中顶点和非树顶点中权重最小的边。举一个例子，在没有加入新的顶点x之前，目前的树和非树顶点y就有一条横切边相连，假设这条边的权重是w1。在加入x之后，由于x也有边和非树顶点y相连，按照延迟实现的算法，我们需要把这个边也加入MinPQ中。但是如果这条的权重w2大于w1，那它即使插入了MinPQ也不会起作用。对于这样的边我们就可以不加入优先队列。</p>
+<p>换句话来说，我们每次加入了新的顶点到树中后，观察这个顶点用边连接的所有还不在树中的顶点，如果不在树中的顶点靠这个顶点的边加入树中的权重比原来的还要大，就不需要更新。如果不在树中的某个顶点依靠这顶点的边加入树中权重比原来小，则这条边很有可能是最小生成树的边，要更新。</p>
+<p>简而言之  我们只会在MinPQ中保存每个非树顶点的一条边:将它与树中的顶点连接起来的权重最小的边。</p>
+<h2 id="prim算法的即时实现">Prim算法的即时实现</h2>
+<ul>
+<li>
+<p>额外的数据结构</p>
+<ul>
+<li>顶点索引数组edgeTo[].如果顶点v不在树中但至少有一条边和树相连，那么edgeTo[v是将v和树相连的最短边。</li>
+<li>顶点索引数组distTo[].edgeTo[v]存放edgeTo[v]的权重。</li>
+<li>索引优先队列.以数组的索引0~V-1作为顶点，存储的是权重。</li>
+</ul>
+</li>
+<li>
+<p>具体实现
+每次从优先队列中返回一个顶点v并检查它的邻接链表中的每条边v-w。如果w已经被标记过，那么这条边就失效了;如果w不在优先队列中或者v-w的权重小于目前已知的最小值edgeTo[w]，则更新数组，将v-w作为最佳选择。</p>
+</li>
+</ul>
+<p><img src="/chapter4/4.3.7prim-eager.png" alt=""></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PrimMST</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> Edge<span style="color:#f92672">[]</span> edgeTo<span style="color:#f92672">;</span>        <span style="color:#75715e">// edgeTo[v]代表连接树到非树顶点的最短的边
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">double</span><span style="color:#f92672">[]</span> distTo<span style="color:#f92672">;</span>      <span style="color:#75715e">// distTo[v]代表最短边的权重
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> marked<span style="color:#f92672">;</span>     <span style="color:#75715e">// 标记是否在树中
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> IndexMinPQ<span style="color:#f92672">&lt;</span>Double<span style="color:#f92672">&gt;</span> pq<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">PrimMST</span><span style="color:#f92672">(</span>EdgeWeightedGraph G<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        edgeTo <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Edge<span style="color:#f92672">[</span>G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">()];</span>
+        distTo <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">double</span><span style="color:#f92672">[</span>G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">()];</span>
+        marked <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">()];</span>
+        pq <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> IndexMinPQ<span style="color:#f92672">&lt;</span>Double<span style="color:#f92672">&gt;(</span>G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">());</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> v <span style="color:#f92672">&lt;</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">();</span> v<span style="color:#f92672">++)</span>
+        <span style="color:#75715e">//距离全部初始化为无限大  这样任意一条边都是比原来小
+</span><span style="color:#75715e"></span>            distTo<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Double<span style="color:#f92672">.</span><span style="color:#a6e22e">POSITIVE_INFINITY</span><span style="color:#f92672">;</span>
+
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> v <span style="color:#f92672">&lt;</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">();</span> v<span style="color:#f92672">++)</span>      <span style="color:#75715e">//处理多个生成树构成生成森林的情况
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>marked<span style="color:#f92672">[</span>v<span style="color:#f92672">])</span> prim<span style="color:#f92672">(</span>G<span style="color:#f92672">,</span> v<span style="color:#f92672">);</span>      
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">prim</span><span style="color:#f92672">(</span>EdgeWeightedGraph G<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//根结点距离为0
+</span><span style="color:#75715e"></span>        distTo<span style="color:#f92672">[</span>s<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 0<span style="color:#f92672">.</span><span style="color:#a6e22e">0</span><span style="color:#f92672">;</span>
+        <span style="color:#75715e">//根结点进入   初始化pq
+</span><span style="color:#75715e"></span>        pq<span style="color:#f92672">.</span><span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span>s<span style="color:#f92672">,</span> distTo<span style="color:#f92672">[</span>s<span style="color:#f92672">]);</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>pq<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> pq<span style="color:#f92672">.</span><span style="color:#a6e22e">delMin</span><span style="color:#f92672">();</span>    <span style="color:#75715e">//每次取离目前树最近的顶点
+</span><span style="color:#75715e"></span>            scan<span style="color:#f92672">(</span>G<span style="color:#f92672">,</span> v<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">scan</span><span style="color:#f92672">(</span>EdgeWeightedGraph G<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> v<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        marked<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Edge e <span style="color:#f92672">:</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">adj</span><span style="color:#f92672">(</span>v<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> w <span style="color:#f92672">=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">other</span><span style="color:#f92672">(</span>v<span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>marked<span style="color:#f92672">[</span>w<span style="color:#f92672">])</span> <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>         <span style="color:#75715e">// 边失效
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>e<span style="color:#f92672">.</span><span style="color:#a6e22e">weight</span><span style="color:#f92672">()</span> <span style="color:#f92672">&lt;</span> distTo<span style="color:#f92672">[</span>w<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>   <span style="color:#75715e">//更新边
+</span><span style="color:#75715e"></span>                distTo<span style="color:#f92672">[</span>w<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">weight</span><span style="color:#f92672">();</span>
+                edgeTo<span style="color:#f92672">[</span>w<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> e<span style="color:#f92672">;</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>pq<span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>w<span style="color:#f92672">))</span> pq<span style="color:#f92672">.</span><span style="color:#a6e22e">decreaseKey</span><span style="color:#f92672">(</span>w<span style="color:#f92672">,</span> distTo<span style="color:#f92672">[</span>w<span style="color:#f92672">]);</span>   <span style="color:#75715e">//已经有边连接树和顶点w了  更新权重
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">else</span>                pq<span style="color:#f92672">.</span><span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span>w<span style="color:#f92672">,</span> distTo<span style="color:#f92672">[</span>w<span style="color:#f92672">]);</span>    <span style="color:#75715e">//新的边连接了树和顶点w
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">//返回最小生成树的所有边的延迟实现
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">//即时实现即用一个集合 如队列存储  直接返回队列
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> Iterable<span style="color:#f92672">&lt;</span>Edge<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">edges</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        Queue<span style="color:#f92672">&lt;</span>Edge<span style="color:#f92672">&gt;</span> mst <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Queue<span style="color:#f92672">&lt;</span>Edge<span style="color:#f92672">&gt;();</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> v <span style="color:#f92672">&lt;</span> edgeTo<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> v<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            Edge e <span style="color:#f92672">=</span> edgeTo<span style="color:#f92672">[</span>v<span style="color:#f92672">];</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>e <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                mst<span style="color:#f92672">.</span><span style="color:#a6e22e">enqueue</span><span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span> mst<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">//返回最小生成树的所有边的权重的延迟实现
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">//即时实现即用一个变量存储即可
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">weight</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">double</span> weight <span style="color:#f92672">=</span> 0<span style="color:#f92672">.</span><span style="color:#a6e22e">0</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Edge e <span style="color:#f92672">:</span> edges<span style="color:#f92672">())</span>
+            weight <span style="color:#f92672">+=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">weight</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">return</span> weight<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+</code></pre></div><ul>
+<li>复杂度 <br>
+所需时间为O(ElogV),所需空间O(V)      <br>
+优先队列重顶点数最多为V，且用了三条由顶点索引的数组，所以空间上限为O(E).  <br>
+V次插入和删除最小元素，E次改变优先级的操作，O(ElogV).</li>
+</ul>
+<hr>
+<h1 id="kruskal算法">Kruskal算法</h1>
+<h2 id="思想-1">思想</h2>
+<p>将所有的边按照权重顺序(由小到大)处理，每次考察权重最小的边，如果加入这条边不会和已经加入的边构成环就可以加入，否则考察下一条权重最小的边。</p>
+<p>对比Prim算法，Prim算法是每次为小的树加入一条边而形成最后的生成树。而Kruskal算法的边每次会连接一片森林中的两棵树，从一片V个单顶点的树构成的森林开始并不断将两棵树合并直到剩下一棵最后的生成树。</p>
+<h2 id="额外的数据结构">额外的数据结构</h2>
+<ul>
+<li>一个优先队列。用于存储边的集合，并可以delMin返回最小权重的边。</li>
+<li>一个union-find数据结构来识别是否会形成环。</li>
+<li>一个队列来存储所有生成树的边。</li>
+</ul>
+<p><img src="/chapter4/4.3.8kruskal.png" alt=""></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">KruskalMST</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">double</span> FLOATING_POINT_EPSILON <span style="color:#f92672">=</span> 1E<span style="color:#f92672">-</span>12<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">double</span> weight<span style="color:#f92672">;</span>                        <span style="color:#75715e">// 记录生成树的所有边的权重
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> Queue<span style="color:#f92672">&lt;</span>Edge<span style="color:#f92672">&gt;</span> mst <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Queue<span style="color:#f92672">&lt;</span>Edge<span style="color:#f92672">&gt;();</span>  <span style="color:#75715e">// 队列保存生成树的边
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">KruskalMST</span><span style="color:#f92672">(</span>EdgeWeightedGraph G<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//  用边构造一个优先队列
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// 优先队列存储的是Edge对象  但是是按照Edge.weight进行排序的
+</span><span style="color:#75715e"></span>        MinPQ<span style="color:#f92672">&lt;</span>Edge<span style="color:#f92672">&gt;</span> pq <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> MinPQ<span style="color:#f92672">&lt;</span>Edge<span style="color:#f92672">&gt;();</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Edge e <span style="color:#f92672">:</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">edges</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            pq<span style="color:#f92672">.</span><span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#75715e">//uf来识别是否构成了环
+</span><span style="color:#75715e"></span>        WeightedQuickUnionUF uf <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> WeightedQuickUnionUF<span style="color:#f92672">(</span>G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">());</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>pq<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> mst<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">&lt;</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">//循环停止条件  pq不空 且 边数未达到V-1
+</span><span style="color:#75715e"></span>            Edge e <span style="color:#f92672">=</span> pq<span style="color:#f92672">.</span><span style="color:#a6e22e">delMin</span><span style="color:#f92672">();</span>
+            <span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">either</span><span style="color:#f92672">();</span>
+            <span style="color:#66d9ef">int</span> w <span style="color:#f92672">=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">other</span><span style="color:#f92672">(</span>v<span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>uf<span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>v<span style="color:#f92672">)</span> <span style="color:#f92672">!=</span> uf<span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>w<span style="color:#f92672">))</span> <span style="color:#f92672">{</span> 
+                <span style="color:#75715e">// 不构成一个环
+</span><span style="color:#75715e"></span>                <span style="color:#75715e">//若两个顶点所在的连通一样  那么加入这条边一定会构成一个环
+</span><span style="color:#75715e"></span>                uf<span style="color:#f92672">.</span><span style="color:#a6e22e">union</span><span style="color:#f92672">(</span>v<span style="color:#f92672">,</span> w<span style="color:#f92672">);</span>  <span style="color:#75715e">// 将两个合并到一起
+</span><span style="color:#75715e"></span>                mst<span style="color:#f92672">.</span><span style="color:#a6e22e">enqueue</span><span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>  <span style="color:#75715e">// 把边加入到队列进行保存
+</span><span style="color:#75715e"></span>                weight <span style="color:#f92672">+=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">weight</span><span style="color:#f92672">();</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">//返回edges的即时实现
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> Iterable<span style="color:#f92672">&lt;</span>Edge<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">edges</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> mst<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">//返回总权重的即时实现
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">weight</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> weight<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+</code></pre></div><h2 id="复杂度">复杂度</h2>
+<p>Kruskal算法计算一幅含有V个顶点和E条边的加权连通无向图的最小生成树所需的空间为O(E)，时间为O(ElogE)。  <br>
+所有边构造优先队列 ，需要O(ElogE). 而其他的E次connected()和V次union()与ElogE相比都可以忽略。 <br>
+优先队列最多保存E条边，所以O(E)的空间。</p>
+<p>实际上，Kruskal比Prim慢，慢在了判断是否会构成环和将两个连通分量连接起来。</p>
+<hr>
+<h1 id="总结">总结</h1>
+<p><em><strong>Prim和Krustal都只使用于加权连通无向图求最小生成树(不连通的就是求最小生成树森林)。对于加权有向图的问题不能解决。</strong></em></p>
+<p><img src="/chapter4/4.3.9.jpg" alt=""></p>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

@@ -15,7 +15,7 @@
 <meta name="twitter:description" content="根据书中的定义：符号表是一种存储键值对的数据结构。支持插入操作：将一组新的键值对存入表中。和查找操作：根据给定的键得到相对应的值
 典型的符号表的应用：查字典时，单词就是键，释义就是值。通过单词来找到意思。
 网络搜索时，关键字就是键，网页名称就是值，通过关键字来找到网页。
-约定  每个键只对应一个值(而一个值可以对应于多个键)。即索引是唯一的。 键不能为空。 查找成功成为命中，不成功返回null为不命中 采用泛型的设计思想，在具体实现时在规定特定的类型。  最基本的符号表的API：
+约定  每个键只对应一个值(不允许存在重复的键)。 键不能为空。 值不能为空，插入一个空的值意味着删除这个键值对。 查找成功成为命中，不成功返回null为不命中 采用泛型的设计思想，在具体实现时在规定特定的类型。  最基本的符号表的API：
 基于链表实现 符号表作为一种数据结构可以通过最基本的链表来实现。
 public class SequentialSearchST&lt;Key,Value&gt; { private Node first; //相当于头结点指针  private class Node { Key key; Value val; Node next; public Node(Key key, Value val, Node next) { this.key=key; this.val=val; this.next=next; } } } 这里给出了链表实现的方法：使用一个内部私有类Node来存放键和值。链表只有一个私有成员first，类型为私有内部类Node，用来指示下一个结点的位置，初始值是null。
 /*这是根据键查找值 以及 插入一对新的键值对的方法*/ public Value get(Key key) { for(Node x=first;x!=null;x=x.next) { if(key.equals(x.key)) { return x.val; } } return null; } public void put(Key key,Value val) { for(Node x=first;x!"/>
@@ -24,7 +24,7 @@ public class SequentialSearchST&lt;Key,Value&gt; { private Node first; //相当�
 <meta property="og:description" content="根据书中的定义：符号表是一种存储键值对的数据结构。支持插入操作：将一组新的键值对存入表中。和查找操作：根据给定的键得到相对应的值
 典型的符号表的应用：查字典时，单词就是键，释义就是值。通过单词来找到意思。
 网络搜索时，关键字就是键，网页名称就是值，通过关键字来找到网页。
-约定  每个键只对应一个值(而一个值可以对应于多个键)。即索引是唯一的。 键不能为空。 查找成功成为命中，不成功返回null为不命中 采用泛型的设计思想，在具体实现时在规定特定的类型。  最基本的符号表的API：
+约定  每个键只对应一个值(不允许存在重复的键)。 键不能为空。 值不能为空，插入一个空的值意味着删除这个键值对。 查找成功成为命中，不成功返回null为不命中 采用泛型的设计思想，在具体实现时在规定特定的类型。  最基本的符号表的API：
 基于链表实现 符号表作为一种数据结构可以通过最基本的链表来实现。
 public class SequentialSearchST&lt;Key,Value&gt; { private Node first; //相当于头结点指针  private class Node { Key key; Value val; Node next; public Node(Key key, Value val, Node next) { this.key=key; this.val=val; this.next=next; } } } 这里给出了链表实现的方法：使用一个内部私有类Node来存放键和值。链表只有一个私有成员first，类型为私有内部类Node，用来指示下一个结点的位置，初始值是null。
 /*这是根据键查找值 以及 插入一对新的键值对的方法*/ public Value get(Key key) { for(Node x=first;x!=null;x=x.next) { if(key.equals(x.key)) { return x.val; } } return null; } public void put(Key key,Value val) { for(Node x=first;x!" />
@@ -76,8 +76,9 @@ public class SequentialSearchST&lt;Key,Value&gt; { private Node first; //相当�
 <p>网络搜索时，关键字就是键，网页名称就是值，通过关键字来找到网页。</p>
 <h1 id="约定">约定</h1>
 <ol>
-<li>每个键只对应一个值(而一个值可以对应于多个键)。即索引是唯一的。</li>
+<li>每个键只对应一个值(不允许存在重复的键)。</li>
 <li>键不能为空。</li>
+<li>值不能为空，插入一个空的值意味着删除这个键值对。</li>
 <li>查找成功成为命中，不成功返回null为不命中</li>
 <li>采用泛型的设计思想，在具体实现时在规定特定的类型。</li>
 </ol>
@@ -152,7 +153,7 @@ public class SequentialSearchST&lt;Key,Value&gt; { private Node first; //相当�
         vals <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Value<span style="color:#f92672">[])</span> <span style="color:#66d9ef">new</span> Object<span style="color:#f92672">[</span>capacity<span style="color:#f92672">];</span>
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
-</code></pre></div><p>此外，在有序数组实现符号表中，可以在很短的时间有更多的操作。比如返回最大/小的键即返回数组的下标第一个/最后一个。
+</code></pre></div><p>此外，在有序数组实现符号表中，可以在很短的时间有更多的操作。比如返回最大/小的键即返回数组的下标第一个/最后一个。   <br>
 <img src="/chapter3/3.1API2.png" alt=""></p>
 <p>所以，在基础的实现中，有序数组实现符号表是最高效的，这得力于适用于有序序列的 <em><strong>二分查找</strong></em> 算法。</p>
 <p>给出基本方法的实现。其中 <strong>rank()</strong> 操作：<br>
@@ -369,7 +370,7 @@ public class SequentialSearchST&lt;Key,Value&gt; { private Node first; //相当�
 <strong>命题：向大小为N的有序数组插入一个新的元素在最坏情况下需要访问~2N次数组。因此向一个空符号表插入N个元素最坏情况下需要访问~N^2次数组。</strong></p>
 <h2 id="启示">启示</h2>
 <p><strong>对于一个静态表(不允许插入)来说，在初始时将它排序(O(NlogN))，然后再利用二分查找是值得的</strong>。<br>
-但是对于任意插入和删除的符号表来说，需要更加高效的实现。
+但是对于任意插入和删除的符号表来说，需要更加高效的实现。    <br>
 <img src="/chapter3/allTypesOfST.jpg" alt=""></p>
 
     </div>

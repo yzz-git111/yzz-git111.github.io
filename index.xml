@@ -5,10 +5,24 @@
     <link>https://yzz-git111.github.io/</link>
     <description>Recent content on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 19 Nov 2020 21:20:20 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 24 Nov 2020 18:41:57 +0800</lastBuildDate>
     
 	<atom:link href="https://yzz-git111.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>加权有向图</title>
+      <link>https://yzz-git111.github.io/post/%E5%8A%A0%E6%9D%83%E6%9C%89%E5%90%91%E5%9B%BE/</link>
+      <pubDate>Tue, 24 Nov 2020 18:41:57 +0800</pubDate>
+      
+      <guid>https://yzz-git111.github.io/post/%E5%8A%A0%E6%9D%83%E6%9C%89%E5%90%91%E5%9B%BE/</guid>
+      <description>加权有向图的数据结构 加权有向图和加权无向图的关系类似于有向图和无向图，给边加了一个方向作为限制。在表示其数据结构时，也能借助加权无向图的几种方式：
+  利用邻接矩阵存储。和有向图的邻接矩阵表示一致，只是用边的权值代替布尔值来作为矩阵的元素。
+  回顾之前有向图邻接表的实现：将V个顶点用0~V-1代替，用一个大小为V的数组的索引(0~V-1)对应于V个顶点。对于数组的每个元素都存放了一个集合数据类型Bag的引用(Bag用链表实现，可以理解为不支持删除操作的无序链表)，链表的每个结点都只存储了一个顶点和指向下个结点的指针。Bag里每个结点的顶点数据都表示和当前数组索引代表的顶点相邻的顶点。即用两个边的两个顶点确定一条边。 对于加权有向图，可以扩展Bag的链表的结点域，让它存储边的终点(起点即存储这个Bag的数组的索引)和这两个顶点确定的边的权重。
+  DirectedEdge对象。与方法2类似，将V个顶点用0~V-1代替，用一个大小为V的数组的索引(0~V-1)对应于V个顶点。对于数组的每个元素都存放了一个集合数据类型Bag的引用。这与邻接表的实现都是一样的。 但是不同的是Bag存放的是新定义的一个类DirectedEdge。而DirectedEdge包括了边的另一个顶点和边的权重。即将方法2扩充的Bag的顶点新封装成一个类存储。 除此之外，在Edge中定义了方法either()/other()用于返回边的两个顶点，定义了比较权重的方法compareTo().(通过实现接口Comparable并实现方法)
+  Edge的实现：
+public class DirectedEdge { private final int v; //加权有向边的起点  private final int w; //加权有向边的终点  private final double weight; //边的权重  public DirectedEdge(int v, int w, double weight) { this.v = v; this.w = w; this.weight = weight; } public int from() { return v; //返回边的起点  } public int to() { return w; //返回边的终点  } public double weight() { return weight; //返回边的权重  } 加权有向图的实现：</description>
+    </item>
     
     <item>
       <title>加权无向图</title>
@@ -28,7 +42,7 @@
 切分定理：在一幅加权图中，给定任意的切分，它的横切边中权重最小者必然属于图的最小生成树 证明：反证法。假设一种切分所得的最小边e不在最小生成树T中，那么如果将e加入T，得到的图必然含有一条经过e的环，且这个环至少含有另一条横切边(设为f),f的权重大于e，那么我们删除f而保留e就可以得到。
 实际上，这就是 贪心算法 的一种：使用切分定理找到最小生成树的一条边，不断重复直到找到最小生成树的所有边。
  数据结构   利用邻接矩阵存储。和无向图的邻接矩阵表示一致，只是用边的权值代替布尔值来作为矩阵的元素。
-  回顾之前无向图数据结构的实现：将V个顶点用0~V-1代替，用一个大小为V的数组的索引(0~V-1)对应于V个顶点。对于数组的每个元素都存放了一个集合数据类型Bag的引用。Bag用链表实现，链表的每个结点都只存储了一个顶点和指向下个结点的指针。Bag里每个结点的顶点数据都表示和当前数组索引代表的顶点相邻的顶点。即用两个边的两个顶点确定一条边。 对于加权无向图，可以扩展Bag的链表的结点域，让它存储另一个顶点和这两个顶点确定的边的权重。
+  回顾之前无向图邻接表的实现：将V个顶点用0~V-1代替，用一个大小为V的数组的索引(0~V-1)对应于V个顶点。对于数组的每个元素都存放了一个集合数据类型Bag的引用。Bag用链表实现，链表的每个结点都只存储了一个顶点和指向下个结点的指针。Bag里每个结点的顶点数据都表示和当前数组索引代表的顶点相邻的顶点。即用两个边的两个顶点确定一条边。 对于加权无向图，可以扩展Bag的链表的结点域，让它存储另一个顶点和这两个顶点确定的边的权重。
   Edge对象。与方法2类似，将V个顶点用0~V-1代替，用一个大小为V的数组的索引(0~V-1)对应于V个顶点。对于数组的每个元素都存放了一个集合数据类型Bag的引用。这与邻接表的实现都是一样的。 但是不同的是Bag存放的是新定义的一个类Edge。而Edge包括了边的另一个顶点和边的权重。即将方法2扩充的Bag的顶点新封装成一个类存储。 除此之外，在Edge中定义了方法either()/other()用于返回边的两个顶点，定义了比较权重的方法compareTo().(通过实现接口Comparable并实现方法)
   //边的数据结构 class Edge implements Comparable&amp;lt;Edge&amp;gt; { private final int v; //边的一个顶点v  private final int w; //边的另一个顶点w  private final double weight; //边的权重  public Edge(int v, int w, double weight) { if (v &amp;lt; 0) throw new IllegalArgumentException(&amp;#34;vertex index must be a nonnegative integer&amp;#34;); if (w &amp;lt; 0) throw new IllegalArgumentException(&amp;#34;vertex index must be a nonnegative integer&amp;#34;); if (Double.</description>
     </item>

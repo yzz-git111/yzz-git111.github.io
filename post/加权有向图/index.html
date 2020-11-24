@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>加权有向图 // </title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.74.3" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="yzz帅的一匹" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://yzz-git111.github.io/css/main.min.88e7083eff65effb7485b6e6f38d10afbec25093a6fac42d734ce9024d3defbd.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="加权有向图"/>
+<meta name="twitter:description" content="加权有向图的数据结构 加权有向图和加权无向图的关系类似于有向图和无向图，给边加了一个方向作为限制。在表示其数据结构时，也能借助加权无向图的几种方式：
+  利用邻接矩阵存储。和有向图的邻接矩阵表示一致，只是用边的权值代替布尔值来作为矩阵的元素。
+  回顾之前有向图邻接表的实现：将V个顶点用0~V-1代替，用一个大小为V的数组的索引(0~V-1)对应于V个顶点。对于数组的每个元素都存放了一个集合数据类型Bag的引用(Bag用链表实现，可以理解为不支持删除操作的无序链表)，链表的每个结点都只存储了一个顶点和指向下个结点的指针。Bag里每个结点的顶点数据都表示和当前数组索引代表的顶点相邻的顶点。即用两个边的两个顶点确定一条边。 对于加权有向图，可以扩展Bag的链表的结点域，让它存储边的终点(起点即存储这个Bag的数组的索引)和这两个顶点确定的边的权重。
+  DirectedEdge对象。与方法2类似，将V个顶点用0~V-1代替，用一个大小为V的数组的索引(0~V-1)对应于V个顶点。对于数组的每个元素都存放了一个集合数据类型Bag的引用。这与邻接表的实现都是一样的。 但是不同的是Bag存放的是新定义的一个类DirectedEdge。而DirectedEdge包括了边的另一个顶点和边的权重。即将方法2扩充的Bag的顶点新封装成一个类存储。 除此之外，在Edge中定义了方法either()/other()用于返回边的两个顶点，定义了比较权重的方法compareTo().(通过实现接口Comparable并实现方法)
+  Edge的实现：
+public class DirectedEdge { private final int v; //加权有向边的起点  private final int w; //加权有向边的终点  private final double weight; //边的权重  public DirectedEdge(int v, int w, double weight) { this.v = v; this.w = w; this.weight = weight; } public int from() { return v; //返回边的起点  } public int to() { return w; //返回边的终点  } public double weight() { return weight; //返回边的权重  } 加权有向图的实现："/>
+
+    <meta property="og:title" content="加权有向图" />
+<meta property="og:description" content="加权有向图的数据结构 加权有向图和加权无向图的关系类似于有向图和无向图，给边加了一个方向作为限制。在表示其数据结构时，也能借助加权无向图的几种方式：
+  利用邻接矩阵存储。和有向图的邻接矩阵表示一致，只是用边的权值代替布尔值来作为矩阵的元素。
+  回顾之前有向图邻接表的实现：将V个顶点用0~V-1代替，用一个大小为V的数组的索引(0~V-1)对应于V个顶点。对于数组的每个元素都存放了一个集合数据类型Bag的引用(Bag用链表实现，可以理解为不支持删除操作的无序链表)，链表的每个结点都只存储了一个顶点和指向下个结点的指针。Bag里每个结点的顶点数据都表示和当前数组索引代表的顶点相邻的顶点。即用两个边的两个顶点确定一条边。 对于加权有向图，可以扩展Bag的链表的结点域，让它存储边的终点(起点即存储这个Bag的数组的索引)和这两个顶点确定的边的权重。
+  DirectedEdge对象。与方法2类似，将V个顶点用0~V-1代替，用一个大小为V的数组的索引(0~V-1)对应于V个顶点。对于数组的每个元素都存放了一个集合数据类型Bag的引用。这与邻接表的实现都是一样的。 但是不同的是Bag存放的是新定义的一个类DirectedEdge。而DirectedEdge包括了边的另一个顶点和边的权重。即将方法2扩充的Bag的顶点新封装成一个类存储。 除此之外，在Edge中定义了方法either()/other()用于返回边的两个顶点，定义了比较权重的方法compareTo().(通过实现接口Comparable并实现方法)
+  Edge的实现：
+public class DirectedEdge { private final int v; //加权有向边的起点  private final int w; //加权有向边的终点  private final double weight; //边的权重  public DirectedEdge(int v, int w, double weight) { this.v = v; this.w = w; this.weight = weight; } public int from() { return v; //返回边的起点  } public int to() { return w; //返回边的终点  } public double weight() { return weight; //返回边的权重  } 加权有向图的实现：" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yzz-git111.github.io/post/%E5%8A%A0%E6%9D%83%E6%9C%89%E5%90%91%E5%9B%BE/" />
+<meta property="article:published_time" content="2020-11-24T18:41:57+08:00" />
+<meta property="article:modified_time" content="2020-11-24T18:41:57+08:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://yzz-git111.github.io/"><img class="app-header-avatar" src="/avatar.jpeg" alt="yzz帅的一匹" /></a>
+      <h1></h1>
+      <p>yzz也想变成学霸</p>
+      <div class="app-header-social">
+        
+          <a target="_blank" href="https://github.com/yzz-git111" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg></a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">加权有向图</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Nov 24, 2020
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          3 min read
+        </div></div>
+    </header>
+    <div class="post-content">
+      <h1 id="加权有向图的数据结构">加权有向图的数据结构</h1>
+<p>加权有向图和加权无向图的关系类似于有向图和无向图，给边加了一个方向作为限制。在表示其数据结构时，也能借助加权无向图的几种方式：</p>
+<ol>
+<li>
+<p>利用邻接矩阵存储。和有向图的邻接矩阵表示一致，只是用边的权值代替布尔值来作为矩阵的元素。</p>
+</li>
+<li>
+<p>回顾之前有向图邻接表的实现：将V个顶点用0~V-1代替，用一个大小为V的数组的索引(0~V-1)对应于V个顶点。对于数组的每个元素都存放了一个集合数据类型Bag的引用(Bag用链表实现，可以理解为不支持删除操作的无序链表)，链表的每个结点都只存储了一个顶点和指向下个结点的指针。Bag里每个结点的顶点数据都表示和当前数组索引代表的顶点相邻的顶点。即用两个边的两个顶点确定一条边。 <br>
+对于加权有向图，可以扩展Bag的链表的结点域，让它存储边的终点(起点即存储这个Bag的数组的索引)和这两个顶点确定的边的权重。</p>
+</li>
+<li>
+<p>DirectedEdge对象。与方法2类似，将V个顶点用0~V-1代替，用一个大小为V的数组的索引(0~V-1)对应于V个顶点。对于数组的每个元素都存放了一个集合数据类型Bag的引用。这与邻接表的实现都是一样的。  <br>
+但是不同的是Bag存放的是新定义的一个类DirectedEdge。而DirectedEdge包括了边的另一个顶点和边的权重。即将方法2扩充的Bag的顶点新封装成一个类存储。  <br>
+除此之外，在Edge中定义了方法either()/other()用于返回边的两个顶点，定义了比较权重的方法compareTo().(通过实现接口Comparable并实现方法)</p>
+</li>
+</ol>
+<p><img src="/chapter4/4.4.1edge-weighted-digraph-representation.png" alt=""></p>
+<p>Edge的实现：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DirectedEdge</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> v<span style="color:#f92672">;</span>    <span style="color:#75715e">//加权有向边的起点
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> w<span style="color:#f92672">;</span>    <span style="color:#75715e">//加权有向边的终点
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">double</span> weight<span style="color:#f92672">;</span>    <span style="color:#75715e">//边的权重
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">DirectedEdge</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> w<span style="color:#f92672">,</span> <span style="color:#66d9ef">double</span> weight<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">v</span> <span style="color:#f92672">=</span> v<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">w</span> <span style="color:#f92672">=</span> w<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">weight</span> <span style="color:#f92672">=</span> weight<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">from</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> v<span style="color:#f92672">;</span>   <span style="color:#75715e">//返回边的起点
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">to</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> w<span style="color:#f92672">;</span>   <span style="color:#75715e">//返回边的终点
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">weight</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> weight<span style="color:#f92672">;</span>  <span style="color:#75715e">//返回边的权重
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+
+</code></pre></div><p>加权有向图的实现：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">EdgeWeightedDigraph</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> V<span style="color:#f92672">;</span>                <span style="color:#75715e">// 顶点数
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> E<span style="color:#f92672">;</span>                      <span style="color:#75715e">// 边数
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> Bag<span style="color:#f92672">&lt;</span>DirectedEdge<span style="color:#f92672">&gt;[]</span> adj<span style="color:#f92672">;</span>    <span style="color:#75715e">// 存储边的数据结构Bag
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> indegree<span style="color:#f92672">;</span>             <span style="color:#75715e">// indegree[v]代表顶点v的入度
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">EdgeWeightedDigraph</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> V<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//V个顶点 0条边的构造方法
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">V</span> <span style="color:#f92672">=</span> V<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">E</span> <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">indegree</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>V<span style="color:#f92672">];</span>
+        adj <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Bag<span style="color:#f92672">&lt;</span>DirectedEdge<span style="color:#f92672">&gt;[])</span> <span style="color:#66d9ef">new</span> Bag<span style="color:#f92672">[</span>V<span style="color:#f92672">];</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> v <span style="color:#f92672">&lt;</span> V<span style="color:#f92672">;</span> v<span style="color:#f92672">++)</span>
+            adj<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Bag<span style="color:#f92672">&lt;</span>DirectedEdge<span style="color:#f92672">&gt;();</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">EdgeWeightedDigraph</span><span style="color:#f92672">(</span>Scanner in<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//通过输入构造加权有向图的构造方法
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">V</span> <span style="color:#f92672">=</span> in<span style="color:#f92672">.</span><span style="color:#a6e22e">nextInt</span><span style="color:#f92672">();</span>
+        indegree <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>V<span style="color:#f92672">];</span>
+        adj <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Bag<span style="color:#f92672">&lt;</span>DirectedEdge<span style="color:#f92672">&gt;[])</span> <span style="color:#66d9ef">new</span> Bag<span style="color:#f92672">[</span>V<span style="color:#f92672">];</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> v <span style="color:#f92672">&lt;</span> V<span style="color:#f92672">;</span> v<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            adj<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Bag<span style="color:#f92672">&lt;</span>DirectedEdge<span style="color:#f92672">&gt;();</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#66d9ef">int</span> E <span style="color:#f92672">=</span> in<span style="color:#f92672">.</span><span style="color:#a6e22e">nextInt</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> E<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> in<span style="color:#f92672">.</span><span style="color:#a6e22e">nextInt</span><span style="color:#f92672">();</span>
+            <span style="color:#66d9ef">int</span> w <span style="color:#f92672">=</span> in<span style="color:#f92672">.</span><span style="color:#a6e22e">nextInt</span><span style="color:#f92672">();</span>
+            <span style="color:#66d9ef">double</span> weight <span style="color:#f92672">=</span> in<span style="color:#f92672">.</span><span style="color:#a6e22e">nextDouble</span><span style="color:#f92672">();</span>
+            addEdge<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> DirectedEdge<span style="color:#f92672">(</span>v<span style="color:#f92672">,</span> w<span style="color:#f92672">,</span> weight<span style="color:#f92672">));</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">EdgeWeightedDigraph</span><span style="color:#f92672">(</span>EdgeWeightedDigraph G<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//通过已有的加权有向图构造的方法
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">(</span>G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">());</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">E</span> <span style="color:#f92672">=</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">E</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> v <span style="color:#f92672">&lt;</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">();</span> v<span style="color:#f92672">++)</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">indegree</span><span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">indegree</span><span style="color:#f92672">(</span>v<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> v <span style="color:#f92672">&lt;</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">();</span> v<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">// reverse so that adjacency list is in same order as original
+</span><span style="color:#75715e"></span>            Stack<span style="color:#f92672">&lt;</span>DirectedEdge<span style="color:#f92672">&gt;</span> reverse <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;</span>DirectedEdge<span style="color:#f92672">&gt;();</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>DirectedEdge e <span style="color:#f92672">:</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">adj</span><span style="color:#f92672">[</span>v<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+                reverse<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>DirectedEdge e <span style="color:#f92672">:</span> reverse<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                adj<span style="color:#f92672">[</span>v<span style="color:#f92672">].</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>与加权有向图相关的一些常用的方法：</p>
+<ul>
+<li>加入一条边</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">addEdge</span><span style="color:#f92672">(</span>DirectedEdge e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">from</span><span style="color:#f92672">();</span>   <span style="color:#75715e">//v为起点
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> w <span style="color:#f92672">=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">to</span><span style="color:#f92672">();</span>     <span style="color:#75715e">//e为终点
+</span><span style="color:#75715e"></span>    adj<span style="color:#f92672">[</span>v<span style="color:#f92672">].</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>  <span style="color:#75715e">//插入起点的边的Bag集合中
+</span><span style="color:#75715e"></span>    indegree<span style="color:#f92672">[</span>w<span style="color:#f92672">]++;</span>
+    E<span style="color:#f92672">++;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><ul>
+<li>返回顶点v出发的有向边</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> Iterable<span style="color:#f92672">&lt;</span>DirectedEdge<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">adj</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">return</span> adj<span style="color:#f92672">[</span>v<span style="color:#f92672">];</span>      <span style="color:#75715e">//直接返回Bag集合
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</code></pre></div><hr>
+<h1 id="最短路径的引入">最短路径的引入</h1>
+<p>加权有向图中最重要的一个问题就是关于 <em><strong>最短路径</strong></em> 的研究。</p>
+<p>最短路径问题：找到从一个顶点到达另一个顶点的权重最小的有向路径。 <br>
+单点最短路径：给定一幅加权有向图和一个起点s，从s到给定的目的顶点v是否存在一条有向路径？如果有，给出这条路径。</p>
+<p>对于加权有向图的最短路径问题，有几种著名的算法，但是适用方法不同：</p>
+<ul>
+<li>Dijkstra算法适用于 <em><strong>权重非负</strong></em> 的最短路径问题。</li>
+<li>快速解法适用于 <em><strong>无环加权图</strong></em> 中解决最短路径问题，<em><strong>边的权值甚至可以是负数</strong></em> 。</li>
+<li>Bellman-Ford算法适用于一般情况，其中图可以含有环，边的权重也可以是负数。</li>
+</ul>
+<p>几个最短路径的例子：</p>
+<ul>
+<li>在A到B的地图中，顶点代表交叉路口，边代表公路。</li>
+<li>在任务调度中，顶点代表任务，边代表优先级限制。</li>
+<li>在套汇中，顶点代表货币，边代表汇率。</li>
+</ul>
+<h2 id="注意点">注意点</h2>
+<ul>
+<li>
+<p>权重不一定代表距离。还可能代表成本、时间等。</p>
+</li>
+<li>
+<p>并不是所有顶点都可以达的。有向图存在可达性的问题，加权有向图当然也有。对于t不是从s可达的，那么就不存在最短路径问题。(假设例子中都是可达的)。</p>
+</li>
+<li>
+<p>可能存在负权重的情况。对于有些算法不可用。</p>
+</li>
+<li>
+<p>通常忽略构成环的零权重边。</p>
+</li>
+<li>
+<p>最短路径不一定是唯一的。可能有多条总权重一样的路径，只需要找出一条即可。</p>
+</li>
+</ul>
+<h2 id="最短路径树">最短路径树</h2>
+<p>定义：给定一幅加权有向图和一个顶点s，以s为起点的一棵最短路径树是图的一幅子图。包含s和从s可达的所有顶点。</p>
+<p>我们的问题是单点最短路径，而最短路径树可以将起点s可达的所有顶点的最短路径都显示出来。</p>
+<hr>
+<h1 id="理论基础">理论基础</h1>
+<h2 id="额外的数据结构">额外的数据结构</h2>
+<ul>
+<li>
+<p>为了保存路径，则和之前一样需要一个edgeTo[]数组来保存上一个点。即edgeTo[v]的值s-&gt;v的最短路径上的最后一条边。</p>
+</li>
+<li>
+<p>为了保存每条最短路径的权重，需要一个有顶点索引的数组distTo[]。即distTo[v]为从s到v的已知最短路径的长度。(约定起点s的distTo[s]==0，任意不可达的顶点为无限大)</p>
+</li>
+</ul>
+<p><img src="/chapter4/4.4.2spt.png" alt=""></p>
+<h2 id="基本的方法">基本的方法</h2>
+<ul>
+<li>边的松弛  <br>
+若对边e进行放松导致distTo[e.to()]和edgeTo[e.to()]发生改变，则称e的放松是成功的，否则成为失败。  <br>
+假设起点s直接和顶点x可达，且边的权重为w1.而与起点s可达的另一顶点y也可达x，s-&gt;y的权重为w2，y-&gt;x的权重为w3，且w1&gt;w2+w3，那么就需要对s-&gt;x的最短路径进行更改(即放松边y-&gt;x)。</li>
+</ul>
+<p><img src="/chapter4/4.4.3relaxation-edge.png" alt=""></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">relax</span><span style="color:#f92672">(</span>DirectedEdge e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">from</span><span style="color:#f92672">(),</span> w <span style="color:#f92672">=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">to</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>distTo<span style="color:#f92672">[</span>w<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> distTo<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">weight</span><span style="color:#f92672">())</span> 
+        <span style="color:#f92672">{</span>
+            distTo<span style="color:#f92672">[</span>w<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> distTo<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">weight</span><span style="color:#f92672">();</span>
+            edgeTo<span style="color:#f92672">[</span>w<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> e<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><ul>
+<li>顶点的松弛
+对顶点v的松弛即放松由v指出的所有的边。</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">relax</span><span style="color:#f92672">(</span>EdgeWeightedDigraph G<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> v<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">for</span><span style="color:#f92672">(</span>DirectedEdge e<span style="color:#f92672">:</span>G<span style="color:#f92672">.</span><span style="color:#a6e22e">adj</span><span style="color:#f92672">(</span>v<span style="color:#f92672">))</span>
+        <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> w <span style="color:#f92672">=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">to</span><span style="color:#f92672">();</span>
+            <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>distTo<span style="color:#f92672">[</span>w<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> distTo<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">weight</span><span style="color:#f92672">())</span>
+            <span style="color:#f92672">{</span>
+                distTo<span style="color:#f92672">[</span>w<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> distTo<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">weight</span><span style="color:#f92672">();</span>
+                edgeTo<span style="color:#f92672">[</span>w<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> e<span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><h2 id="理论依据">理论依据</h2>
+<ul>
+<li>最优性条件  <br>
+给定一幅加权有向图G，s为起点，对于s可达的所有v。当且仅当对于v到w的任意一条边e，这些值都满足distTo[w] &lt;= distTo[v] + e.weight()时(即不存在有效的放松边)，它们是最短路径的长度。</li>
+</ul>
+<p>证明：必要条件(最短路径=&gt;不等式成立)   <br>
+假设distTo[w]是从s到w的最短路径。如果对于某条v到w的边e有distTo[w] &gt; distTo[v] + e.weight()，那么从s-&gt;w(经过v)且经过e的路径的长度必然小于distTo[w]，即distTo[w]不是s到w的最短路径长度。矛盾。所以最优性条件是必要的。<br>
+充分性(不等式成立=&gt;最短路径)  <br>
+假设w是从s可达的且s=v0-&gt;v1-&gt;&hellip;-&gt;vk=w是从s到w的最短路径，且权重为Weight。对于1到k之间的i，令ei表示边vi-1到vi的边则满足</p>
+<pre><code>distTo[w]=distTo[vk]&lt;=distTo[vk-1]+ek.weight()    
+又有distTo[vk-1]&lt;=distTo[vk-2]+ek-1.weight() 
+         ....
+distTo[v2]&lt;=distTo[v1]+e2.weight()
+distTo[v1]&lt;=distTo[s]+e1.weight(); 
+</code></pre>
+<p>综合不等式并且distTo[s]==0;得到distTo[w]&lt;=e1.weight()+e2.weight()+&hellip;+ek.weight()=Weight.  <br>
+所以Weigth&lt;=distTo[w]&lt;=Weight，等号必然成立。</p>
+<ul>
+<li>通用最短路径算法
+设s为起点，将distTo[s]初始化为0，其他都为无穷大。循环执行“放松G的任意边，直到不存在(放松)有效边”即可得到最短路径。</li>
+</ul>
+<p>证明：放松边v-&gt;w必然会将distTo[w]的值设为s到w的某条路径的长度。对于s可达的任意顶点w，只要distTo[w]任然是无穷大，那么到达w的最短路径上的某条边肯定任然是有效的(可以放松成功的).对于已经找到最短路径的任意顶点v，在计算过程中distTo[v]的值必然是递减的。当不存在有效边(可以放松成功的边)时，就得到了最短路径。</p>
+<p><em><strong>通用算法一定可以找到最短路径，但是它对于边的放松的顺序是没有规定的。</strong></em> <br>
+<em><strong>而下面的算法，要证明它们都能找到最短路径，只需要证明它们都会放松所有的边直到所有边都失效即可。</strong></em></p>
+<hr>
+<h1 id="dijkstra算法">Dijkstra算法</h1>
+<p>回顾加权无向图中最小生成树的Prim算法：利用优先队列MinPQ存储所有的横切边，每次都向最小生成树中添加一条新的边(连接树和非树顶点的权重最小的边)，并将新加入的顶点的边都加入MinPQ。</p>
+<p>Dijkstra算法类似：首先将distTo[s]初始化为0，distTo[]中其他元素初始化为正无穷。然后将distTo[]最小的非树(最短路径树)顶点放松(放松由它指出的所有的边)并加入树中。循环上述操作，直到所有顶点都在树中或者所有非树顶点的distTo[]值均为无穷大(不可达)。</p>
+<p>为了快速找到distTo[]最小的非树顶点，也需要用一个优先队列MinPQ。而索引优先队列IndexMinPQ可以将索引和键(优先级)关联起来，关联的值就是distTo[]。</p>
+<p><img src="/chapter4/4.4.4.jpg" alt=""></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DijkstraSP</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">double</span><span style="color:#f92672">[]</span> distTo<span style="color:#f92672">;</span>          <span style="color:#75715e">// distTo[v]表示s-&gt;v的最短路径的权重
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> DirectedEdge<span style="color:#f92672">[]</span> edgeTo<span style="color:#f92672">;</span>    <span style="color:#75715e">// edgeTo[v]表示最短路径的最后一个顶点
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> IndexMinPQ<span style="color:#f92672">&lt;</span>Double<span style="color:#f92672">&gt;</span> pq<span style="color:#f92672">;</span>    <span style="color:#75715e">// 优先队列 用于返回distTo最短的
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">DijkstraSP</span><span style="color:#f92672">(</span>EdgeWeightedDigraph G<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        distTo <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">double</span><span style="color:#f92672">[</span>G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">()];</span>
+        edgeTo <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> DirectedEdge<span style="color:#f92672">[</span>G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">()];</span>
+
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> v <span style="color:#f92672">&lt;</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">();</span> v<span style="color:#f92672">++)</span>
+            distTo<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Double<span style="color:#f92672">.</span><span style="color:#a6e22e">POSITIVE_INFINITY</span><span style="color:#f92672">;</span>
+        distTo<span style="color:#f92672">[</span>s<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 0<span style="color:#f92672">.</span><span style="color:#a6e22e">0</span><span style="color:#f92672">;</span>    
+        <span style="color:#75715e">//将distTo[s]初始化为0，distTo[]中其他元素初始化为正无穷
+</span><span style="color:#75715e"></span>
+        pq <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> IndexMinPQ<span style="color:#f92672">&lt;</span>Double<span style="color:#f92672">&gt;(</span>G<span style="color:#f92672">.</span><span style="color:#a6e22e">V</span><span style="color:#f92672">());</span>
+        pq<span style="color:#f92672">.</span><span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span>s<span style="color:#f92672">,</span> distTo<span style="color:#f92672">[</span>s<span style="color:#f92672">]);</span>    <span style="color:#75715e">//用起点初始化pq
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>pq<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> pq<span style="color:#f92672">.</span><span style="color:#a6e22e">delMin</span><span style="color:#f92672">();</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>DirectedEdge e <span style="color:#f92672">:</span> G<span style="color:#f92672">.</span><span style="color:#a6e22e">adj</span><span style="color:#f92672">(</span>v<span style="color:#f92672">))</span>
+                relax<span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">// relax edge e and update pq if changed
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">relax</span><span style="color:#f92672">(</span>DirectedEdge e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">from</span><span style="color:#f92672">(),</span> w <span style="color:#f92672">=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">to</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>distTo<span style="color:#f92672">[</span>w<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> distTo<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">weight</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            distTo<span style="color:#f92672">[</span>w<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> distTo<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">weight</span><span style="color:#f92672">();</span>
+            edgeTo<span style="color:#f92672">[</span>w<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> e<span style="color:#f92672">;</span>
+            <span style="color:#75715e">//若w已经在队列中 则改变值即可
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">//否则需要将新的顶点加入其中
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>pq<span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>w<span style="color:#f92672">))</span> pq<span style="color:#f92672">.</span><span style="color:#a6e22e">decreaseKey</span><span style="color:#f92672">(</span>w<span style="color:#f92672">,</span> distTo<span style="color:#f92672">[</span>w<span style="color:#f92672">]);</span>
+            <span style="color:#66d9ef">else</span>                pq<span style="color:#f92672">.</span><span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span>w<span style="color:#f92672">,</span> distTo<span style="color:#f92672">[</span>w<span style="color:#f92672">]);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">distTo</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> distTo<span style="color:#f92672">[</span>v<span style="color:#f92672">];</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">hasPathTo</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> distTo<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> Double<span style="color:#f92672">.</span><span style="color:#a6e22e">POSITIVE_INFINITY</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> Iterable<span style="color:#f92672">&lt;</span>DirectedEdge<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">pathTo</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        validateVertex<span style="color:#f92672">(</span>v<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>hasPathTo<span style="color:#f92672">(</span>v<span style="color:#f92672">))</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        <span style="color:#75715e">//一样的用栈将路径调正
+</span><span style="color:#75715e"></span>        Stack<span style="color:#f92672">&lt;</span>DirectedEdge<span style="color:#f92672">&gt;</span> path <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;</span>DirectedEdge<span style="color:#f92672">&gt;();</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>DirectedEdge e <span style="color:#f92672">=</span> edgeTo<span style="color:#f92672">[</span>v<span style="color:#f92672">];</span> e <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span> e <span style="color:#f92672">=</span> edgeTo<span style="color:#f92672">[</span>e<span style="color:#f92672">.</span><span style="color:#a6e22e">from</span><span style="color:#f92672">()])</span> <span style="color:#f92672">{</span>
+            path<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span> path<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>Dijkstra与Prim的即时实现和相似，只不过Prim的即时实现是每次添加 <em><strong>离树最近</strong></em> 的非树顶点；而Dijkstra算法则是每次添加 <em><strong>离起点最近</strong></em> 的非树顶点。它们都可以不用marked[]数组，因为!marked[w]等价于distTo[w]为无穷大。</p>
+<p>同样的，根据Prim的延迟实现也可以完成Dijkstra的延迟实现。</p>
+<ul>
+<li>复杂度：在一幅含有V个顶点和E条边的加权有向图中，使用Dijkstra算法计算根结点为给定起点的最短路径树所需空间与V成正比，时间与ElogV成正比。  <br>
+（MinPQ存储V个顶点；E条边都要relax()&ndash;ElogV）</li>
+</ul>
+<h2 id="变种">变种</h2>
+<ul>
+<li>
+<p>给定一幅加权无向图和一个起点s，是否存在一条从s到给定的顶点v的路径？如果有，找出最短的那条。  <br>
+对于加权无向图，可以创建一幅由相同顶点构成的加权有向图，即把无向图的一条边看作是有向图的两条顶点相同，方向相反的边。这样就可以使用Dijkstra算法一样解决。</p>
+</li>
+<li>
+<p>给定两点的最短路径。给定一幅加权有向图以及一个起点s和一个终点t，找到从s到t的最短路径。  <br>
+可以控制循环结束的条件，在优先队列中取到t之后停止。</p>
+</li>
+<li>
+<p>任意顶点对之间的最短路径。给定一幅加权有向图，给定一个起点s和t一个终点t，是否存在一条从s到t的路径？如果有，找出最短的那条。  <br>
+为了得到任意顶点对之间的最短路径，需要对每个顶点都使用Dijkstra算法，每个顶点都作为一个根结点得到相应的最短路径树。那么所需要的时间空间都是O(EVlogV).</p>
+</li>
+</ul>
+<hr>
+<h1 id="无环加权有向图的最短路径算法">无环加权有向图的最短路径算法</h1>
+<p>Dijkstra算法适用于非负权值的有向图。而有一种算法适用于 <em><strong>无环的</strong></em> 加权有向图的最短路径求解。  <br>
+并且它具有以下性质：</p>
+<ul>
+<li>能够在 <em><strong>线性时间</strong></em> 解决单点最短路径问题。</li>
+<li>能够处理 <em><strong>负权重</strong></em> 的边。</li>
+</ul>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

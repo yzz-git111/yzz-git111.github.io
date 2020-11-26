@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>图的总结 // </title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.74.3" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="yzz帅的一匹" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://yzz-git111.github.io/css/main.min.88e7083eff65effb7485b6e6f38d10afbec25093a6fac42d734ce9024d3defbd.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="图的总结"/>
+<meta name="twitter:description" content="分类 通常图可以分为：
+ 无向图 有向图 加权无向图 加权有向图  数据结构 树是一种特殊的图，对于完全二叉树通常采用数组存储。对于普通的二叉树，通常采用含有左右孩子指针的链表来表示。对于普通的树，通常有孩子表示法，双亲表示法和孩子兄弟表示法。
+同样的，图也可以用最基础的数组/链表进行表示。 通常我们将图“标准化”：用0~V-1表示V个顶点，并用数组的索引来一一对应。
+总的来说图通常有邻接表，邻接矩阵和边的数组。
+1. 图的邻接表存储 邻接表是最常用的一种表示图的方法，它通常用一个大小为V的索引数组(顶点与数组的索引相同)存储V个顶点。而这个数组又是一个集合对象的数组(集合通常为链表，可以是Stack，Queue，LinkedList，这里《算法四》采用了一种不支持删除操作的链表结构Bag)，第i个元素的集合中存储了与当前顶点相关联的边。
+邻接表优点是不浪费空间，同时无序链表的插入为O(1)。 但是缺点是无序链表的查找却达到O(E). 邻接表适用于稀疏图
+public class Graph { private final int V; //V为顶点数 通常假定顶点不可变  private int E; //E为边数  private Bag&lt;Integer&gt;[] adj; //每个顶点都用一个Bag来存储相关联的边  public Graph(int V) { if (V &lt; 0) throw new IllegalArgumentException(&#34;Number of vertices must be nonnegative&#34;); this.V = V; this.E = 0; adj = (Bag&lt;Integer&gt;[]) new Bag[V]; for (int v = 0; v &lt; V; v&#43;&#43;) { adj[v] = new Bag&lt;Integer&gt;(); } } } 2."/>
+
+    <meta property="og:title" content="图的总结" />
+<meta property="og:description" content="分类 通常图可以分为：
+ 无向图 有向图 加权无向图 加权有向图  数据结构 树是一种特殊的图，对于完全二叉树通常采用数组存储。对于普通的二叉树，通常采用含有左右孩子指针的链表来表示。对于普通的树，通常有孩子表示法，双亲表示法和孩子兄弟表示法。
+同样的，图也可以用最基础的数组/链表进行表示。 通常我们将图“标准化”：用0~V-1表示V个顶点，并用数组的索引来一一对应。
+总的来说图通常有邻接表，邻接矩阵和边的数组。
+1. 图的邻接表存储 邻接表是最常用的一种表示图的方法，它通常用一个大小为V的索引数组(顶点与数组的索引相同)存储V个顶点。而这个数组又是一个集合对象的数组(集合通常为链表，可以是Stack，Queue，LinkedList，这里《算法四》采用了一种不支持删除操作的链表结构Bag)，第i个元素的集合中存储了与当前顶点相关联的边。
+邻接表优点是不浪费空间，同时无序链表的插入为O(1)。 但是缺点是无序链表的查找却达到O(E). 邻接表适用于稀疏图
+public class Graph { private final int V; //V为顶点数 通常假定顶点不可变  private int E; //E为边数  private Bag&lt;Integer&gt;[] adj; //每个顶点都用一个Bag来存储相关联的边  public Graph(int V) { if (V &lt; 0) throw new IllegalArgumentException(&#34;Number of vertices must be nonnegative&#34;); this.V = V; this.E = 0; adj = (Bag&lt;Integer&gt;[]) new Bag[V]; for (int v = 0; v &lt; V; v&#43;&#43;) { adj[v] = new Bag&lt;Integer&gt;(); } } } 2." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yzz-git111.github.io/post/%E5%9B%BE%E7%9A%84%E6%80%BB%E7%BB%93/" />
+<meta property="article:published_time" content="2020-11-25T17:16:40+08:00" />
+<meta property="article:modified_time" content="2020-11-25T17:16:40+08:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://yzz-git111.github.io/"><img class="app-header-avatar" src="/avatar.jpeg" alt="yzz帅的一匹" /></a>
+      <h1></h1>
+      <p>yzz也想变成学霸</p>
+      <div class="app-header-social">
+        
+          <a target="_blank" href="https://github.com/yzz-git111" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg></a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">图的总结</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Nov 25, 2020
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          2 min read
+        </div></div>
+    </header>
+    <div class="post-content">
+      <h1 id="分类">分类</h1>
+<p>通常图可以分为：</p>
+<ul>
+<li>无向图</li>
+<li>有向图</li>
+<li>加权无向图</li>
+<li>加权有向图</li>
+</ul>
+<h1 id="数据结构">数据结构</h1>
+<p>树是一种特殊的图，对于完全二叉树通常采用数组存储。对于普通的二叉树，通常采用含有左右孩子指针的链表来表示。对于普通的树，通常有孩子表示法，双亲表示法和孩子兄弟表示法。</p>
+<p>同样的，图也可以用最基础的数组/链表进行表示。   <br>
+通常我们将图“标准化”：用0~V-1表示V个顶点，并用数组的索引来一一对应。</p>
+<p>总的来说图通常有邻接表，邻接矩阵和边的数组。</p>
+<h2 id="1-图的邻接表存储">1. 图的邻接表存储</h2>
+<p>邻接表是最常用的一种表示图的方法，它通常用一个大小为V的索引数组(顶点与数组的索引相同)存储V个顶点。而这个数组又是一个集合对象的数组(集合通常为链表，可以是Stack，Queue，LinkedList，这里《算法四》采用了一种不支持删除操作的链表结构Bag)，第i个元素的集合中存储了与当前顶点相关联的边。</p>
+<p>邻接表优点是不浪费空间，同时无序链表的插入为O(1)。 <br>
+但是缺点是无序链表的查找却达到O(E).  <br>
+<em><strong>邻接表适用于稀疏图</strong></em></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Graph</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> V<span style="color:#f92672">;</span>    <span style="color:#75715e">//V为顶点数   通常假定顶点不可变
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> E<span style="color:#f92672">;</span>          <span style="color:#75715e">//E为边数
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> Bag<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;[]</span> adj<span style="color:#f92672">;</span> <span style="color:#75715e">//每个顶点都用一个Bag来存储相关联的边
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Graph</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> V<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>V <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Number of vertices must be nonnegative&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">V</span> <span style="color:#f92672">=</span> V<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">E</span> <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+        adj <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Bag<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;[])</span> <span style="color:#66d9ef">new</span> Bag<span style="color:#f92672">[</span>V<span style="color:#f92672">];</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> v <span style="color:#f92672">&lt;</span> V<span style="color:#f92672">;</span> v<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            adj<span style="color:#f92672">[</span>v<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Bag<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;();</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="2-图的邻接矩阵存储">2. 图的邻接矩阵存储</h2>
+<p>邻接矩阵的想法是用一个二维数组(即二维矩阵)，行和列都对应着V个顶点。并且可以设置这个数组为boolean类型的，若两个点就将相应的二维矩阵的位置赋值为true。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">AdjMatrixGraph</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> V<span style="color:#f92672">;</span>    <span style="color:#75715e">//V表示顶点数
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> E<span style="color:#f92672">;</span>          <span style="color:#75715e">//E表示边数
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[][]</span> adj<span style="color:#f92672">;</span>    <span style="color:#75715e">//二维数组  行和列都代表V个顶点
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">AdjMatrixGraph</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> V<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>V <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Too few vertices&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">V</span> <span style="color:#f92672">=</span> V<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">E</span> <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">adj</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>V<span style="color:#f92672">][</span>V<span style="color:#f92672">];</span>   <span style="color:#75715e">//初始化都是false
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</code></pre></div><p>邻接矩阵的优点是查找，插入都只要O(1).  <br>
+缺点是浪费空间，空间复杂度高达O(V^2).  <br>
+<em><strong>邻接矩阵适用于稠密图</strong></em></p>
+<h2 id="3图的边的集合存储">3.图的边的集合存储</h2>
+<p>存储边的想法是：定义一个Edge类，类中有两个int类型的属性，代表着边的两条边。然后将每个边都用Edge表示，然后用一个集合类(数组，链表，Bag等都可以)来存储所有的边。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">EdgeSet</span>
+<span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> Edge<span style="color:#f92672">[]</span> edges<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">EdgeSet</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> E<span style="color:#f92672">)</span>   <span style="color:#75715e">//E为边数
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">{</span>
+        edges <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Edge<span style="color:#f92672">[</span>E<span style="color:#f92672">];</span>
+        <span style="color:#75715e">//Edge[i] = new Edge(int v,int w);
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Edge</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> v<span style="color:#f92672">;</span>  <span style="color:#75715e">//边的一个顶点
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> w<span style="color:#f92672">;</span>  <span style="color:#75715e">//边的另一个顶点
+</span><span style="color:#75715e"></span>
+        <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Edge</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v<span style="color:#f92672">,</span><span style="color:#66d9ef">int</span> w<span style="color:#f92672">)</span>
+        <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">v</span> <span style="color:#f92672">=</span> v<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">w</span> <span style="color:#f92672">=</span> w<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span> 
+</code></pre></div><p>边的集合的优点是不浪费空间，且插入很快。 <br>
+缺点是难以实现需要频繁使用的adj(int v)方法，用于返回与v相关联的所有的边。  <br>
+边的集合的表示方法很少用到。</p>
+<p>特别的，对于四类不同的图其具体的实现细节都不同。</p>
+<ul>
+<li>
+<p>无向图。 <br>
+在无向图中，由于边是没有方向的，所以在邻接表中一个连接v和w的边会在v和w对应的Bag中都存储一次。即一条边会被存储两次。   <br>
+用邻接矩阵表示，矩阵是一个对称矩阵。</p>
+</li>
+<li>
+<p>有向图。 <br>
+有向图的边是由起点v指向终点w的。那么这条边只会在v对应的Bag中存储。边不会被存储两次。  <br>
+用邻接矩阵表示，矩阵不是一个对称矩阵。</p>
+</li>
+<li>
+<p>加权无向图 <br>
+由于边包括权重，所以邻接表一种方案是扩展Bag的结点类，使之不仅包括另一个顶点，还包括边的权重。另一种方案是重新定义一个类Edge，Edge包括顶点和权重，然后Bag存储的Edge对象。  <br>
+用邻接矩阵表示，可以用权重代替boolean，矩阵是一个对称矩阵。</p>
+</li>
+<li>
+<p>加权有向图
+与加权无向图的存储类似，区别也类似有向图和无向图的区别。</p>
+</li>
+</ul>
+<h1 id="dfs和bfs">DFS和BFS</h1>
+<p>在图中，很多算法都是基于深度优先搜索（DFS）和广度优先搜索（BFS）。</p>
+<ul>
+<li>
+<p>DFS利用递归，并借助一个辅助数组marked[]用来标记某个顶点v是否被访问过。  <br>
+从给定的起点开始，递归DFS搜索顶点v相连的边的另一个顶点中第一个未被访问过的顶点。   <br>
+若某个顶点v的所有相邻的顶点都被访问过了，就会返回到上一个顶点继续上述操作。当DFS搜索完成之后递归会返回到根结点，结束。</p>
+</li>
+<li>
+<p>BFS和树的层次遍历相似。利用一个队列，首先遍历从起点一条边的长度可达的所有顶点，并将它们按顺序入队列。然后遍历长度为2的所有可达的&hellip;&hellip;</p>
+</li>
+</ul>
+<p>注意：</p>
+<ul>
+<li>
+<p>若图中有点不在同一个连通分量，或者某个点不可达。那么在以这个为起点的所有的顶点都遍历完了后，对为遍历的顶点重新开始一次遍历。</p>
+</li>
+<li>
+<p>DFS 和 BFS的时间复杂度都为O(E+V).</p>
+</li>
+</ul>
+<h1 id="返回路径">返回路径</h1>
+<h2 id="dfs">DFS</h2>
+<p>DFS的一个典型的应用就是：给定一幅图，给定一个起点s和另一个顶点w，回答是否有一条路径连通这两个顶点？ <br>
+还有一个典型的应用是：给定一幅图，给定一个起点s和另一个顶点w，回答是否有一条路径连通这两个顶点？<strong>如果有，请给出这条路径。</strong></p>
+<p>这两个问题的区别在于第二个问题需要给出具体的路径，而第一个问题只需要回答是否连通。可以将第一个问题看做第二个问题的简化。解决了第二个问题也一定能解决第一个问题。</p>
+<p>第二个问题为了返回这条路径，就需要记录路径上的每个顶点。而记录每个顶点就需要用一个辅助数组edgeTo[],这个数组记录从起点到一个顶点的已知路径上的最后一个顶点。假设v与起点s直接相连，那么egdeTo[v]==s，表示起点到v的已知路径(直达)的最后一个顶点为s。个人觉得还可以理解为若由某个顶点x为根，首次将顶点y访问到，那么edgeTo[y]==x;</p>
+<p>有了edgeTo[]数组之后，对于终点w，edgeTo[w]就是起点s到w的路径上的倒数第二个点，假设为u;进而edgeTo[u]就是s到w的路径上的倒数第三个顶点&hellip;&hellip;以此类推，直到一直找到了起点s。那么这样的点就是s到w的路径的所有点的逆序。为了得到s到w的路径，很容易的就想到需要一个辅助栈。</p>
+<h2 id="bfs">BFS</h2>
+<p>同样的，BFS也可以解决给定的两个顶点是否连通，只不过是遍历的顺序不同。实际上任意一种遍历都能解决是否连通的问题。只要在以给定起点的遍历中访问到了给定的目标顶点就说明连通。</p>
+<p>BFS的对于是否连通的扩展就是：给出给定起点s到某一目的顶点w的 <strong>最短的</strong> 路径，如果路径存在的话。<br>
+对于给出路径，一定需要一个辅助数组edgeTo[]来记录路径上的所有的点。然后通过栈来将路径由逆序变正。想法和DFS类似。</p>
+<p>注意：</p>
+<ul>
+<li>
+<p>深度优先搜索算法DFS和广度优先搜索算法BFS是所有图有关算法的基础，适用于所有类型的图。</p>
+</li>
+<li>
+<p>若题目要求给出具体的路径，就一定需要一个辅助数组记录路径。</p>
+</li>
+</ul>
+<h1 id="dfs和bfs的其他应用">DFS和BFS的其他应用</h1>
+<ul>
+<li>
+<p>连通分量：找出一幅图的所有连通分量。  <br>
+利用DFS，由某个顶点DFS能够访问到的所有顶点都在同一个连通分量内。 <br>
+（union-find算法也能解决）</p>
+</li>
+<li>
+<p>检测环：给定的图是无环图吗？  <br>
+利用DFS。如果DFS递归访问起点为s的图，递归中第二次访问到了某个顶点，并且这个顶点不是s，则含有环。(若不含有环，第二次访问到某个顶点一定是起点s，因为所有的都访问完了会回到最初的点访问)</p>
+</li>
+<li>
+<p>二分图：检测给定的图是二分图吗？  <br>
+利用dfs。</p>
+</li>
+</ul>
+<h1 id="有向图典型问题">有向图典型问题</h1>
+<h1 id="最小生成树--加权无向图典型问题">最小生成树&ndash;加权无向图典型问题</h1>
+<h1 id="最短路径--加权有向图典型问题">最短路径&ndash;加权有向图典型问题</h1>
+<h1 id="符号图">符号图</h1>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

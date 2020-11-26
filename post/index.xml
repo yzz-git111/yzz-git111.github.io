@@ -5,10 +5,25 @@
     <link>https://yzz-git111.github.io/post/</link>
     <description>Recent content in Posts on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 24 Nov 2020 18:41:57 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 25 Nov 2020 17:16:40 +0800</lastBuildDate>
     
 	<atom:link href="https://yzz-git111.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>图的总结</title>
+      <link>https://yzz-git111.github.io/post/%E5%9B%BE%E7%9A%84%E6%80%BB%E7%BB%93/</link>
+      <pubDate>Wed, 25 Nov 2020 17:16:40 +0800</pubDate>
+      
+      <guid>https://yzz-git111.github.io/post/%E5%9B%BE%E7%9A%84%E6%80%BB%E7%BB%93/</guid>
+      <description>分类 通常图可以分为：
+ 无向图 有向图 加权无向图 加权有向图  数据结构 树是一种特殊的图，对于完全二叉树通常采用数组存储。对于普通的二叉树，通常采用含有左右孩子指针的链表来表示。对于普通的树，通常有孩子表示法，双亲表示法和孩子兄弟表示法。
+同样的，图也可以用最基础的数组/链表进行表示。 通常我们将图“标准化”：用0~V-1表示V个顶点，并用数组的索引来一一对应。
+总的来说图通常有邻接表，邻接矩阵和边的数组。
+1. 图的邻接表存储 邻接表是最常用的一种表示图的方法，它通常用一个大小为V的索引数组(顶点与数组的索引相同)存储V个顶点。而这个数组又是一个集合对象的数组(集合通常为链表，可以是Stack，Queue，LinkedList，这里《算法四》采用了一种不支持删除操作的链表结构Bag)，第i个元素的集合中存储了与当前顶点相关联的边。
+邻接表优点是不浪费空间，同时无序链表的插入为O(1)。 但是缺点是无序链表的查找却达到O(E). 邻接表适用于稀疏图
+public class Graph { private final int V; //V为顶点数 通常假定顶点不可变  private int E; //E为边数  private Bag&amp;lt;Integer&amp;gt;[] adj; //每个顶点都用一个Bag来存储相关联的边  public Graph(int V) { if (V &amp;lt; 0) throw new IllegalArgumentException(&amp;#34;Number of vertices must be nonnegative&amp;#34;); this.V = V; this.E = 0; adj = (Bag&amp;lt;Integer&amp;gt;[]) new Bag[V]; for (int v = 0; v &amp;lt; V; v++) { adj[v] = new Bag&amp;lt;Integer&amp;gt;(); } } } 2.</description>
+    </item>
     
     <item>
       <title>加权有向图</title>

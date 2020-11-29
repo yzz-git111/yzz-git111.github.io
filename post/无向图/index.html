@@ -587,7 +587,7 @@
             <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>marked<span style="color:#f92672">[</span>w<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
                 dfs<span style="color:#f92672">(</span>G<span style="color:#f92672">,</span> w<span style="color:#f92672">,</span>v<span style="color:#f92672">);</span>
             <span style="color:#f92672">}</span>
-            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>w<span style="color:#f92672">!=</span>u<span style="color:#f92672">)</span>   <span style="color:#75715e">//v的某个顶点当w被访问过了，且这个顶点不是当前顶点
+            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>w<span style="color:#f92672">!=</span>u<span style="color:#f92672">)</span>   <span style="color:#75715e">//v的某个顶点当w被访问过了，且这个顶点不是上一个顶点
 </span><span style="color:#75715e"></span>            <span style="color:#f92672">{</span>               <span style="color:#75715e">//那么说明有环
 </span><span style="color:#75715e"></span>                hasCycle <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
             <span style="color:#f92672">}</span>

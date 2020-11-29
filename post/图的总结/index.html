@@ -13,7 +13,7 @@
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="图的总结"/>
 <meta name="twitter:description" content="分类 通常图可以分为：
- 无向图 有向图 加权无向图 加权有向图  数据结构 树是一种特殊的图，对于完全二叉树通常采用数组存储。对于普通的二叉树，通常采用含有左右孩子指针的链表来表示。对于普通的树，通常有孩子表示法，双亲表示法和孩子兄弟表示法。
+ 无向图 有向图 加权无向图 加权有向图   数据结构 树是一种特殊的图，对于完全二叉树通常采用数组存储。对于普通的二叉树，通常采用含有左右孩子指针的链表来表示。对于普通的树，通常有孩子表示法，双亲表示法和孩子兄弟表示法。
 同样的，图也可以用最基础的数组/链表进行表示。 通常我们将图“标准化”：用0~V-1表示V个顶点，并用数组的索引来一一对应。
 总的来说图通常有邻接表，邻接矩阵和边的数组。
 1. 图的邻接表存储 邻接表是最常用的一种表示图的方法，它通常用一个大小为V的索引数组(顶点与数组的索引相同)存储V个顶点。而这个数组又是一个集合对象的数组(集合通常为链表，可以是Stack，Queue，LinkedList，这里《算法四》采用了一种不支持删除操作的链表结构Bag)，第i个元素的集合中存储了与当前顶点相关联的边。
@@ -22,7 +22,7 @@ public class Graph { private final int V; //V为顶点数 通常假定顶点不�
 
     <meta property="og:title" content="图的总结" />
 <meta property="og:description" content="分类 通常图可以分为：
- 无向图 有向图 加权无向图 加权有向图  数据结构 树是一种特殊的图，对于完全二叉树通常采用数组存储。对于普通的二叉树，通常采用含有左右孩子指针的链表来表示。对于普通的树，通常有孩子表示法，双亲表示法和孩子兄弟表示法。
+ 无向图 有向图 加权无向图 加权有向图   数据结构 树是一种特殊的图，对于完全二叉树通常采用数组存储。对于普通的二叉树，通常采用含有左右孩子指针的链表来表示。对于普通的树，通常有孩子表示法，双亲表示法和孩子兄弟表示法。
 同样的，图也可以用最基础的数组/链表进行表示。 通常我们将图“标准化”：用0~V-1表示V个顶点，并用数组的索引来一一对应。
 总的来说图通常有邻接表，邻接矩阵和边的数组。
 1. 图的邻接表存储 邻接表是最常用的一种表示图的方法，它通常用一个大小为V的索引数组(顶点与数组的索引相同)存储V个顶点。而这个数组又是一个集合对象的数组(集合通常为链表，可以是Stack，Queue，LinkedList，这里《算法四》采用了一种不支持删除操作的链表结构Bag)，第i个元素的集合中存储了与当前顶点相关联的边。
@@ -67,7 +67,7 @@ public class Graph { private final int V; //V为顶点数 通常假定顶点不�
   <title>clock</title>
   <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
 </svg>
-          2 min read
+          3 min read
         </div></div>
     </header>
     <div class="post-content">
@@ -79,6 +79,7 @@ public class Graph { private final int V; //V为顶点数 通常假定顶点不�
 <li>加权无向图</li>
 <li>加权有向图</li>
 </ul>
+<hr>
 <h1 id="数据结构">数据结构</h1>
 <p>树是一种特殊的图，对于完全二叉树通常采用数组存储。对于普通的二叉树，通常采用含有左右孩子指针的链表来表示。对于普通的树，通常有孩子表示法，双亲表示法和孩子兄弟表示法。</p>
 <p>同样的，图也可以用最基础的数组/链表进行表示。   <br>
@@ -171,6 +172,7 @@ public class Graph { private final int V; //V为顶点数 通常假定顶点不�
 与加权无向图的存储类似，区别也类似有向图和无向图的区别。</p>
 </li>
 </ul>
+<hr>
 <h1 id="dfs和bfs">DFS和BFS</h1>
 <p>在图中，很多算法都是基于深度优先搜索（DFS）和广度优先搜索（BFS）。</p>
 <ul>
@@ -192,7 +194,8 @@ public class Graph { private final int V; //V为顶点数 通常假定顶点不�
 <p>DFS 和 BFS的时间复杂度都为O(E+V).</p>
 </li>
 </ul>
-<h1 id="返回路径">返回路径</h1>
+<hr>
+<h1 id="返回路径和可达性">返回路径和可达性</h1>
 <h2 id="dfs">DFS</h2>
 <p>DFS的一个典型的应用就是：给定一幅图，给定一个起点s和另一个顶点w，回答是否有一条路径连通这两个顶点？ <br>
 还有一个典型的应用是：给定一幅图，给定一个起点s和另一个顶点w，回答是否有一条路径连通这两个顶点？<strong>如果有，请给出这条路径。</strong></p>
@@ -212,6 +215,7 @@ public class Graph { private final int V; //V为顶点数 通常假定顶点不�
 <p>若题目要求给出具体的路径，就一定需要一个辅助数组记录路径。</p>
 </li>
 </ul>
+<hr>
 <h1 id="dfs和bfs的其他应用">DFS和BFS的其他应用</h1>
 <ul>
 <li>
@@ -221,18 +225,268 @@ public class Graph { private final int V; //V为顶点数 通常假定顶点不�
 </li>
 <li>
 <p>检测环：给定的图是无环图吗？  <br>
-利用DFS。如果DFS递归访问起点为s的图，递归中第二次访问到了某个顶点，并且这个顶点不是s，则含有环。(若不含有环，第二次访问到某个顶点一定是起点s，因为所有的都访问完了会回到最初的点访问)</p>
-</li>
-<li>
-<p>二分图：检测给定的图是二分图吗？  <br>
-利用dfs。</p>
+利用DFS。给定起点w的一条边e连接顶点v，且v未被访问过，则递归的进行dfs来访问v，在dfs访问v时可能出现两种情况：一是v的相邻顶点未被访问过，则递归访问。二是v的相邻顶点u被访问过了，除非这个顶点是w(w即v的上一个顶点，e在v和w都存了一遍)，否则一定含有环。</p>
 </li>
 </ul>
+<p>注意，这里是无向图的检测是否有环，只适用于无向图和加权无向图。与下面有向图的环检测不同。</p>
+<p><img src="/chapter4/4.5.1.png" alt=""></p>
+<ul>
+<li>二分图：检测给定的图是二分图吗？  <br>
+利用dfs。</li>
+</ul>
+<hr>
 <h1 id="有向图典型问题">有向图典型问题</h1>
+<ul>
+<li>单点可达性：给定一幅有向图和起点s，是否存在一条s到给定顶点v的路径？</li>
+<li>多点可达性：给定一幅有向图和起点的集合，是否存在一条从集合的任意顶点到给定顶点v的路径？</li>
+</ul>
+<p>这两个问题属于可达性问题，可以用DFS和BFS解决。给出所有可达的顶点然后判断v是否在里面即可。   <br>
+且多点可达性可以用于内存管理，垃圾回收机制。</p>
+<ul>
+<li>单点有向路径：给定一幅有向图和起点s，给出s到指定顶点v的路径？</li>
+<li>单点最短有向路径：给定一幅有向图和起点s，给出s到指定顶点v的最短路径？</li>
+</ul>
+<p>这两个问题属于返回路径问题，需要edgeTo[]数组来保存路径。最短路径需要用BFS。</p>
+<h2 id="1检测有向环">1.检测有向环</h2>
+<p>若从起点可以到达所有其他顶点，对起点开始 <em><strong>深度优先搜索算法</strong></em>。同时将正在dfs递归调用访问的顶点一个数据结构进行保存。若在递归遍历过程中对某个顶点w继续深度搜索时，它指出的边指向的点v已经被标记了且在这个数据结构中，说明有环。</p>
+<p>可以采用真的数组/链表来存储，也可以用一个标识表示是否在此次的dfs递归调用访问中被访问。好处是判断是否在其中只需要O(1).  <br>
+若还想给出环的所有顶点，则也可以从用edgeTo[]和Stack来保存路径上的所有顶点。 <br>
+算法时间复杂度为O(E+V)</p>
+<p>可以对比无向图的环的检测。</p>
+<h2 id="2拓扑排序">2.拓扑排序</h2>
+<p>实现拓扑排序的基本思想是：深度优先搜索算法正好只会访问每个顶点一次。如果将dfs()的参数顶点保存在一个数据结构中，按一定的顺序遍历整个数据结构实际上就能访问图中的所有顶点。而遍历的顺序为 <em>逆后序</em> 。</p>
+<p><em><strong>一幅有向无环图的拓扑排序即为所有顶点的逆后序排列。</strong></em></p>
+<p>注意点：</p>
+<ul>
+<li>无环。对于有向有环图，不存在拓扑排序。</li>
+<li>逆后序。逆后序：在递归调用之 <em>后</em> 将顶点入 <em>栈</em> (将后序逆序)。</li>
+</ul>
+<p>利用深度优先搜索算法解决拓扑排序问题就可以归纳为如下的几步：</p>
+<ul>
+<li>检测有向图是否含有环，以确保存在解。</li>
+<li>使用拓扑排序解决调度问题</li>
+</ul>
+<p>算法时间复杂度为O(E+V)</p>
+<h2 id="3优先级调度">3.优先级调度</h2>
+<p><em><strong>优先级限制下的调度问题等价于计算有向无环图的所有顶点的拓扑排序。</strong></em></p>
+<p>利用深度优先搜索算法解决优先级调度问题(拓扑排序问题)就可以归纳为如下的几步：</p>
+<ul>
+<li>指明任务和优先级条件。(相当于给定顶点和边的方向)</li>
+<li>检测有向图是否含有环，以确保存在解。</li>
+<li>使用拓扑排序解决调度问题</li>
+</ul>
+<p>算法时间复杂度为O(E+V)</p>
+<h2 id="4有向图的强连通分量">4.有向图的强连通分量</h2>
+<ul>
+<li><em><strong>强连通性问题：给定的两个顶点是强连通的吗？某个有向图中有几个强连通分量？</strong></em></li>
+</ul>
+<p>两个顶点是强连通的  &lt;==&gt;  它们都在一个普通的有向环中。所以若只需要判断有向图是否含有强连通分量，就可以用上面的检测有向图是否含有环。</p>
+<ul>
+<li><em><strong>强连通分量：给出有向图的所有强连通分量</strong></em>
+Kosaraju算法：使用深度优先搜索查找给定有向图G的反向图G&rsquo;，根据由此得到的所有顶点的逆后序再次使用深度优先搜索处理有向图G，其构造函数中每一次递归调用所标记的顶点都在同一个强连通分量中。</li>
+</ul>
+<p>算法时间复杂度为O(E+V)</p>
+<hr>
 <h1 id="最小生成树--加权无向图典型问题">最小生成树&ndash;加权无向图典型问题</h1>
+<h2 id="原理切分定理和贪心算法">原理：切分定理和贪心算法</h2>
+<p><em><strong>切分定理：在一幅加权图中，给定任意的切分，它的横切边中权重最小者必然属于图的最小生成树</strong></em></p>
+<p><em><strong>贪心算法</strong></em> 的思想：使用切分定理找到最小生成树的一条边，不断重复直到找到最小生成树的所有边。</p>
+<h2 id="prim算法">Prim算法</h2>
+<p>思想：一开始这棵树只有一个顶点，然后向它添加V-1条边，每次总是将下一条 <em><strong>连接树中的顶点与不在树中的顶点且权重最小的边</strong></em> 加入树中(即由树中的顶点所定义的切分中的一条横切边)。</p>
+<ul>
+<li>Prim算法的延迟实现 <br>
+额外的数据结构
+<ul>
+<li>存储顶点。用marked[]数组。如果顶点v在树中，则marked[v]的值为true。</li>
+<li>存储边。用一条队列来保存 或者 一个由顶点索引的Edge对象的数组edgeTo(edgeTo[v]将v连接到树中的Edge对象)</li>
+<li>求最小的横切边。用一条优先队列MinPQ&lt; Edge &gt;来根据权重比较所有边。</li>
+</ul>
+</li>
+</ul>
+<p>具体做法 <br>
+初始时最小生成树只有一个根（默认顶点0），将起点与其他顶点的构成的集合的横切边都进入优先队列MinPQ，然后delMin返回权重最小的横切边。  <br>
+对于最小的横切边，判断是否两个顶点都已经在最小生成树中(marked[]数组)，若都在则表示这条横切边无效，就继续判断下一条次最小的横切边。 <br>
+当找到最小且满足条件的横切边，那么这条边就是最小生成树的边，加入到保存边的队列mst中并将另一个顶点标记在树中(marked[]=true)。同时更新MinPQ：加入新的顶点的相接的边，循环找每次加入边和一个顶点后最小的横切边。  <br>
+当找到V-1条边时才结束循环。</p>
+<p>算法所需空间为O(E).所需时间为O(ElogE)</p>
+<ul>
+<li>Prim算法的即时实现  <br>
+改进：我们每次加入了新的顶点到树中后，观察这个顶点用边连接的所有还不在树中的顶点，如果不在树中的顶点靠这个顶点的边加入树中的权重比原来的还要大，就不需要更新。如果不在树中的某个顶点依靠这顶点的边加入树中权重比原来小，则这条边很有可能是最小生成树的边，要更新。  <br>
+额外的数据结构
+<ul>
+<li>顶点索引数组edgeTo[].如果顶点v不在树中但至少有一条边和树相连，那么edgeTo[v]是将v和树相连的最短边。</li>
+<li>顶点索引数组distTo[].disTo[v]存放edgeTo[v]的权重。</li>
+<li>索引优先队列.以数组的索引0~V-1作为顶点，存储的是权重。</li>
+</ul>
+</li>
+</ul>
+<p>具体实现
+每次从优先队列中返回一个顶点v并检查它的邻接链表中的每条边v-w。如果w已经被标记过，那么这条边就失效了;如果w不在优先队列中或者v-w的权重小于目前已知的最小值edgeTo[w]，则更新数组，将v-w作为最佳选择。</p>
+<p>算法所需空间O(V)，所需时间为O(ElogV)</p>
+<h2 id="kruskal算法">Kruskal算法</h2>
+<ul>
+<li>
+<p>思想 <br>
+将所有的边按照权重顺序(由小到大)处理，每次考察权重最小的边，如果加入这条边不会和已经加入的边构成环就可以加入，否则考察下一条权重最小的边。</p>
+</li>
+<li>
+<p>额外的数据结构</p>
+<ul>
+<li>一个优先队列。用于存储边的集合，并可以delMin返回最小权重的边。</li>
+<li>一个union-find数据结构来识别是否会形成环。</li>
+<li>一个队列来存储所有生成树的边。</li>
+</ul>
+</li>
+</ul>
+<p>算法所需的空间为O(E)，时间为O(ElogE)。</p>
+<hr>
 <h1 id="最短路径--加权有向图典型问题">最短路径&ndash;加权有向图典型问题</h1>
+<h2 id="理论">理论</h2>
+<p>最优性条件  <br>
+给定一幅加权有向图G，s为起点，对于s可达的所有v。当且仅当对于v到w的任意一条边e，这些值都满足distTo[w] &lt;= distTo[v] + e.weight()时(即不存在有效的放松边)，它们是最短路径的长度。</p>
+<h2 id="基本方法-放松">基本方法 放松</h2>
+<ul>
+<li>
+<p>边的松弛  <br>
+若对边e进行放松导致distTo[e.to()]和edgeTo[e.to()]发生改变，则称e的放松是成功的，否则成为失败。  <br>
+假设起点s直接和顶点x可达，且边的权重为w1.而与起点s可达的另一顶点y也可达x，s-&gt;y的权重为w2，y-&gt;x的权重为w3，且w1&gt;w2+w3，那么就需要对s-&gt;x的最短路径进行更改(即放松边y-&gt;x)。</p>
+</li>
+<li>
+<p>顶点的松弛
+对顶点v的松弛即放松由v指出的所有的边。</p>
+</li>
+</ul>
+<h2 id="额外的数据结构">额外的数据结构</h2>
+<ul>
+<li>
+<p>与路径相关的问题，基本都需要一个edgeTo[]数组来保存上一个点。即edgeTo[v]的值s-&gt;v的最短路径上的最后一条边。</p>
+</li>
+<li>
+<p>为了保存每条最短路径的权重，需要一个有顶点索引的数组distTo[]。即distTo[v]为从s到v的已知最短路径的长度。(约定起点s的distTo[s]==0，任意不可达的顶点为无限大)</p>
+</li>
+</ul>
+<h2 id="1通用最短路径算法">1.通用最短路径算法</h2>
+<p>设s为起点，将distTo[s]初始化为0，其他都为无穷大。循环执行“放松G的任意边，直到不存在(放松)有效边”即可得到最短路径。</p>
+<ul>
+<li><em><strong>通用算法一定可以找到最短路径，但是它对于边的放松的顺序是没有规定的。</strong></em></li>
+<li><em><strong>而改进的几种算法，要证明它们都能找到最短路径，只需要证明它们都会放松所有的边直到所有边都失效即可。</strong></em></li>
+</ul>
+<h2 id="2dijkstra算法--非负权重">2.Dijkstra算法&ndash;非负权重</h2>
+<p>Dijkstra算法：首先将distTo[s]初始化为0，distTo[]中其他元素初始化为正无穷。然后将distTo[]最小的非树(最短路径树)顶点加入树中并放松(放松由它指出的所有的边)。循环上述操作，直到所有顶点都在树中或者所有非树顶点的distTo[]值均为无穷大(不可达)。<br>
+为了快速找到distTo[]最小的非树顶点，也需要用一个优先队列MinPQ。而索引优先队列IndexMinPQ可以将索引和键(优先级)关联起来，关联的值就是distTo[]。</p>
+<p>Dijkstra与Prim的即时实现和相似，只不过Prim的即时实现是每次添加 <em><strong>离树最近</strong></em> 的非树顶点；而Dijkstra算法则是每次添加 <em><strong>离起点最近</strong></em> 的非树顶点。它们都可以不用marked[]数组，因为!marked[w]等价于distTo[w]为无穷大。</p>
+<p>复杂度：在一幅含有V个顶点和E条边的加权有向图中，使用Dijkstra算法计算根结点为给定起点的最短路径树所需空间与V成正比，时间与ElogV成正比。</p>
+<p><em><strong>限制：Dj算法不适用于权重为负的图。</strong></em></p>
+<h2 id="3无环加权有向图的最短路径算法">3.无环加权有向图的最短路径算法</h2>
+<p>由通用最短路径算法可以知道，只要将所有的边都进行放松就一定能够得到以起点为根的包括所有顶点的最短路径树。Dijkstrra算法规定的边的放松顺序是将距离起点最近的某个顶点放松，然后将其指出的边都加入优先队列。</p>
+<p>若在一幅不含有环的有向图中，我们完全可以将有向图先进行拓扑排序，然后按照排序的方式对顶点进行放松。</p>
+<p>具体做法：首先将distTo[s]初始化为0，其他初始化为无穷大，然后一个个按照拓扑排序的顺序放松所有的顶点。<br>
+(不需要使用marked[]，因为按照拓扑顺序处理不可能遇到已经被放松过的顶点)</p>
+<p>若按照拓扑排序进行放松，就能在O(E+V)的时间内解决无环加权有向图的单点最短路径问题。  <br>
+(有向图的拓扑排序复杂度为O(E+V),而第二次对边放松时只会对每条边放松一次。所以总的复杂度为O(E+V)) <br>
+已知某加权有向图是 <em><strong>无环图</strong></em>，这个方法是最好的。并且这个方法适用于权重是负值的情况。</p>
+<h2 id="4一般加权有向图中的最短路径算法">4.一般加权有向图中的最短路径算法</h2>
+<ul>
+<li>
+<p>Bellman-Ford算法  <br>
+在任意含有V个顶点的加权有向图中给定起点s，从s无法达到任何负权重环。那么将distTo[s]初始化为0，其他初始化为无穷大，以任意顺序放松有向图的所有边并 <em><strong>重复V轮</strong></em> 就可以得到s到所有可达顶点的最短路径树。<br>
+和通用算法类似。复杂度高达O(EV)</p>
+</li>
+<li>
+<p>基于队列的Bellman-Ford算法 <br>
+在V轮放松中，<em><strong>只有上一轮distTo[]的值发生变化的顶点指出的边</strong></em> 才能改变其他distTo[]元素的值。那么我们可以用一条FIFO的队列记录这样的顶点。</p>
+</li>
+</ul>
+<p>处理负权重的边：  <br>
+对于负权重边，可能在一轮放松中使得原来已经被放松过的顶点的distTo[]的值发生了变化，那么就还需要放松。如下图的顶点4：顶点4首先在顶点0被放松后加入了队列进行放松。然后再6被放松后由于6-&gt;4的权重为负，且0-&gt;..-&gt;6-&gt;4的权重比0-&gt;4的权重小，所有需要对4进行再次放松。这样由4指出的顶点的distTo[]也还可能改变。</p>
+<p><img src="/chapter4/4.4.8.jpg" alt=""></p>
+<p>处理负权重的环：  <br>
+<strong>对于含有负权重的图，起点到负权重环上的所有顶点的最小路径都为负无穷，无意义。</strong> <br>
+所以要进行检测是否含有负权重环。</p>
+<p>由于负权重环的存在，每轮的放松都会使得负权重环上的顶点的distTo[]发生改变，即使进行了V轮后，存储distTo[]发生改变的队列(需要放松的顶点)任然不为空。因为对于负权重环上的顶点，每轮distTo[]都会减小且没有下界。  <br>
+如果V轮后任然还有顶点在队列中，就说明含有负权重环。那么只需要利用edgeTo[]构造一个有向图，并且用检测有向图的方法(深度优先搜索算法)检测有向图是否有环。并能够返回负权重环的所有点。</p>
+<hr>
 <h1 id="符号图">符号图</h1>
+<p>对于我们上述实现的所有图，都默认的用0~V-1代表V个顶点，而0~V-1也是大小为V的数组的索引。  <br>
+这个想法是因为图的邻接表和邻接矩阵都是用大小为V的数组来存储V个顶点。当然也可以设置数组大小为X(X&gt;V)，然后用其中的V个空间来存储(即表示顶点不一定非要0开始)，但是这样浪费了空间。</p>
+<p>这样都是用数字来代表顶点，而实际生活中很可能碰到的顶点是字符或者字符串。 <br>
+为了将它们转化为标准的实现，可以利用符号表。符号表的查找方法可以根据给定的键，返回相应的值。   <br>
+对于我们的问题：</p>
+<ul>
+<li>在输入时给定两个顶点的字符串名字，要知道对应的是哪两个点。这就需要将字符串名字作为键，将0~V-1索引作为值。</li>
+<li>在返回时，对于两个索引的数字，要查询到对应的字符串名字，然后进行输出。这就需要将索引作为键，将字符串作为值，即反向的一个索引，可以利用数组实现。</li>
+</ul>
+<h2 id="实现步骤">实现步骤</h2>
+<ol>
+<li>
+<p>用一个符号表st,键的类型为String,值的类型为int;</p>
+</li>
+<li>
+<p>用一个数组keys[]作为反向索引，保存每个顶点索引对应的顶点名;</p>
+</li>
+<li>
+<p>用一个标准的Graph对象G存储这个无向图的信息。</p>
+</li>
+</ol>
+<p><img src="/chapter4/4.1.11symbol-graph.png" alt=""></p>
+<p>以有向图为例，对于其他三种类型的图也一样。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SymbolDigraph</span>
+<span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> SequentialSearchST<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> st<span style="color:#f92672">;</span>  <span style="color:#75715e">// 符号表，将输入时字符串转化为标准的索引
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> String<span style="color:#f92672">[]</span> keys<span style="color:#f92672">;</span>           <span style="color:#75715e">// 输出时，将索引转化为字符串
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> Digraph digraph<span style="color:#f92672">;</span>         <span style="color:#75715e">// 存储图相关的信息
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">SymbolDigraph</span><span style="color:#f92672">(</span>String filename<span style="color:#f92672">,</span> String delimiter<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        st <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> SequentialSearchST<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;();</span>
+        In in <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> In<span style="color:#f92672">(</span>filename<span style="color:#f92672">);</span>
 
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>in<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            String<span style="color:#f92672">[]</span> a <span style="color:#f92672">=</span> in<span style="color:#f92672">.</span><span style="color:#a6e22e">readLine</span><span style="color:#f92672">().</span><span style="color:#a6e22e">split</span><span style="color:#f92672">(</span>delimiter<span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> a<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>st<span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>a<span style="color:#f92672">[</span>i<span style="color:#f92672">]))</span>
+                    st<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>a<span style="color:#f92672">[</span>i<span style="color:#f92672">],</span> st<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">());</span>    <span style="color:#75715e">//初始化符号表
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#75715e">//初始化反向索引  输出时根据索引返回对应的字符串名
+</span><span style="color:#75715e"></span>        keys <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> String<span style="color:#f92672">[</span>st<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()];</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String name <span style="color:#f92672">:</span> st<span style="color:#f92672">.</span><span style="color:#a6e22e">keys</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            keys<span style="color:#f92672">[</span>st<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>name<span style="color:#f92672">)]</span> <span style="color:#f92672">=</span> name<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#75715e">//初始化图
+</span><span style="color:#75715e"></span>        digraph <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Digraph<span style="color:#f92672">(</span>st<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">());</span>
+        in <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> In<span style="color:#f92672">(</span>filename<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>in<span style="color:#f92672">.</span><span style="color:#a6e22e">hasNextLine</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            String<span style="color:#f92672">[]</span> a <span style="color:#f92672">=</span> in<span style="color:#f92672">.</span><span style="color:#a6e22e">readLine</span><span style="color:#f92672">().</span><span style="color:#a6e22e">split</span><span style="color:#f92672">(</span>delimiter<span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">int</span> v <span style="color:#f92672">=</span> st<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>a<span style="color:#f92672">[</span>0<span style="color:#f92672">]);</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> a<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">int</span> w <span style="color:#f92672">=</span> st<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>a<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
+                digraph<span style="color:#f92672">.</span><span style="color:#a6e22e">addEdge</span><span style="color:#f92672">(</span>v<span style="color:#f92672">,</span> w<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">//判断字符串s的顶点是否在图中 用符号表的查询
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> st<span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>s<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">//用于输入时将顶点的字符串名转化为索引
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">index</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> st<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>s<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">//用于输出时将索引转化为顶点的字符串名
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">nameOf</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> v<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> keys<span style="color:#f92672">[</span>v<span style="color:#f92672">];</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> Digraph <span style="color:#a6e22e">digraph</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> digraph<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
     </div>
     <div class="post-footer">
       

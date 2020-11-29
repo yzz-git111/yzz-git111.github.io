@@ -395,7 +395,7 @@ public class AdjMatrixDigraph { private int V; private int E; private boolean[][
 <ul>
 <li><strong>有向环检测：给定的有向图中包含有向环吗？</strong></li>
 </ul>
-<p>若从起点可以到达所有其他顶点，对起点开始 <em><strong>深度优先搜索算法</strong></em>。同时将已经搜索过的顶点用一个数据结构进行保存。若在遍历过程中对某个顶点w继续深度搜索时，它指出的边指向的点v已经被标记了且在这个数据结构中，说明有环。</p>
+<p>若从起点可以到达所有其他顶点，对起点开始 <em><strong>深度优先搜索算法</strong></em>。同时将正在dfs递归调用访问的顶点用一个数据结构进行保存。若在遍历过程中对某个顶点w继续深度搜索时，它指出的边指向的点v已经被标记了且在这个数据结构中，说明有环。</p>
 <p>证明：设w是路径上的某个顶点。一旦我们找到了一条有向边v-&gt;w且w以及存在这个数据结构中了，那么我们就找到了一个环。因为我们找到的是一条w-&gt;v的有向路径，而v-&gt;w刚好补全了这个环。反过来，没有这样的一个边，就说明这幅有向图是没有环的。</p>
 <p><img src="/chapter4/4.2.9.jpg" alt=""></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DirectedCycle</span> <span style="color:#f92672">{</span>
@@ -538,7 +538,7 @@ public class AdjMatrixDigraph { private int V; private int E; private boolean[][
     <span style="color:#f92672">}</span>
 
 <span style="color:#75715e">/*=====   时间复杂度为O(V+E)   =====*/</span>
-</code></pre></div><p>实现拓扑排序的基本思想是：深度优先搜索算法正好只会访问每个顶点一次。如果将dfs()的参数顶点保存在一个数据结构中，遍历整个数据结构实际上就能访问图中的所有顶点。而遍历的顺序为 <em>逆后序</em> 。</p>
+</code></pre></div><p>实现拓扑排序的基本思想是：深度优先搜索算法正好只会访问每个顶点一次。如果将dfs()的参数顶点保存在一个数据结构中，按一定的顺序遍历整个数据结构实际上就能访问图中的所有顶点。而遍历的顺序为 <em>逆后序</em> 。</p>
 <p><img src="/chapter4/4.2.5depth-first-orders.png" alt=""></p>
 <p>证明 <strong>一幅有向无环图的拓扑排序即为所有顶点的逆后序排序</strong>： <br>
 以上图为例：对于任意边v-&gt;w,在调用dfs(v)时，下面三种情况必然有一种成立</p>
@@ -550,8 +550,8 @@ public class AdjMatrixDigraph { private int V; private int E; private boolean[][
 <p>在可能的两种情况中，dfs(w)都会在dfs(v)之前完成，因此在后序排序中w排在前面而在逆后序中w排在v后面。因此任意一条边v-&gt;w都能由排名前的顶点指向排名后的顶点。</p>
 <p>有了上述的证明，我们利用深度优先搜索算法解决优先级调度问题(拓扑排序问题)就可以归纳为如下的几步：</p>
 <ul>
+<li>指明任务和优先级条件。(相当于给定顶点和边的方向)</li>
 <li>检测有向图是否含有环，以确保存在解。</li>
-<li>指明任务和优先级条件。</li>
 <li>使用拓扑排序解决调度问题</li>
 </ul>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Topological</span> <span style="color:#f92672">{</span>
@@ -596,7 +596,7 @@ public class AdjMatrixDigraph { private int V; private int E; private boolean[][
 整个生态圈就含有强连通分量(每个动物都有天敌，不然就泛滥了)</p>
 <p><strong>强连通性问题：给定的两个顶点是强连通的吗？某个有向图中有几个强连通分量？</strong> <br>
 Kosaraju算法：使用深度优先搜索查找给定有向图G的反向图G&rsquo;，根据由此得到的所有顶点的逆后序再次使用深度优先搜索处理有向图G，其构造函数中每一次递归调用所标记的顶点都在同一个强连通分量中。 <br>
-且可以根据顶点之间返回所在强连通分量的id，支持常数时间的查询操作。</p>
+且可以根据顶点直接返回所在强连通分量的id，支持常数时间的查询操作。</p>
 <p>下图是Kosaraju算法正确性的证明： <br>
 <img src="/chapter4/4.2.11.jpg" alt=""></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">KosarajuSharirSCC</span> <span style="color:#f92672">{</span>

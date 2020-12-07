@@ -5,10 +5,29 @@
     <link>https://yzz-git111.github.io/post/</link>
     <description>Recent content in Posts on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 25 Nov 2020 17:16:40 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 06 Dec 2020 18:46:42 +0800</lastBuildDate>
     
 	<atom:link href="https://yzz-git111.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>字符串排序</title>
+      <link>https://yzz-git111.github.io/post/%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%8E%92%E5%BA%8F/</link>
+      <pubDate>Sun, 06 Dec 2020 18:46:42 +0800</pubDate>
+      
+      <guid>https://yzz-git111.github.io/post/%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%8E%92%E5%BA%8F/</guid>
+      <description>引言 在第二章的排序中，学习了很多的排序算法：选择排序，插入排序，希尔排序，归并排序，快速排序，堆排序。这些算法都是通用的算法，对于任何实现了Comparable接口的类的对象都适用(对于未实现Comparable接口的对象即自己定义的类，只要重写一下compareTo()方法即可)。
+同时，第二章学习的都是基于比较的排序算法。对于基于比较的排序算法来说，其时间复杂度的下限为O(NlogN)&amp;ndash;通过决策树可以简单证明。
+除此之外，还有基于非比较的排序算法，其时间复杂度不受O(NlogN)的限制。比较常用的有计数排序，基数排序和桶排序。
+而现在学习三种利用字符串的特殊性质将字符串排序：低位优先字符串排序、高位优先字符串排序和三向字符串快速排序。 注意：第二章的通用排序对字符串排序同样的适用，只不过现在介绍三种算法的更适用字符串排序。
+字母表 一种偷懒的方法是用ASCII字母表或者UNICODE16字母表，虽然这种字母表对于很多的实现都是充足了，但是它有很多字符对于特定的实现是不必要的，那么我们可以自己实现一个字母表，给出每个字符在字母表中对应的值。
+以构造只含有&#39;0123456789&amp;rsquo;的数字字母表为例。
+字母表要实现的方法包括 由字符给出在字母表的索引 和 由索引给出字符。
+对于Unicode 16/ASCII字母表 它已经为0-9每个字符建立的一个对应的索引值，比如&#39;0&amp;rsquo;对应48。构建我们自己的字母表需要利用它，可以先将输入的所有字符转化为一个字符数组，这个字符数组就是字母表。
+下面要建立索引，直接以字母表数组的索引为索引显然不成立，因为这样的话每建立一个字母表都需要记住索引。 我们要利用已经规定要的Unicode 16.且我们已经有方法可以将char强转为一个整型(这个整型数就是它在Unicode16的索引值)。而Unicode 16 字符的索引一直到65535，那么就需要一个大小和Unicode一样大的数组inverse，用它来记录字符在我们自己实现的字母表中的索引。 for (int c = 0; c &amp;lt; R; c++) inverse[alphabet[c]] = c;
+举例来说明：inverse数组大小为65536，初始化全为-1.对于字符&#39;0&amp;rsquo;,我们可以直接(int)(&amp;lsquo;0&amp;rsquo;)将它转化为Unicode中的索引48，那么我们就把inverse数组下标为48那个元素赋值为它在自己实现的字母表的索引值(0)。这样一来，我们想要由&#39;0&amp;rsquo;返回在我们实现的字母表的索引的时候可以直接返回inverse[(int)&amp;lsquo;0&amp;rsquo;]&amp;lt;==&amp;gt;inverse[48]，存储的就是0.简单来说，就是利用Unicode的索引再建立到我们自己的字母表的一个映射。
+public class Alphabet { private char[] alphabet; // 记录字母表中的字符  private int[] inverse; // 记录在本字母表中各个字符对应的索引  private final int R; // 字母表的大小  public Alphabet(String alpha) {//通过输入所有的字符来构造一个字母表  // 检查是否有重复的字符  boolean[] unicode = new boolean[Character.MAX_VALUE]; for (int i = 0; i &amp;lt; alpha.</description>
+    </item>
     
     <item>
       <title>图的总结</title>

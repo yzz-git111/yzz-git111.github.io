@@ -20,7 +20,7 @@
 以构造只含有&#39;0123456789&rsquo;的数字字母表为例。
 字母表要实现的方法包括 由字符给出在字母表的索引 和 由索引给出字符。
 对于Unicode 16/ASCII字母表 它已经为0-9每个字符建立的一个对应的索引值，比如&#39;0&rsquo;对应48。构建我们自己的字母表需要利用它，可以先将输入的所有字符转化为一个字符数组，这个字符数组就是字母表。
-下面要建立索引，直接以字母表数组的索引为索引显然不成立，因为这样的话每建立一个字母表都需要记住索引。 我们要利用已经规定要的Unicode 16.且我们已经有方法可以将char强转为一个整型(这个整型数就是它在Unicode16的索引值)。而Unicode 16 字符的索引一直到65535，那么就需要一个大小和Unicode一样大的数组inverse，用它来记录字符在我们自己实现的字母表中的索引。 for (int c = 0; c &lt; R; c&#43;&#43;) inverse[alphabet[c]] = c;
+下面要建立索引，直接以字母表数组的索引为索引显然不成立，因为这样的话每建立一个字母表都需要记住索引。 我们要利用已经规定好的Unicode 16字母表.且我们已经有方法可以将char强转为一个整型(这个整型数就是它在Unicode16的索引值)。而Unicode 16 字符的索引一直到65535，那么就需要一个大小和Unicode一样大的数组inverse，用它来记录字符在我们自己实现的字母表中的索引。 for (int c = 0; c &lt; R; c&#43;&#43;) inverse[alphabet[c]] = c;
 举例来说明：inverse数组大小为65536，初始化全为-1.对于字符&#39;0&rsquo;,我们可以直接(int)(&lsquo;0&rsquo;)将它转化为Unicode中的索引48，那么我们就把inverse数组下标为48那个元素赋值为它在自己实现的字母表的索引值(0)。这样一来，我们想要由&#39;0&rsquo;返回在我们实现的字母表的索引的时候可以直接返回inverse[(int)&lsquo;0&rsquo;]&lt;==&gt;inverse[48]，存储的就是0.简单来说，就是利用Unicode的索引再建立到我们自己的字母表的一个映射。
 public class Alphabet { private char[] alphabet; // 记录字母表中的字符  private int[] inverse; // 记录在本字母表中各个字符对应的索引  private final int R; // 字母表的大小  public Alphabet(String alpha) {//通过输入所有的字符来构造一个字母表  // 检查是否有重复的字符  boolean[] unicode = new boolean[Character.MAX_VALUE]; for (int i = 0; i &lt; alpha."/>
 
@@ -33,7 +33,7 @@ public class Alphabet { private char[] alphabet; // 记录字母表中的字符 
 以构造只含有&#39;0123456789&rsquo;的数字字母表为例。
 字母表要实现的方法包括 由字符给出在字母表的索引 和 由索引给出字符。
 对于Unicode 16/ASCII字母表 它已经为0-9每个字符建立的一个对应的索引值，比如&#39;0&rsquo;对应48。构建我们自己的字母表需要利用它，可以先将输入的所有字符转化为一个字符数组，这个字符数组就是字母表。
-下面要建立索引，直接以字母表数组的索引为索引显然不成立，因为这样的话每建立一个字母表都需要记住索引。 我们要利用已经规定要的Unicode 16.且我们已经有方法可以将char强转为一个整型(这个整型数就是它在Unicode16的索引值)。而Unicode 16 字符的索引一直到65535，那么就需要一个大小和Unicode一样大的数组inverse，用它来记录字符在我们自己实现的字母表中的索引。 for (int c = 0; c &lt; R; c&#43;&#43;) inverse[alphabet[c]] = c;
+下面要建立索引，直接以字母表数组的索引为索引显然不成立，因为这样的话每建立一个字母表都需要记住索引。 我们要利用已经规定好的Unicode 16字母表.且我们已经有方法可以将char强转为一个整型(这个整型数就是它在Unicode16的索引值)。而Unicode 16 字符的索引一直到65535，那么就需要一个大小和Unicode一样大的数组inverse，用它来记录字符在我们自己实现的字母表中的索引。 for (int c = 0; c &lt; R; c&#43;&#43;) inverse[alphabet[c]] = c;
 举例来说明：inverse数组大小为65536，初始化全为-1.对于字符&#39;0&rsquo;,我们可以直接(int)(&lsquo;0&rsquo;)将它转化为Unicode中的索引48，那么我们就把inverse数组下标为48那个元素赋值为它在自己实现的字母表的索引值(0)。这样一来，我们想要由&#39;0&rsquo;返回在我们实现的字母表的索引的时候可以直接返回inverse[(int)&lsquo;0&rsquo;]&lt;==&gt;inverse[48]，存储的就是0.简单来说，就是利用Unicode的索引再建立到我们自己的字母表的一个映射。
 public class Alphabet { private char[] alphabet; // 记录字母表中的字符  private int[] inverse; // 记录在本字母表中各个字符对应的索引  private final int R; // 字母表的大小  public Alphabet(String alpha) {//通过输入所有的字符来构造一个字母表  // 检查是否有重复的字符  boolean[] unicode = new boolean[Character.MAX_VALUE]; for (int i = 0; i &lt; alpha." />
 <meta property="og:type" content="article" />
@@ -93,7 +93,7 @@ public class Alphabet { private char[] alphabet; // 记录字母表中的字符 
 <p>字母表要实现的方法包括 由字符给出在字母表的索引 和 由索引给出字符。</p>
 <p>对于Unicode 16/ASCII字母表 它已经为0-9每个字符建立的一个对应的索引值，比如'0&rsquo;对应48。构建我们自己的字母表需要利用它，可以先将输入的所有字符转化为一个字符数组，这个字符数组就是字母表。<br>
 下面要建立索引，直接以字母表数组的索引为索引显然不成立，因为这样的话每建立一个字母表都需要记住索引。 <br>
-我们要利用已经规定要的Unicode 16.且我们已经有方法可以将char强转为一个整型(这个整型数就是它在Unicode16的索引值)。而Unicode 16 字符的索引一直到65535，那么就需要一个大小和Unicode一样大的数组inverse，用它来记录字符在我们自己实现的字母表中的索引。          for (int c = 0; c &lt; R; c++)
+我们要利用已经规定好的Unicode 16字母表.且我们已经有方法可以将char强转为一个整型(这个整型数就是它在Unicode16的索引值)。而Unicode 16 字符的索引一直到65535，那么就需要一个大小和Unicode一样大的数组inverse，用它来记录字符在我们自己实现的字母表中的索引。          for (int c = 0; c &lt; R; c++)
 inverse[alphabet[c]] = c;</p>
 <p>举例来说明：inverse数组大小为65536，初始化全为-1.对于字符'0&rsquo;,我们可以直接(int)(&lsquo;0&rsquo;)将它转化为Unicode中的索引48，那么我们就把inverse数组下标为48那个元素赋值为它在自己实现的字母表的索引值(0)。这样一来，我们想要由'0&rsquo;返回在我们实现的字母表的索引的时候可以直接返回inverse[(int)&lsquo;0&rsquo;]&lt;==&gt;inverse[48]，存储的就是0.简单来说，就是利用Unicode的索引再建立到我们自己的字母表的一个映射。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Alphabet</span> <span style="color:#f92672">{</span>

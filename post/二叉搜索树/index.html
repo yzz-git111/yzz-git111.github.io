@@ -323,8 +323,8 @@ if (x.left == null) return x.right;遇到最小的结点就会返回最小结点
 <h2 id="删除">删除</h2>
 <p>删除方法是二叉查找树的最难实现的一个方法。对于只有一个子树(或者没有子树)的结点都可以用删除最小结点的方法。但是对于两个子树都有的结点需要考虑如何放置两个子树。</p>
 <p><em><strong>删除x结点后用它的后继节点(中序遍历的后一个结点)填补它的位置。</strong></em>
-<em><strong>因为它x有一个右子树，因此它的后继节点就是右子树的最小结点</strong></em>
-***deleMin</p>
+<em><strong>因为它x有一个右子树，因此它的后继节点就是右子树的最小结点</strong></em> <br>
+<em><strong>deleMin</strong></em></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">delete</span><span style="color:#f92672">(</span>Key key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
         <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;calls delete() with a null key&#34;</span><span style="color:#f92672">);</span>
         root <span style="color:#f92672">=</span> delete<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> key<span style="color:#f92672">);</span>

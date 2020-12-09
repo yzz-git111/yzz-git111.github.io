@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>单词查找树 // </title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.74.3" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="yzz帅的一匹" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://yzz-git111.github.io/css/main.min.88e7083eff65effb7485b6e6f38d10afbec25093a6fac42d734ce9024d3defbd.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="单词查找树"/>
+<meta name="twitter:description" content="引言   回顾 回顾之前实现的各种适用于查找的符号表(每个元素都是一个键值对，包括一个键Key和一个值Value。查找能够根据给定的键返回对应的值，插入能插入新的键值对，删除能够删除键值对)。这种典型的符号表包括适用于二分查找的顺序表，二叉查找树，红黑树，散列表。其中散列表速度最快但是不支持顺序性相关的操作(返回最值元素等)。二叉查找树平均需要O(logN)的复杂度，但可能有最坏情况退化到链表的情况。红黑树是黑高度平衡的二叉查找树，最坏情况也是O(logN)。且它们都适用了泛型编程的思想，对于各种类型的键均适用。
+  分析(可能不严谨) 之前的二叉查找树和红黑树的每个结点都存储的是一个键值对。而即使对于键都是大整数的情况，也可以将键看作是由若干&#39;0&rsquo;到&#39;9&rsquo;的单个字符组成的字符串。 那么现在我们若将键都看作是字符串，并且每个结点存储的不是一个键而是构成键的若干字符。查找时也是一个个字符的查找。由于对于一般情况65536位的Unicode 16表甚至128位的ASCII码都足够了。
+假设现在我们由10亿个键值对，用传统的二叉查找树则需要10亿个结点。而每个结点只存储128个字符的引用的话树的高度最多只有最长的字符串的长度那么大。
+  单词查找树 单词查找树这一数据结构有很好的性能：
+  查找命中所需时间和被查找的键的长度成正比
+  查找未命中只需要检查若干字符
+    先给出单词查找树这一用于查找的符号表的数据结构能实现的API： 这些API和之前学习的有些不同。首先指定了键的类型：专门用于实现字符串类型的键。其次添加了longestPrefixOf(),keysWithPrefix(),keysThatMatch()。
+ 单词查找树 单词查找树：由字符串键中的所有字符构造而成，允许使用被查找键中的字符进行查找。
+基本性质 如图，其实每个结点都含有R条连接，其中R为字母表的大小。由于单词查找树一般含有大量的空连接，因此在描绘一棵单词查找树时一般会忽略空链接。 每个结点又都有一个区域存放值，这个可以是空也可以是符号表中的某个键所关联的值。即我们将每个键所关联的值保存在该键的最后一个字母所对应的结点中。
+结点的表示 对于R个字符的字母表，每个点都需要有R个链接，对应着可能出现的字符。 如下图：将一棵单词查找树完整的表达出来，字母表是所有小写字母组成，所以每个结点含有1个值和26个链接。 并且单词查找树中，键是由根结点到含有非空值的结点的路径所隐式表示的。因为结点的数据结构不会存储任何字符串或者字符，保存的只是链接数组和值。例如在上述R=26的单词查找树中，字母表的索引为0的地方存储的是&rsquo;a&rsquo;的链接，所以哪个链接不空就隐含了这个字符就是该索引在字母表中对应的字符。我们将基于含有R个字符的字母表的单词查找树称为R向单词查找树。
+结点的数据结构作为内部类定义在单词查找树的类里。
+public class TrieST&lt;Value&gt; { //键的类型默认String，值用泛型  private static final int R = 256; // 默认的字母表是扩展后的8为ASCII表  private Node root; // 根结点 值为空  private int n; // 键值对的数量  // R-向单词查找树  private static class Node { private Object val; private Node[] next = new Node[R]; } public TrieST() { } } 1."/>
+
+    <meta property="og:title" content="单词查找树" />
+<meta property="og:description" content="引言   回顾 回顾之前实现的各种适用于查找的符号表(每个元素都是一个键值对，包括一个键Key和一个值Value。查找能够根据给定的键返回对应的值，插入能插入新的键值对，删除能够删除键值对)。这种典型的符号表包括适用于二分查找的顺序表，二叉查找树，红黑树，散列表。其中散列表速度最快但是不支持顺序性相关的操作(返回最值元素等)。二叉查找树平均需要O(logN)的复杂度，但可能有最坏情况退化到链表的情况。红黑树是黑高度平衡的二叉查找树，最坏情况也是O(logN)。且它们都适用了泛型编程的思想，对于各种类型的键均适用。
+  分析(可能不严谨) 之前的二叉查找树和红黑树的每个结点都存储的是一个键值对。而即使对于键都是大整数的情况，也可以将键看作是由若干&#39;0&rsquo;到&#39;9&rsquo;的单个字符组成的字符串。 那么现在我们若将键都看作是字符串，并且每个结点存储的不是一个键而是构成键的若干字符。查找时也是一个个字符的查找。由于对于一般情况65536位的Unicode 16表甚至128位的ASCII码都足够了。
+假设现在我们由10亿个键值对，用传统的二叉查找树则需要10亿个结点。而每个结点只存储128个字符的引用的话树的高度最多只有最长的字符串的长度那么大。
+  单词查找树 单词查找树这一数据结构有很好的性能：
+  查找命中所需时间和被查找的键的长度成正比
+  查找未命中只需要检查若干字符
+    先给出单词查找树这一用于查找的符号表的数据结构能实现的API： 这些API和之前学习的有些不同。首先指定了键的类型：专门用于实现字符串类型的键。其次添加了longestPrefixOf(),keysWithPrefix(),keysThatMatch()。
+ 单词查找树 单词查找树：由字符串键中的所有字符构造而成，允许使用被查找键中的字符进行查找。
+基本性质 如图，其实每个结点都含有R条连接，其中R为字母表的大小。由于单词查找树一般含有大量的空连接，因此在描绘一棵单词查找树时一般会忽略空链接。 每个结点又都有一个区域存放值，这个可以是空也可以是符号表中的某个键所关联的值。即我们将每个键所关联的值保存在该键的最后一个字母所对应的结点中。
+结点的表示 对于R个字符的字母表，每个点都需要有R个链接，对应着可能出现的字符。 如下图：将一棵单词查找树完整的表达出来，字母表是所有小写字母组成，所以每个结点含有1个值和26个链接。 并且单词查找树中，键是由根结点到含有非空值的结点的路径所隐式表示的。因为结点的数据结构不会存储任何字符串或者字符，保存的只是链接数组和值。例如在上述R=26的单词查找树中，字母表的索引为0的地方存储的是&rsquo;a&rsquo;的链接，所以哪个链接不空就隐含了这个字符就是该索引在字母表中对应的字符。我们将基于含有R个字符的字母表的单词查找树称为R向单词查找树。
+结点的数据结构作为内部类定义在单词查找树的类里。
+public class TrieST&lt;Value&gt; { //键的类型默认String，值用泛型  private static final int R = 256; // 默认的字母表是扩展后的8为ASCII表  private Node root; // 根结点 值为空  private int n; // 键值对的数量  // R-向单词查找树  private static class Node { private Object val; private Node[] next = new Node[R]; } public TrieST() { } } 1." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yzz-git111.github.io/post/%E5%8D%95%E8%AF%8D%E6%9F%A5%E6%89%BE%E6%A0%91/" />
+<meta property="article:published_time" content="2020-12-08T20:14:07+08:00" />
+<meta property="article:modified_time" content="2020-12-08T20:14:07+08:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://yzz-git111.github.io/"><img class="app-header-avatar" src="/avatar.jpeg" alt="yzz帅的一匹" /></a>
+      <h1></h1>
+      <p>yzz也想变成学霸</p>
+      <div class="app-header-social">
+        
+          <a target="_blank" href="https://github.com/yzz-git111" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg></a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">单词查找树</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Dec 8, 2020
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          7 min read
+        </div></div>
+    </header>
+    <div class="post-content">
+      <h1 id="引言">引言</h1>
+<ol>
+<li>
+<p>回顾 <br>
+回顾之前实现的各种适用于查找的符号表(每个元素都是一个键值对，包括一个键Key和一个值Value。查找能够根据给定的键返回对应的值，插入能插入新的键值对，删除能够删除键值对)。这种典型的符号表包括适用于二分查找的顺序表，二叉查找树，红黑树，散列表。其中散列表速度最快但是不支持顺序性相关的操作(返回最值元素等)。二叉查找树平均需要O(logN)的复杂度，但可能有最坏情况退化到链表的情况。红黑树是黑高度平衡的二叉查找树，最坏情况也是O(logN)。且它们都适用了泛型编程的思想，对于各种类型的键均适用。</p>
+</li>
+<li>
+<p>分析(可能不严谨) <br>
+之前的二叉查找树和红黑树的每个结点都存储的是一个键值对。而即使对于键都是大整数的情况，也可以将键看作是由若干'0&rsquo;到'9&rsquo;的单个字符组成的字符串。 <br>
+那么现在我们若将键都看作是字符串，并且每个结点存储的不是一个键而是构成键的若干字符。查找时也是一个个字符的查找。由于对于一般情况65536位的Unicode 16表甚至128位的ASCII码都足够了。<br>
+假设现在我们由10亿个键值对，用传统的二叉查找树则需要10亿个结点。而每个结点只存储128个字符的引用的话树的高度最多只有最长的字符串的长度那么大。</p>
+</li>
+<li>
+<p>单词查找树  <br>
+单词查找树这一数据结构有很好的性能：</p>
+<ul>
+<li>
+<p>查找命中所需时间和被查找的键的长度成正比</p>
+</li>
+<li>
+<p>查找未命中只需要检查若干字符</p>
+</li>
+</ul>
+</li>
+</ol>
+<p>先给出单词查找树这一用于查找的符号表的数据结构能实现的API：  <br>
+<img src="/chapter5/5.2.1.jpg" alt=""></p>
+<p>这些API和之前学习的有些不同。首先指定了键的类型：专门用于实现字符串类型的键。其次添加了longestPrefixOf(),keysWithPrefix(),keysThatMatch()。</p>
+<hr>
+<h1 id="单词查找树">单词查找树</h1>
+<p>单词查找树：由字符串键中的所有字符构造而成，允许使用被查找键中的字符进行查找。</p>
+<h2 id="基本性质">基本性质</h2>
+<p><img src="/chapter5/5.2.2.jpg" alt=""></p>
+<p>如图，其实每个结点都含有R条连接，其中R为字母表的大小。由于单词查找树一般含有大量的空连接，因此在描绘一棵单词查找树时一般会忽略空链接。 <br>
+每个结点又都有一个区域存放值，这个可以是空也可以是符号表中的某个键所关联的值。即我们将每个键所关联的值保存在该键的最后一个字母所对应的结点中。</p>
+<h2 id="结点的表示">结点的表示</h2>
+<p>对于R个字符的字母表，每个点都需要有R个链接，对应着可能出现的字符。  <br>
+如下图：将一棵单词查找树完整的表达出来，字母表是所有小写字母组成，所以每个结点含有1个值和26个链接。 <br>
+<img src="/chapter5/5.2.5.jpg" alt=""></p>
+<p>并且单词查找树中，键是由根结点到含有非空值的结点的路径所隐式表示的。因为结点的数据结构不会存储任何字符串或者字符，保存的只是链接数组和值。例如在上述R=26的单词查找树中，字母表的索引为0的地方存储的是&rsquo;a&rsquo;的链接，所以哪个链接不空就隐含了这个字符就是该索引在字母表中对应的字符。我们将基于含有R个字符的字母表的单词查找树称为R向单词查找树。</p>
+<p>结点的数据结构作为内部类定义在单词查找树的类里。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TrieST</span><span style="color:#f92672">&lt;</span>Value<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>    <span style="color:#75715e">//键的类型默认String，值用泛型
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> R <span style="color:#f92672">=</span> 256<span style="color:#f92672">;</span>        <span style="color:#75715e">// 默认的字母表是扩展后的8为ASCII表
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">private</span> Node root<span style="color:#f92672">;</span>      <span style="color:#75715e">// 根结点  值为空
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> n<span style="color:#f92672">;</span>          <span style="color:#75715e">// 键值对的数量
+</span><span style="color:#75715e"></span>
+    <span style="color:#75715e">// R-向单词查找树
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Node</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">private</span> Object val<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">private</span> Node<span style="color:#f92672">[]</span> next <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Node<span style="color:#f92672">[</span>R<span style="color:#f92672">];</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">TrieST</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="1键的数量">1.键的数量</h2>
+<p>单词查找树键是用一个根到某个结点的路径存储的。大小的实现和二叉树实现一样，通常有下面两种：</p>
+<ul>
+<li>即使实现：用一个实例变量N存储键的数量。插入新的键值对就加一，删除就减一。</li>
+<li>延迟实现：若结点的值的区域不为空，就代表了一个键。那么我们可以对于根结点，用递归的方法实现size()方法。size(x)=size(x.next[0])+&hellip;.+size(x.next[R-1]) <br>
+这种递归方法要遍历整棵树，所以复杂度比较高。</li>
+</ul>
+<h2 id="2查找">2.查找</h2>
+<p>由于键是由一条由根到某个结点的路径保存的，所以查找时需要递归：从根结点开始，首先经过的是键的首字母对应的链接；在下一个结点中沿着第二个字符所对应的链接继续向前；在第二个结点中沿着第三个字符所对应的链接向前，如此直到达到最后一个字母所指向的结点或者是遇到了一条空连接。可能有如下三种情况：</p>
+<ul>
+<li>键的尾字符所对应的结点中的值非空(下图的shells和she查找)。这表示命中&ndash;键所对应的值就是键的尾字符所对应的结点中保存的值。</li>
+<li>键的尾字符所对应的结点中的值为空(下图的shore查找)。这表示未命中&ndash;树中不存在被查找的键。</li>
+<li>查找结束于一条空连接(下图的shore查找)，这也表示未命中。</li>
+</ul>
+<p><img src="/chapter5/5.2.3.jpg" alt=""></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> Value <span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>String key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;argument to get() is null&#34;</span><span style="color:#f92672">);</span>
+        Node x <span style="color:#f92672">=</span> get<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> key<span style="color:#f92672">,</span> 0<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>Value<span style="color:#f92672">)</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>   <span style="color:#75715e">//由于Java不支持泛型数组，所以Node中值的类型必须时Object，然后转化为Value
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">//在结点x中查找键key的第d个字符
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> Node <span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>Node x<span style="color:#f92672">,</span> String key<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> d<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>d <span style="color:#f92672">==</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">())</span> <span style="color:#66d9ef">return</span> x<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">char</span> c <span style="color:#f92672">=</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>d<span style="color:#f92672">);</span> <span style="color:#75715e">//获取第d个字符
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> get<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">[</span>c<span style="color:#f92672">],</span> key<span style="color:#f92672">,</span> d<span style="color:#f92672">+</span>1<span style="color:#f92672">);</span>    <span style="color:#75715e">//递归的进行查找
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</code></pre></div><h2 id="3插入">3.插入</h2>
+<p>对于二叉查找树，要找到待插入的结点的位置的父结点，然后新建一个结点，将这个结点的链接赋值给父结点链接数组对应的链接里。因此需要递归的插入。<br>
+而单词查找树会出现以下两种情况：</p>
+<ul>
+<li>在到达键的尾字符之前就遇到了一个空链接。意味着单词查找树中不存在与键的尾字符对应的结点，因此还需要为键中还未被检查的每个字符创建一个对应的结点并将键的值保存在最后一个字符的结点中。</li>
+<li>在遇到空链接之前就达到了键的尾字符。那么只需要将该结点的值设为键所对应的值。</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>String key<span style="color:#f92672">,</span> Value val<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;first argument to put() is null&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>val <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> delete<span style="color:#f92672">(</span>key<span style="color:#f92672">);</span>   <span style="color:#75715e">//插入一个空的值就相当于把键删除
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">else</span> root <span style="color:#f92672">=</span> put<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> key<span style="color:#f92672">,</span> val<span style="color:#f92672">,</span> 0<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> Node <span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>Node x<span style="color:#f92672">,</span> String key<span style="color:#f92672">,</span> Value val<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> d<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> x <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Node<span style="color:#f92672">();</span>  <span style="color:#75715e">//对应于第一种情况
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>d <span style="color:#f92672">==</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">//遇到了尾字符
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> n<span style="color:#f92672">++;</span>
+            x<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">=</span> val<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">return</span> x<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">char</span> c <span style="color:#f92672">=</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>d<span style="color:#f92672">);</span>
+        x<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">[</span>c<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> put<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">[</span>c<span style="color:#f92672">],</span> key<span style="color:#f92672">,</span> val<span style="color:#f92672">,</span> d<span style="color:#f92672">+</span>1<span style="color:#f92672">);</span>  <span style="color:#75715e">//递归的插入
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> x<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>由空的单词查找树创建一棵新的的过程就相当于不断的插入。如下图： <br>
+<img src="/chapter5/5.2.4.jpg" alt=""></p>
+<p>补充一点：上述的查找操作在查找失败时返回的是null，若实现一个返回失败的空链接的父结点的引用，那么在插入时就可以先调用查找算法。</p>
+<h2 id="4匹配以s为前缀的键">4.匹配以s为前缀的键</h2>
+<p>keysPrefixOf()接受一个字符串参数并返回符号表中所有以该字符串作为前缀的键。比如keysPrefixOf(&ldquo;she&rdquo;)可能返回she和shells，keysPrefixOf(&ldquo;se&rdquo;)返回的结果可能时sells和sea。</p>
+<p>为了实现这个keysPrefixOf(String str)，我们可以先用get()找到给定前缀str所对应的子单词查找树的树根结点(不存在就返回null)，类似于。然后这棵子树所有的键加上前缀str都是以s为前缀的键。  <br>
+为了存储子树的所有键，就需要一个数据结构&ndash;这里用的是队列Queue。</p>
+<p>现在还有一个问题：单词查找树的所有键都是隐式存储的，我们现在需要将他显式存储。 <br>
+为此可以实现一个递归方法collect()，它维护了一个字符串用来保存根结点出发的路径上的一系列字符。每当我们在collect()调用中访问一个结点时，方法的第一个参数就是该结点，第二个参数是和该结点相关联的字符串(从根结点到该结点的路径上的所有字符)。在访问一个结点时，如果它的值非空，就将它和相关联的字符串加入队列中，然后(递归地)访问它的链接数组所指向的所有可能的字符结点。并且每次调用之前，都将链接对应的字符附加到当前键的末尾作为调用的第二个参数。</p>
+<p><img src="/chapter5/5.2.6.jpg" alt=""></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> Iterable<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#f92672">(</span>String prefix<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        Queue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> results <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Queue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;();</span>    <span style="color:#75715e">//队列存储所有键
+</span><span style="color:#75715e"></span>        Node x <span style="color:#f92672">=</span> get<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> prefix<span style="color:#f92672">,</span> 0<span style="color:#f92672">);</span>  <span style="color:#75715e">//用get()找到给定前缀str所对应的子单词查找树的树根结点
+</span><span style="color:#75715e"></span>        collect<span style="color:#f92672">(</span>x<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">(</span>prefix<span style="color:#f92672">),</span> results<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> results<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">collect</span><span style="color:#f92672">(</span>Node x<span style="color:#f92672">,</span> StringBuilder prefix<span style="color:#f92672">,</span> Queue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> results<span style="color:#f92672">)</span> 
+    <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//第二个参数是和该结点相关联的字符串(从根结点到该结点的路径上的所有字符)
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+        <span style="color:#75715e">//如果它的值非空，就将它和相关联的字符串加入队列中
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> results<span style="color:#f92672">.</span><span style="color:#a6e22e">enqueue</span><span style="color:#f92672">(</span>prefix<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">());</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">char</span> c <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> c <span style="color:#f92672">&lt;</span> R<span style="color:#f92672">;</span> c<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">//将链接对应的字符附加到当前键的末尾作为调用的第二个参数
+</span><span style="color:#75715e"></span>            prefix<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>c<span style="color:#f92672">);</span>
+            collect<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">[</span>c<span style="color:#f92672">],</span> prefix<span style="color:#f92672">,</span> results<span style="color:#f92672">);</span>
+            prefix<span style="color:#f92672">.</span><span style="color:#a6e22e">deleteCharAt</span><span style="color:#f92672">(</span>prefix<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><h2 id="5返回所有键">5.返回所有键</h2>
+<p>这个问题可以归约为keysWithPrefix(&quot;&quot;),即查找匹配以空字符串为前缀的键，亦即返回所有的键。</p>
+<p><img src="/chapter5/5.2.7.jpg" alt=""></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> Iterable<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">keys</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> keysWithPrefix<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><h2 id="6通用字符匹配">6.通用字符匹配</h2>
+<p>假设我们对keysPrefixOf(String str)改写成keysThatMatch()，使得str可以包含一个&rsquo;.&lsquo;字符，这个字符可以与字母表的任意字符进行匹配。例如keysThatMatch(&quot;.he&rdquo;)，可能的返回值有she和the，keysThatMatch(&ldquo;s..&quot;)可能的返回值有she和sea。  <br>
+大致的思路和匹配以s为前缀的键一样，只不过对于Collect()方法的匹配实现需要进行扩充:如果含有通配符&rsquo;.'，就需要递归调用处理所有的链接，否则就只需要处理指定字符链接。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> Iterable<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">keysThatMatch</span><span style="color:#f92672">(</span>String pattern<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        Queue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> results <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Queue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;();</span>     <span style="color:#75715e">//队列存储所有键
+</span><span style="color:#75715e"></span>        collect<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">(),</span> pattern<span style="color:#f92672">,</span> results<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> results<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">collect</span><span style="color:#f92672">(</span>Node x<span style="color:#f92672">,</span> StringBuilder prefix<span style="color:#f92672">,</span> String pattern<span style="color:#f92672">,</span> Queue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> results<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span> d <span style="color:#f92672">=</span> prefix<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span>
+         <span style="color:#75715e">//如果它的值非空，就将它和相关联的字符串加入队列中
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>d <span style="color:#f92672">==</span> pattern<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span>
+            results<span style="color:#f92672">.</span><span style="color:#a6e22e">enqueue</span><span style="color:#f92672">(</span>prefix<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">());</span>
+        <span style="color:#75715e">//值是空的，说明虽然含有这个字符串，但这不是一对键值对
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>d <span style="color:#f92672">==</span> pattern<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">())</span>
+            <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+
+        <span style="color:#66d9ef">char</span> c <span style="color:#f92672">=</span> pattern<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>d<span style="color:#f92672">);</span>
+        <span style="color:#75715e">//通配符
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;.&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">char</span> ch <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> ch <span style="color:#f92672">&lt;</span> R<span style="color:#f92672">;</span> ch<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+                <span style="color:#75715e">//递归调用处理所有的链接
+</span><span style="color:#75715e"></span>                prefix<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>ch<span style="color:#f92672">);</span>
+                collect<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">[</span>ch<span style="color:#f92672">],</span> prefix<span style="color:#f92672">,</span> pattern<span style="color:#f92672">,</span> results<span style="color:#f92672">);</span>
+                prefix<span style="color:#f92672">.</span><span style="color:#a6e22e">deleteCharAt</span><span style="color:#f92672">(</span>prefix<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">//否则就只需要处理指定字符链接
+</span><span style="color:#75715e"></span>            prefix<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>c<span style="color:#f92672">);</span>
+            collect<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">[</span>c<span style="color:#f92672">],</span> prefix<span style="color:#f92672">,</span> pattern<span style="color:#f92672">,</span> results<span style="color:#f92672">);</span>
+            prefix<span style="color:#f92672">.</span><span style="color:#a6e22e">deleteCharAt</span><span style="color:#f92672">(</span>prefix<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><h2 id="7最长前缀">7.最长前缀</h2>
+<p>实现一个方法longestPrefixOf(String s);返回单词查找树的所有键中与给定的字符串s相一致的最长的前缀。比如longestPrefixOf(&ldquo;shellsort&rdquo;):返回shells，longestPrefixOf(&ldquo;quicksort&rdquo;):返回null。</p>
+<p>这个过程类似于查找给定的字符串s的前面的一部分的字符串。由于s已知，所以我们在树中递归查找s，并维护一个整型变量length记录s的字符在树中的数量，知道了length只需要返回s.substring(0,length)即是最长前缀了。 <br>
+实现一个类似于get()的方法search(),它会记录查找路径上找到的最长键的长度(将它作为递归方法的参数在遇到值非空的结点时更新它)。查找会在被查找的字符串结束(返回离结点最近的一个有值的键)或是遇到空链接(0..length即为最长前缀)时终止。</p>
+<p><img src="/chapter5/5.2.8.jpg" alt=""></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">longestPrefixOf</span><span style="color:#f92672">(</span>String query<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>query <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;argument to longestPrefixOf() is null&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">int</span> length <span style="color:#f92672">=</span> longestPrefixOf<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> query<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">);</span>   <span style="color:#75715e">//通过length来实现返回最长前缀，初始值为-1，首字母就不匹配的话说明最长前缀不存在
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>length <span style="color:#f92672">==</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>  
+        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">return</span> query<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> length<span style="color:#f92672">);</span> <span style="color:#75715e">//最长前缀即query的0..length的子字符串
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">longestPrefixOf</span><span style="color:#f92672">(</span>Node x<span style="color:#f92672">,</span> String query<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> d<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> length<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> length<span style="color:#f92672">;</span>   <span style="color:#75715e">//遇到空链接
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> length <span style="color:#f92672">=</span> d<span style="color:#f92672">;</span>  <span style="color:#75715e">//查找中遇到新的键，更新length
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>d <span style="color:#f92672">==</span> query<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">())</span> <span style="color:#66d9ef">return</span> length<span style="color:#f92672">;</span><span style="color:#75715e">//被查找的字符串结束
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//length记录的是查找路径上最后遇到的有值的键，即离最终结点最近的键。
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">char</span> c <span style="color:#f92672">=</span> query<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>d<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> longestPrefixOf<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">[</span>c<span style="color:#f92672">],</span> query<span style="color:#f92672">,</span> d<span style="color:#f92672">+</span>1<span style="color:#f92672">,</span> length<span style="color:#f92672">);</span>  <span style="color:#75715e">//递归查找下一个字母
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</code></pre></div><h2 id="8删除">8.删除</h2>
+<p>实现删除首先需要找到键的尾字符所对应的结点(存储键的值的结点)，并将它的值置为null。然后需要考虑以下几种情况：</p>
+<ul>
+<li>
+<p>该结点含有一个非空的链接指向某个子结点，那么不需要做其他的操作，因为还有其他的键和这个被删除的键有共同的前缀字符。</p>
+</li>
+<li>
+<p>如果它的所有链接都为空，那就需要从树中也删除这个结点。且如果删除后使得它的父结点的所有链接也都为空，那么就需要继续删除它的父结点，以此类推。  <br>
+举个例子理解：初始时单词查找树是空树。插入键值对&lt;she,0&gt;后,树从上到下有3个结点&rsquo;s,null&rsquo;、&lsquo;h,null&rsquo;、&lsquo;e,0&rsquo;。如果删除键&rsquo;she&rsquo;以及它对应的值，那么树应该变成空树。即首先需要将&rsquo;e,0&rsquo;置为&rsquo;e,null&rsquo;，然后依次删除&rsquo;s,null&rsquo;、&lsquo;h,null&rsquo;、&lsquo;e,null&rsquo;。</p>
+</li>
+</ul>
+<p><img src="/chapter5/5.2.9.jpg" alt=""></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">delete</span><span style="color:#f92672">(</span>String key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;argument to delete() is null&#34;</span><span style="color:#f92672">);</span>
+        root <span style="color:#f92672">=</span> delete<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> key<span style="color:#f92672">,</span> 0<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> Node <span style="color:#a6e22e">delete</span><span style="color:#f92672">(</span>Node x<span style="color:#f92672">,</span> String key<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> d<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>d <span style="color:#f92672">==</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>    <span style="color:#75715e">//找到键所对应的结点
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> n<span style="color:#f92672">--;</span> <span style="color:#75715e">//维护键值对的数量n
+</span><span style="color:#75715e"></span>            x<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>   
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>  <span style="color:#75715e">//递归找键的尾字符所对应的结点
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">char</span> c <span style="color:#f92672">=</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>d<span style="color:#f92672">);</span>
+            x<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">[</span>c<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> delete<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">[</span>c<span style="color:#f92672">],</span> key<span style="color:#f92672">,</span> d<span style="color:#f92672">+</span>1<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#75715e">// 删除下面的结点直到遇到了一个路径上的其他的键
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> x<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> c <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> c <span style="color:#f92672">&lt;</span> R<span style="color:#f92672">;</span> c<span style="color:#f92672">++)</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">[</span>c<span style="color:#f92672">]</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#75715e">//如果该结点含有一个非空的链接指向某个子结点，那么不需要做其他的操作
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">return</span> x<span style="color:#f92672">;</span>   <span style="color:#75715e">//返回这个结点
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>    <span style="color:#75715e">//返回null表示删除这个结点
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</code></pre></div><h2 id="字母表">字母表</h2>
+<p>对于默认的实现，我们采用的是R=256的扩展的8位ASCII码。实际上对于很多情况，所有字符串类型的键可能只有一小部分字符(可能都是0-9的数字，可能是26个字母)，那么每个结点的256个链接中很多都是空链接，浪费空间。  <br>
+我们可以像字符串排序一样，自己实现一个小型的字母表：</p>
+<ul>
+<li>实现一个构造函数，接受一个Alphabet对象作为参数，将一个Alphabet类型的实例变量设为该参数的值并将实例变量R的值设为字母表中字母的个数。</li>
+<li>利用ASCII的索引关系建立字母表的索引关系，将字符串中的字符转化为0到R-1之间的索引值。</li>
+<li>使用Alphabet类的toChar方法，将0到R-1之间的索引值转化为char的值。</li>
+</ul>
+<p>具体来说，以刚才的&quot;she sells sea shells by the sea shore&rdquo;,以每个单词为键，可以观察到键的所有的键都是由&rsquo;a&rsquo;-&lsquo;z&rsquo;这26个小写英文字母组成。所以可以用小写的英文字母表作为字母表。相应的需要该几处地方即可：</p>
+<p>构造函数：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TrieST</span><span style="color:#f92672">&lt;</span>Value<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span>  <span style="color:#66d9ef">int</span> R<span style="color:#f92672">;</span>  <span style="color:#75715e">//每个结点的索引数组的大小，即字母表的大小
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">private</span> Node root<span style="color:#f92672">;</span>       
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> n<span style="color:#f92672">;</span>         
+    <span style="color:#66d9ef">private</span> Alphabet alphabet<span style="color:#f92672">;</span> <span style="color:#75715e">// 传递一个字母表
+</span><span style="color:#75715e"></span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">TrieST</span><span style="color:#f92672">(</span>Alphabet alphabet<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">alphabet</span><span style="color:#f92672">=</span>alphabet<span style="color:#f92672">;</span> <span style="color:#75715e">//以传递的字母表作为标准
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">R</span> <span style="color:#f92672">=</span> alphabet<span style="color:#f92672">.</span><span style="color:#a6e22e">radix</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>查找： <br>
+Alphabet类实现了alphabet.toIndex(char c)方法，接受一个字符作为参数，返回字符c在自己实现的字母表alphabet中的索引。(如何实现的看前一篇文章)</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">private</span> Node <span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>Node x<span style="color:#f92672">,</span> String key<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> d<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>d <span style="color:#f92672">==</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">())</span> <span style="color:#66d9ef">return</span> x<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">char</span> c <span style="color:#f92672">=</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>d<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> get<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">[</span>alphabet<span style="color:#f92672">.</span><span style="color:#a6e22e">toIndex</span><span style="color:#f92672">(</span>c<span style="color:#f92672">)],</span> key<span style="color:#f92672">,</span> d<span style="color:#f92672">+</span>1<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>插入：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">private</span> Node <span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>Node x<span style="color:#f92672">,</span> String key<span style="color:#f92672">,</span> Value val<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> d<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> x <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Node<span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>d <span style="color:#f92672">==</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> n<span style="color:#f92672">++;</span>
+            x<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">=</span> val<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">return</span> x<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">char</span> c <span style="color:#f92672">=</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>d<span style="color:#f92672">);</span>
+        x<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">[</span>alphabet<span style="color:#f92672">.</span><span style="color:#a6e22e">toIndex</span><span style="color:#f92672">(</span>c<span style="color:#f92672">)]</span> <span style="color:#f92672">=</span> put<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">[</span>alphabet<span style="color:#f92672">.</span><span style="color:#a6e22e">toIndex</span><span style="color:#f92672">(</span>c<span style="color:#f92672">)],</span> key<span style="color:#f92672">,</span> val<span style="color:#f92672">,</span> d<span style="color:#f92672">+</span>1<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> x<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>collect(): <br>
+alphabet.toChar(int index)接受一个整型数作为字母表的索引，返回索引在字母表对应的字符。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">collect</span><span style="color:#f92672">(</span>Node x<span style="color:#f92672">,</span> StringBuilder prefix<span style="color:#f92672">,</span> Queue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> results<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> results<span style="color:#f92672">.</span><span style="color:#a6e22e">enqueue</span><span style="color:#f92672">(</span>prefix<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">());</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> c <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> c <span style="color:#f92672">&lt;</span> R<span style="color:#f92672">;</span> c<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">char</span> cc<span style="color:#f92672">=</span>alphabet<span style="color:#f92672">.</span><span style="color:#a6e22e">toChar</span><span style="color:#f92672">(</span>c<span style="color:#f92672">);</span>
+            prefix<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>cc<span style="color:#f92672">);</span>
+            collect<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">[</span>c<span style="color:#f92672">],</span> prefix<span style="color:#f92672">,</span> results<span style="color:#f92672">);</span>
+            prefix<span style="color:#f92672">.</span><span style="color:#a6e22e">deleteCharAt</span><span style="color:#f92672">(</span>prefix<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><h2 id="分析">分析</h2>
+<ul>
+<li>单词查找树的树的形状与键的插入和删除的顺序无关。换句话说，对于任意给定的一组键，其单词查找树都是唯一的。</li>
+</ul>
+<p>而这个性质是二叉查找树和红黑树所不具备的，因为对于二叉查找树而言，第一个插入的点一定作为根，后面插入的点以已经存在的结点为标准。</p>
+<ul>
+<li>在单词查找树中查找一个键或者是插入一个键，访问数组的次数最多为键的长度加1。因为put和get方法递归时传递的参数d等于键的长度时递归停止调用。</li>
+</ul>
+<p>只考虑时间复杂度的话，单词查找树时最理想的。且键的长度只于键本身有关，和符号表中键的总数无关。</p>
+<ul>
+<li>单词查找树在未命中的查找中一般只需要检查很少的几个结点。<br>
+设字母表大小为R，在一棵由N个随机键构造的单词查找树中，未命中查找平均需要检查的结点数量为~以R为底N的对数。</li>
+</ul>
+<p>假设我们对一个单词查找树进行查找，而根结点与被查找键的第一个字符所对应的链接为空，此时只检查了一个结点就知道该键不在表中。 <br>
+查找未命中的成本与键的长度无关。</p>
+<ul>
+<li>但是单词查找树致命缺陷在于其空间复杂度。 <br>
+设w为键的平均长度，R为字母表的大小，N为键值对的数量，那么一棵单词查找树中的链接总数在RN到RNw之间。</li>
+</ul>
+<p>缩小R，可以节省大量的空间。</p>
+<h2 id="改进--单分支情况">改进&ndash;单分支情况</h2>
+<p><img src="/chapter5/5.2.10.jpg" alt=""></p>
+<p>如图：两个长键可能只是在最后一个字符不同，而路径上的结点只有一条指向下一个结点的链接(R-1条空链接)。对于这种情况，可以将相同的合并。具体实现不会。,,ԾㅂԾ,,</p>
+<p><em><strong>所以，我们不使用单词查找树处理大型字母表的大量长键</strong></em></p>
+<hr>
+<h1 id="三向单词查找树">三向单词查找树</h1>
+<p>巨大的额外空间使得单词查找树在大型字母表的大量长键的情况下并不好。为了避免R向单词查找树过度空间消耗，学习三向单词查找树。</p>
+<p>三向单词查找树类似二叉查找树，它的每个结点含有一个字符，三条链接和一个值。而这三条链接分别对应着当前字母小于，等于和大于结点字母的所有键。</p>
+<p><img src="/chapter5/5.2.11.jpg" alt=""></p>
+<p>如上图，我们可以将一棵R-向单词查找树和一棵三向单词查找树一一对应。在等价的三向单词查找树中，字符是 <em>显式</em> 的保存在结点中&ndash;只有在沿着中间链接(等于的情况)前进时才能根据字符找到表中的键。</p>
+<p><strong>这样的实现方式等价于将R向单词查找树的每个结点实现以 <em>非空链接</em> 所对应的字符作为键的二叉查找树。</strong></p>
+<p><strong>且 三向单词查找树与三向字符串快速排序之间的对应关系 和 二叉查找树与快速排序 以及 单词查找树和高位优先字符串排序 之间的对应关系一样</strong>  <br>
+<strong>那么单词查找树中链接所占用的空间即为高位优先字符串排序中的计数器所占的空间。</strong></p>
+<p><img src="/chapter5/5.2.13.jpg" alt=""></p>
+<h2 id="实现">实现</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TST</span><span style="color:#f92672">&lt;</span>Value<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> n<span style="color:#f92672">;</span>              <span style="color:#75715e">// 键值对的数量
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> Node<span style="color:#f92672">&lt;</span>Value<span style="color:#f92672">&gt;</span> root<span style="color:#f92672">;</span>   <span style="color:#75715e">// 三向单词查找树的根
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Node</span><span style="color:#f92672">&lt;</span>Value<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">char</span> c<span style="color:#f92672">;</span>                        <span style="color:#75715e">// 结点存储一个char类型的字符
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">private</span> Node<span style="color:#f92672">&lt;</span>Value<span style="color:#f92672">&gt;</span> left<span style="color:#f92672">,</span> mid<span style="color:#f92672">,</span> right<span style="color:#f92672">;</span>  <span style="color:#75715e">// 左，中，右三条链接
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">private</span> Value val<span style="color:#f92672">;</span>                     <span style="color:#75715e">// 字符串键的值
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">TST</span><span style="color:#f92672">()</span> <span style="color:#f92672">{}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="1查找">1.查找</h2>
+<p>查找依然是递归的，首先比较键的首字母和根结点的字母大小：如果键的首字母比根结点的字母小，就由左链接向下递归查找；若相等，就沿着中间链接递归查找；若首字母比根的字母大，就沿着右链接递归查找。 <br>
+如果遇到了一个空链接或者键结束的结点的值为null，那么说明查找未命中。  <br>
+如果键结束的结点的值非空则查找命中。</p>
+<p><img src="/chapter5/5.2.12.jpg" alt=""></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> Value <span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>String key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;calls get() with null argument&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;key must have length &gt;= 1&#34;</span><span style="color:#f92672">);</span>
+        Node<span style="color:#f92672">&lt;</span>Value<span style="color:#f92672">&gt;</span> x <span style="color:#f92672">=</span> get<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> key<span style="color:#f92672">,</span> 0<span style="color:#f92672">);</span>  <span style="color:#75715e">//由根结点出发
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">// return subtrie corresponding to given key
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> Node<span style="color:#f92672">&lt;</span>Value<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>Node<span style="color:#f92672">&lt;</span>Value<span style="color:#f92672">&gt;</span> x<span style="color:#f92672">,</span> String key<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> d<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;key must have length &gt;= 1&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">char</span> c <span style="color:#f92672">=</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>d<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span>      <span style="color:#f92672">(</span>c <span style="color:#f92672">&lt;</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">c</span><span style="color:#f92672">)</span>              <span style="color:#66d9ef">return</span> get<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">,</span>  key<span style="color:#f92672">,</span> d<span style="color:#f92672">);</span> <span style="color:#75715e">//比根小，在左链接递归
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">&gt;</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">c</span><span style="color:#f92672">)</span>              <span style="color:#66d9ef">return</span> get<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">,</span> key<span style="color:#f92672">,</span> d<span style="color:#f92672">);</span> <span style="color:#75715e">//比根大，在右链接递归
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>d <span style="color:#f92672">&lt;</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> get<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">mid</span><span style="color:#f92672">,</span>   key<span style="color:#f92672">,</span> d<span style="color:#f92672">+</span>1<span style="color:#f92672">);</span>   <span style="color:#75715e">//相等，中间链接查找
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">else</span>                           <span style="color:#66d9ef">return</span> x<span style="color:#f92672">;</span>    <span style="color:#75715e">//结束了，返回当前结点
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</code></pre></div><h2 id="2插入">2.插入</h2>
+<p>在插入一个新键值对时，先进行查找，然后和在单词查找树一样，在树中不全键末尾的所有结点。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>String key<span style="color:#f92672">,</span> Value val<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;calls put() with null key&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>contains<span style="color:#f92672">(</span>key<span style="color:#f92672">))</span> n<span style="color:#f92672">++;</span>
+        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>val <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> n<span style="color:#f92672">--;</span>       <span style="color:#75715e">// 插入值为null的键值对，相当于删除
+</span><span style="color:#75715e"></span>        root <span style="color:#f92672">=</span> put<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> key<span style="color:#f92672">,</span> val<span style="color:#f92672">,</span> 0<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> Node<span style="color:#f92672">&lt;</span>Value<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>Node<span style="color:#f92672">&lt;</span>Value<span style="color:#f92672">&gt;</span> x<span style="color:#f92672">,</span> String key<span style="color:#f92672">,</span> Value val<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> d<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">char</span> c <span style="color:#f92672">=</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>d<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            x <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Node<span style="color:#f92672">&lt;</span>Value<span style="color:#f92672">&gt;();</span>
+            x<span style="color:#f92672">.</span><span style="color:#a6e22e">c</span> <span style="color:#f92672">=</span> c<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#75715e">//比结点小，往左走
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span>      <span style="color:#f92672">(</span>c <span style="color:#f92672">&lt;</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">c</span><span style="color:#f92672">)</span>               x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span>  <span style="color:#f92672">=</span> put<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">,</span>  key<span style="color:#f92672">,</span> val<span style="color:#f92672">,</span> d<span style="color:#f92672">);</span>
+        <span style="color:#75715e">//比结点大，往右走
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">&gt;</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">c</span><span style="color:#f92672">)</span>               x<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span> put<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">,</span> key<span style="color:#f92672">,</span> val<span style="color:#f92672">,</span> d<span style="color:#f92672">);</span>
+        <span style="color:#75715e">//相等，且不是最后一个字符 往中间走
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>d <span style="color:#f92672">&lt;</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span>  x<span style="color:#f92672">.</span><span style="color:#a6e22e">mid</span>   <span style="color:#f92672">=</span> put<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">mid</span><span style="color:#f92672">,</span>   key<span style="color:#f92672">,</span> val<span style="color:#f92672">,</span> d<span style="color:#f92672">+</span>1<span style="color:#f92672">);</span>
+        <span style="color:#75715e">//相等，且是键的最后一个字符 直接插入值。
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">else</span>                            x<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span>   <span style="color:#f92672">=</span> val<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> x<span style="color:#f92672">;</span>   <span style="color:#75715e">//返回新插入的结点
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+
+</code></pre></div><h2 id="3前缀匹配通配符匹配最长前缀">3.前缀匹配，通配符匹配，最长前缀</h2>
+<p>这三个方法的实现和单词查找树类似： <br>
+前缀匹配</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> Iterable<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">keysWithPrefix</span><span style="color:#f92672">(</span>String prefix<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>prefix <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;calls keysWithPrefix() with null argument&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+        Queue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> queue <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Queue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;();</span>
+        Node<span style="color:#f92672">&lt;</span>Value<span style="color:#f92672">&gt;</span> x <span style="color:#f92672">=</span> get<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> prefix<span style="color:#f92672">,</span> 0<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> queue<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> queue<span style="color:#f92672">.</span><span style="color:#a6e22e">enqueue</span><span style="color:#f92672">(</span>prefix<span style="color:#f92672">);</span>
+        collect<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">mid</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">(</span>prefix<span style="color:#f92672">),</span> queue<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> queue<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">collect</span><span style="color:#f92672">(</span>Node<span style="color:#f92672">&lt;</span>Value<span style="color:#f92672">&gt;</span> x<span style="color:#f92672">,</span> StringBuilder prefix<span style="color:#f92672">,</span> Queue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> queue<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+        collect<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">,</span>  prefix<span style="color:#f92672">,</span> queue<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> queue<span style="color:#f92672">.</span><span style="color:#a6e22e">enqueue</span><span style="color:#f92672">(</span>prefix<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">c</span><span style="color:#f92672">);</span>
+        collect<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">mid</span><span style="color:#f92672">,</span>   prefix<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">c</span><span style="color:#f92672">),</span> queue<span style="color:#f92672">);</span>
+        prefix<span style="color:#f92672">.</span><span style="color:#a6e22e">deleteCharAt</span><span style="color:#f92672">(</span>prefix<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">);</span>
+        collect<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">,</span> prefix<span style="color:#f92672">,</span> queue<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>通配符匹配</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> Iterable<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">keysThatMatch</span><span style="color:#f92672">(</span>String pattern<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        Queue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> queue <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Queue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;();</span>
+        collect<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">(),</span> 0<span style="color:#f92672">,</span> pattern<span style="color:#f92672">,</span> queue<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> queue<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">collect</span><span style="color:#f92672">(</span>Node<span style="color:#f92672">&lt;</span>Value<span style="color:#f92672">&gt;</span> x<span style="color:#f92672">,</span> StringBuilder prefix<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> i<span style="color:#f92672">,</span> String pattern<span style="color:#f92672">,</span> Queue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> queue<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">char</span> c <span style="color:#f92672">=</span> pattern<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;.&#39;</span> <span style="color:#f92672">||</span> c <span style="color:#f92672">&lt;</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">c</span><span style="color:#f92672">)</span> collect<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">,</span> prefix<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> pattern<span style="color:#f92672">,</span> queue<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;.&#39;</span> <span style="color:#f92672">||</span> c <span style="color:#f92672">==</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">c</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">==</span> pattern<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> 1 <span style="color:#f92672">&amp;&amp;</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> queue<span style="color:#f92672">.</span><span style="color:#a6e22e">enqueue</span><span style="color:#f92672">(</span>prefix<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">c</span><span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&lt;</span> pattern<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                collect<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">mid</span><span style="color:#f92672">,</span> prefix<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">c</span><span style="color:#f92672">),</span> i<span style="color:#f92672">+</span>1<span style="color:#f92672">,</span> pattern<span style="color:#f92672">,</span> queue<span style="color:#f92672">);</span>
+                prefix<span style="color:#f92672">.</span><span style="color:#a6e22e">deleteCharAt</span><span style="color:#f92672">(</span>prefix<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;.&#39;</span> <span style="color:#f92672">||</span> c <span style="color:#f92672">&gt;</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">c</span><span style="color:#f92672">)</span> collect<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">,</span> prefix<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> pattern<span style="color:#f92672">,</span> queue<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>最长前缀</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">longestPrefixOf</span><span style="color:#f92672">(</span>String query<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>query <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;calls longestPrefixOf() with null argument&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>query<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span> length <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+        Node<span style="color:#f92672">&lt;</span>Value<span style="color:#f92672">&gt;</span> x <span style="color:#f92672">=</span> root<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> i <span style="color:#f92672">&lt;</span> query<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">char</span> c <span style="color:#f92672">=</span> query<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">if</span>      <span style="color:#f92672">(</span>c <span style="color:#f92672">&lt;</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">c</span><span style="color:#f92672">)</span> x <span style="color:#f92672">=</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">&gt;</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">c</span><span style="color:#f92672">)</span> x <span style="color:#f92672">=</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+                i<span style="color:#f92672">++;</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> length <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>
+                x <span style="color:#f92672">=</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">mid</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span> query<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> length<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><h2 id="6删除">6.删除</h2>
+<p>本质上说，每个被删除的字符都属于一棵二叉查找树。删除操作需要用在二叉查找树中删除结点的方式: <br>
+<em><strong>删除x结点后用它的后继节点(中序遍历的后一个结点)填补它的位置。</strong></em>
+<em><strong>因为它x有一个右子树，因此它的后继节点就是右子树的最小结点</strong></em></p>
+<h2 id="分析-1">分析</h2>
+<ol>
+<li>
+<p>比较<br>
+三向单词查找树等价于将R向单词查找树的每个结点实现以 <em>非空链接</em> 所对应的字符作为键的二叉查找树。<br>
+换句话说，可以看作是单词查找树的紧凑表示。 <br>
+但是单词查找树的形状和键的插入顺序无关的这一性质对于三向单词查找树就不适用了。</p>
+</li>
+<li>
+<p>空间<br>
+由N个平均长度为w的字符串构造的三向单词查找树中的链接总数在3N到3Nw之间，远小于R向单词查找树。 <br>
+且由于相同前缀的键会共享高层结点，所以实际内存空间达不到3Nw。</p>
+</li>
+<li>
+<p>时间 <br>
+由于三向单词查找树等价于将R向单词查找树的每个结点实现以 <em>非空链接</em> 所对应的字符作为键的二叉查找树。 <br>
+所以三向单词查找树查找(和插入)的成本需要将它所对应的单词查找树中的查找成本 乘以 遍历每个结点的二叉查找树的成本。<br>
+在一棵由N个随机字符串构造的三向单词查找树中，查找未命中平均需要比较字符~lnN次。除~lnN次外，一次插入或命中的查找会比较一次被查找的键的每个字符。
+而最坏情况下，一个结点可能变成一个完全的R向结点(对应的R向单词查找树结点的每个链接都不为空)。因此需要成一个系数R。</p>
+</li>
+</ol>
+<h2 id="改进">改进</h2>
+<p>对于单词查找树而言，根据实际情况使用较小的字母表是很有必要的，但是对于三向单词查找树而言，可以使用较大的ASCII甚至是Unicode 16字母表。</p>
+<p>除此之外，对于单分支的情况，也可以将键的尾字母变为叶子结点并在内部结点中消除单向分支来减小额外的空间。</p>
+<p>！额外的 ，还可以用一种混合三向单词查找树的方法来改进。<br>
+用一个大型显示的多向根结点(最简单的就是一张含有R棵三向单词查找树的表)，每一棵都对应者键的首字母的一种可能。如果R不大的话，还可以使用键的头两个字母(那么表就含有R^2项)。</p>
+<hr>
+<h1 id="总结">总结</h1>
+<p><img src="/chapter5/5.2.14.jpg" alt=""></p>
+<p>若空间足够，则用R向单词查找树来保证速度。能够 <em>常数</em> 次比较来完成查找。</p>
+<p>对于大型字母表，三向单词查找树是最优选项。  <br>
+对字符的比较次数是对数级别。而二叉查找树对键的比较次数(这里的键又是字符串，比较还需要字符串长度的时间)是对数。</p>
+<p>当然，之前学习的任意查找表都能实现键是字符串的查找。散列表表现很好，但是对于有序性符号表的操作，它却显得不行了。</p>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

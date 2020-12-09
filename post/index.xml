@@ -5,10 +5,30 @@
     <link>https://yzz-git111.github.io/post/</link>
     <description>Recent content in Posts on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 07 Dec 2020 13:53:24 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 08 Dec 2020 20:14:07 +0800</lastBuildDate>
     
 	<atom:link href="https://yzz-git111.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>单词查找树</title>
+      <link>https://yzz-git111.github.io/post/%E5%8D%95%E8%AF%8D%E6%9F%A5%E6%89%BE%E6%A0%91/</link>
+      <pubDate>Tue, 08 Dec 2020 20:14:07 +0800</pubDate>
+      
+      <guid>https://yzz-git111.github.io/post/%E5%8D%95%E8%AF%8D%E6%9F%A5%E6%89%BE%E6%A0%91/</guid>
+      <description>引言   回顾 回顾之前实现的各种适用于查找的符号表(每个元素都是一个键值对，包括一个键Key和一个值Value。查找能够根据给定的键返回对应的值，插入能插入新的键值对，删除能够删除键值对)。这种典型的符号表包括适用于二分查找的顺序表，二叉查找树，红黑树，散列表。其中散列表速度最快但是不支持顺序性相关的操作(返回最值元素等)。二叉查找树平均需要O(logN)的复杂度，但可能有最坏情况退化到链表的情况。红黑树是黑高度平衡的二叉查找树，最坏情况也是O(logN)。且它们都适用了泛型编程的思想，对于各种类型的键均适用。
+  分析(可能不严谨) 之前的二叉查找树和红黑树的每个结点都存储的是一个键值对。而即使对于键都是大整数的情况，也可以将键看作是由若干&#39;0&amp;rsquo;到&#39;9&amp;rsquo;的单个字符组成的字符串。 那么现在我们若将键都看作是字符串，并且每个结点存储的不是一个键而是构成键的若干字符。查找时也是一个个字符的查找。由于对于一般情况65536位的Unicode 16表甚至128位的ASCII码都足够了。
+假设现在我们由10亿个键值对，用传统的二叉查找树则需要10亿个结点。而每个结点只存储128个字符的引用的话树的高度最多只有最长的字符串的长度那么大。
+  单词查找树 单词查找树这一数据结构有很好的性能：
+  查找命中所需时间和被查找的键的长度成正比
+  查找未命中只需要检查若干字符
+    先给出单词查找树这一用于查找的符号表的数据结构能实现的API： 这些API和之前学习的有些不同。首先指定了键的类型：专门用于实现字符串类型的键。其次添加了longestPrefixOf(),keysWithPrefix(),keysThatMatch()。
+ 单词查找树 单词查找树：由字符串键中的所有字符构造而成，允许使用被查找键中的字符进行查找。
+基本性质 如图，其实每个结点都含有R条连接，其中R为字母表的大小。由于单词查找树一般含有大量的空连接，因此在描绘一棵单词查找树时一般会忽略空链接。 每个结点又都有一个区域存放值，这个可以是空也可以是符号表中的某个键所关联的值。即我们将每个键所关联的值保存在该键的最后一个字母所对应的结点中。
+结点的表示 对于R个字符的字母表，每个点都需要有R个链接，对应着可能出现的字符。 如下图：将一棵单词查找树完整的表达出来，字母表是所有小写字母组成，所以每个结点含有1个值和26个链接。 并且单词查找树中，键是由根结点到含有非空值的结点的路径所隐式表示的。因为结点的数据结构不会存储任何字符串或者字符，保存的只是链接数组和值。例如在上述R=26的单词查找树中，字母表的索引为0的地方存储的是&amp;rsquo;a&amp;rsquo;的链接，所以哪个链接不空就隐含了这个字符就是该索引在字母表中对应的字符。我们将基于含有R个字符的字母表的单词查找树称为R向单词查找树。
+结点的数据结构作为内部类定义在单词查找树的类里。
+public class TrieST&amp;lt;Value&amp;gt; { //键的类型默认String，值用泛型  private static final int R = 256; // 默认的字母表是扩展后的8为ASCII表  private Node root; // 根结点 值为空  private int n; // 键值对的数量  // R-向单词查找树  private static class Node { private Object val; private Node[] next = new Node[R]; } public TrieST() { } } 1.</description>
+    </item>
     
     <item>
       <title>计数排序、基数排序和桶排序</title>
@@ -48,7 +68,7 @@ count[] 0 1 2 3 4 5 6 7 8 9 0 0 1 1 1 1 1 1 0 1  第二步遍历count数组，�
 以构造只含有&#39;0123456789&amp;rsquo;的数字字母表为例。
 字母表要实现的方法包括 由字符给出在字母表的索引 和 由索引给出字符。
 对于Unicode 16/ASCII字母表 它已经为0-9每个字符建立的一个对应的索引值，比如&#39;0&amp;rsquo;对应48。构建我们自己的字母表需要利用它，可以先将输入的所有字符转化为一个字符数组，这个字符数组就是字母表。
-下面要建立索引，直接以字母表数组的索引为索引显然不成立，因为这样的话每建立一个字母表都需要记住索引。 我们要利用已经规定要的Unicode 16.且我们已经有方法可以将char强转为一个整型(这个整型数就是它在Unicode16的索引值)。而Unicode 16 字符的索引一直到65535，那么就需要一个大小和Unicode一样大的数组inverse，用它来记录字符在我们自己实现的字母表中的索引。 for (int c = 0; c &amp;lt; R; c++) inverse[alphabet[c]] = c;
+下面要建立索引，直接以字母表数组的索引为索引显然不成立，因为这样的话每建立一个字母表都需要记住索引。 我们要利用已经规定好的Unicode 16字母表.且我们已经有方法可以将char强转为一个整型(这个整型数就是它在Unicode16的索引值)。而Unicode 16 字符的索引一直到65535，那么就需要一个大小和Unicode一样大的数组inverse，用它来记录字符在我们自己实现的字母表中的索引。 for (int c = 0; c &amp;lt; R; c++) inverse[alphabet[c]] = c;
 举例来说明：inverse数组大小为65536，初始化全为-1.对于字符&#39;0&amp;rsquo;,我们可以直接(int)(&amp;lsquo;0&amp;rsquo;)将它转化为Unicode中的索引48，那么我们就把inverse数组下标为48那个元素赋值为它在自己实现的字母表的索引值(0)。这样一来，我们想要由&#39;0&amp;rsquo;返回在我们实现的字母表的索引的时候可以直接返回inverse[(int)&amp;lsquo;0&amp;rsquo;]&amp;lt;==&amp;gt;inverse[48]，存储的就是0.简单来说，就是利用Unicode的索引再建立到我们自己的字母表的一个映射。
 public class Alphabet { private char[] alphabet; // 记录字母表中的字符  private int[] inverse; // 记录在本字母表中各个字符对应的索引  private final int R; // 字母表的大小  public Alphabet(String alpha) {//通过输入所有的字符来构造一个字母表  // 检查是否有重复的字符  boolean[] unicode = new boolean[Character.MAX_VALUE]; for (int i = 0; i &amp;lt; alpha.</description>
     </item>

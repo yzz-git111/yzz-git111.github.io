@@ -5,10 +5,26 @@
     <link>https://yzz-git111.github.io/</link>
     <description>Recent content on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 08 Dec 2020 20:14:07 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 12 Dec 2020 14:29:52 +0800</lastBuildDate>
     
 	<atom:link href="https://yzz-git111.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>子字符串查找</title>
+      <link>https://yzz-git111.github.io/post/%E5%AD%90%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%9F%A5%E6%89%BE/</link>
+      <pubDate>Sat, 12 Dec 2020 14:29:52 +0800</pubDate>
+      
+      <guid>https://yzz-git111.github.io/post/%E5%AD%90%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%9F%A5%E6%89%BE/</guid>
+      <description>概述 字符串的一种基本操作就是子字符串的查找：给定一段长度为N的文本和一个长度为M的模式字符串，在文本中找到一个和该模式一样的子字符串 或者找不到。
+子字符串的查找使用的十分的频繁，如：在浏览器或者文本编辑器中查找某个单词等。
+通常模式相对于文本是很短的。即文本可能有百万或者亿数量级别，而模式只有100或者1000的数量级。所以，对于子字符串查找算法的优化是很有必要的。
+我们将会学习以下几种算法：
+ 暴力算法(2种实现) &amp;mdash;&amp;ndash; O(NM) KMP算法 &amp;mdash;&amp;ndash; O(M+N) Boyer-Moore算法 &amp;mdash;&amp;mdash; O(N) Rabin-Karp算法 &amp;mdash;&amp;mdash; O(N)   暴力算法 假设文本串的长度为N，模式串的长度为M。 最简单也最容易想到的就是按顺序比较文本中每一个与模式子字符串大小相等(字符个数一样)的子字符串。
+为了使得每一个大小和模式字符串一样的子字符串都能比较，需要一个文本指针i从0移动到N-M(当i&amp;gt;N-M时，文本的txt[i..N]的个数已经小于M了，一定不能匹配)。 为了比较模式字符串和文本的子字符串，需要一个模式串的指针j，从模式串的0开始，比较pat[j]和txt[i+j]。
+若i==N-M+1,即说明模式串结束之前文本串就没了，则没有找到，约定返回N。 若j==M，即说明模式串与文本串的某个子字符串完全一样，则返回当时i的值。
+实现1 public static int search1(String pat, String txt) { int m = pat.length(); int n = txt.length(); for (int i = 0; i &amp;lt;= n - m; i++) { //文本串指针从0到n-m  int j; for (j = 0; j &amp;lt; m; j++) { //比较当前的文本的子字符串和模式串的每个字符  if (txt.</description>
+    </item>
     
     <item>
       <title>单词查找树</title>

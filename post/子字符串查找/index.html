@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>子字符串查找 // </title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.74.3" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="yzz帅的一匹" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://yzz-git111.github.io/css/main.min.88e7083eff65effb7485b6e6f38d10afbec25093a6fac42d734ce9024d3defbd.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="子字符串查找"/>
+<meta name="twitter:description" content="概述 字符串的一种基本操作就是子字符串的查找：给定一段长度为N的文本和一个长度为M的模式字符串，在文本中找到一个和该模式一样的子字符串 或者找不到。
+子字符串的查找使用的十分的频繁，如：在浏览器或者文本编辑器中查找某个单词等。
+通常模式相对于文本是很短的。即文本可能有百万或者亿数量级别，而模式只有100或者1000的数量级。所以，对于子字符串查找算法的优化是很有必要的。
+我们将会学习以下几种算法：
+ 暴力算法(2种实现) &mdash;&ndash; O(NM) KMP算法 &mdash;&ndash; O(M&#43;N) Boyer-Moore算法 &mdash;&mdash; O(N) Rabin-Karp算法 &mdash;&mdash; O(N)   暴力算法 假设文本串的长度为N，模式串的长度为M。 最简单也最容易想到的就是按顺序比较文本中每一个与模式子字符串大小相等(字符个数一样)的子字符串。
+为了使得每一个大小和模式字符串一样的子字符串都能比较，需要一个文本指针i从0移动到N-M(当i&gt;N-M时，文本的txt[i..N]的个数已经小于M了，一定不能匹配)。 为了比较模式字符串和文本的子字符串，需要一个模式串的指针j，从模式串的0开始，比较pat[j]和txt[i&#43;j]。
+若i==N-M&#43;1,即说明模式串结束之前文本串就没了，则没有找到，约定返回N。 若j==M，即说明模式串与文本串的某个子字符串完全一样，则返回当时i的值。
+实现1 public static int search1(String pat, String txt) { int m = pat.length(); int n = txt.length(); for (int i = 0; i &lt;= n - m; i&#43;&#43;) { //文本串指针从0到n-m  int j; for (j = 0; j &lt; m; j&#43;&#43;) { //比较当前的文本的子字符串和模式串的每个字符  if (txt."/>
+
+    <meta property="og:title" content="子字符串查找" />
+<meta property="og:description" content="概述 字符串的一种基本操作就是子字符串的查找：给定一段长度为N的文本和一个长度为M的模式字符串，在文本中找到一个和该模式一样的子字符串 或者找不到。
+子字符串的查找使用的十分的频繁，如：在浏览器或者文本编辑器中查找某个单词等。
+通常模式相对于文本是很短的。即文本可能有百万或者亿数量级别，而模式只有100或者1000的数量级。所以，对于子字符串查找算法的优化是很有必要的。
+我们将会学习以下几种算法：
+ 暴力算法(2种实现) &mdash;&ndash; O(NM) KMP算法 &mdash;&ndash; O(M&#43;N) Boyer-Moore算法 &mdash;&mdash; O(N) Rabin-Karp算法 &mdash;&mdash; O(N)   暴力算法 假设文本串的长度为N，模式串的长度为M。 最简单也最容易想到的就是按顺序比较文本中每一个与模式子字符串大小相等(字符个数一样)的子字符串。
+为了使得每一个大小和模式字符串一样的子字符串都能比较，需要一个文本指针i从0移动到N-M(当i&gt;N-M时，文本的txt[i..N]的个数已经小于M了，一定不能匹配)。 为了比较模式字符串和文本的子字符串，需要一个模式串的指针j，从模式串的0开始，比较pat[j]和txt[i&#43;j]。
+若i==N-M&#43;1,即说明模式串结束之前文本串就没了，则没有找到，约定返回N。 若j==M，即说明模式串与文本串的某个子字符串完全一样，则返回当时i的值。
+实现1 public static int search1(String pat, String txt) { int m = pat.length(); int n = txt.length(); for (int i = 0; i &lt;= n - m; i&#43;&#43;) { //文本串指针从0到n-m  int j; for (j = 0; j &lt; m; j&#43;&#43;) { //比较当前的文本的子字符串和模式串的每个字符  if (txt." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yzz-git111.github.io/post/%E5%AD%90%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%9F%A5%E6%89%BE/" />
+<meta property="article:published_time" content="2020-12-12T14:29:52+08:00" />
+<meta property="article:modified_time" content="2020-12-12T14:29:52+08:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://yzz-git111.github.io/"><img class="app-header-avatar" src="/avatar.jpeg" alt="yzz帅的一匹" /></a>
+      <h1></h1>
+      <p>yzz也想变成学霸</p>
+      <div class="app-header-social">
+        
+          <a target="_blank" href="https://github.com/yzz-git111" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg></a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">子字符串查找</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Dec 12, 2020
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          5 min read
+        </div></div>
+    </header>
+    <div class="post-content">
+      <h1 id="概述">概述</h1>
+<p>字符串的一种基本操作就是子字符串的查找：给定一段长度为N的文本和一个长度为M的模式字符串，在文本中找到一个和该模式一样的子字符串 或者找不到。</p>
+<p><img src="/chapter5/5.3.1.jpg" alt=""></p>
+<p>子字符串的查找使用的十分的频繁，如：在浏览器或者文本编辑器中查找某个单词等。</p>
+<p>通常模式相对于文本是很短的。即文本可能有百万或者亿数量级别，而模式只有100或者1000的数量级。所以，对于子字符串查找算法的优化是很有必要的。</p>
+<p>我们将会学习以下几种算法：</p>
+<ul>
+<li>暴力算法(2种实现)  &mdash;&ndash;   O(NM)</li>
+<li>KMP算法   &mdash;&ndash; O(M+N)</li>
+<li>Boyer-Moore算法 &mdash;&mdash; O(N)</li>
+<li>Rabin-Karp算法 &mdash;&mdash; O(N)</li>
+</ul>
+<hr>
+<h1 id="暴力算法">暴力算法</h1>
+<p>假设文本串的长度为N，模式串的长度为M。 <br>
+最简单也最容易想到的就是按顺序比较文本中每一个与模式子字符串大小相等(字符个数一样)的子字符串。</p>
+<p>为了使得每一个大小和模式字符串一样的子字符串都能比较，需要一个文本指针i从0移动到N-M(当i&gt;N-M时，文本的txt[i..N]的个数已经小于M了，一定不能匹配)。  <br>
+为了比较模式字符串和文本的子字符串，需要一个模式串的指针j，从模式串的0开始，比较pat[j]和txt[i+j]。</p>
+<p>若i==N-M+1,即说明模式串结束之前文本串就没了，则没有找到，约定返回N。  <br>
+若j==M，即说明模式串与文本串的某个子字符串完全一样，则返回当时i的值。</p>
+<p><img src="/chapter5/5.3.2.jpg" alt=""></p>
+<h2 id="实现1">实现1</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">search1</span><span style="color:#f92672">(</span>String pat<span style="color:#f92672">,</span> String txt<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> m <span style="color:#f92672">=</span> pat<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span>   
+        <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> txt<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span>
+
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;=</span> n <span style="color:#f92672">-</span> m<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>  
+            <span style="color:#75715e">//文本串指针从0到n-m
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">int</span> j<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> m<span style="color:#f92672">;</span> j<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+                <span style="color:#75715e">//比较当前的文本的子字符串和模式串的每个字符
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>txt<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">+</span>j<span style="color:#f92672">)</span> <span style="color:#f92672">!=</span> pat<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>j<span style="color:#f92672">))</span>
+                <span style="color:#75715e">//有一个不一样就比较文本的下一个子字符串，即i++
+</span><span style="color:#75715e"></span>                    <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>j <span style="color:#f92672">==</span> m<span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> i<span style="color:#f92672">;</span>            <span style="color:#75715e">// 匹配 返回i
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span> n<span style="color:#f92672">;</span>                            <span style="color:#75715e">// 没有匹配的 返回n
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</code></pre></div><h2 id="实现2">实现2</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">search2</span><span style="color:#f92672">(</span>String pat<span style="color:#f92672">,</span> String txt<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> m <span style="color:#f92672">=</span> pat<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> txt<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span>
+
+        <span style="color:#66d9ef">int</span> i<span style="color:#f92672">,</span> j<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n <span style="color:#f92672">&amp;&amp;</span> j <span style="color:#f92672">&lt;</span> m<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>txt<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">==</span> pat<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>j<span style="color:#f92672">))</span> j<span style="color:#f92672">++;</span>
+            <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+                i <span style="color:#f92672">-=</span> j<span style="color:#f92672">;</span>     <span style="color:#75715e">//文本指针显式回退j个字符
+</span><span style="color:#75715e"></span>                j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>      <span style="color:#75715e">//模式指针退回第一个字符
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>j <span style="color:#f92672">==</span> m<span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> i <span style="color:#f92672">-</span> m<span style="color:#f92672">;</span>    <span style="color:#75715e">// 找到匹配的
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">else</span>        <span style="color:#66d9ef">return</span> n<span style="color:#f92672">;</span>        <span style="color:#75715e">// 没找到
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</code></pre></div><h2 id="对比">对比</h2>
+<p>第一种实现可以看作用文本指针i确定文本串的txt[i..i+m-1]这个子字符串。每次始终比较pat[j]和txt[i+j]。同时失败后每次模式指针j都从pat[0]开始。即文本指针始终起一个标志起始位的作用，只有在不匹配的时候加一。</p>
+<p>第二种实现中文本指针i跟随着模式指针移动，每次始终比较txt[i]和pat[j]。失败后，也需要比较文本字符串的下一个子字符串，那么i就需要回退j个字符，即i到了i+1的位置。同时模式指针退回到pat[0]。也可以称为显式回退。</p>
+<h2 id="分析">分析</h2>
+<p>虽然暴力算法看起来很复杂，但是在实际的应用中，索引j的增长可能很少。比如在一篇191个单词英文文章中查找&quot;pattern&rdquo;，而整篇文章中以p开头的单词只有7个且没有以pa开头的。所以在绝大部分情况下在比较第一个字符时就会不匹配。总的比较次数就只有191+7次。  <br>
+所以在很多应用中算法的复杂度为O(N).</p>
+<p>但是不能排除最坏的情况：如下图</p>
+<p><img src="/chapter5/5.3.3.jpg" alt=""></p>
+<p>虽然这种情况并不常见，但是对于二进制的文本却可能频繁发生。</p>
+<p>对于最坏情况，暴力算法在长度为N的文本中查找长度为M的模式串要~NM次比较，复杂度达到了O(NM)。(我们对于算法的研究往往都考虑最坏情况的复杂度)</p>
+<hr>
+<h1 id="kmp算法">KMP算法</h1>
+<p>对于暴力算法的第二种实现方法，KMP算法的思想就是当出现不匹配的时候，能够知晓一部分文本的内容(因为在匹配失败之前它们就已经和模式相匹配)。我们可以利用这些信息避免指针回退到所有这些已知字符之前(不使模式指针每次都退到pat[0])。</p>
+<p><em><strong>KMP算法中文本指针i不回退</strong></em>。i已知从0到n，通过改变模式指针来选择模式串中下一个要和txt[ i ]比较的字符。</p>
+<p>那么如何利用已知信息呢？  <br>
+假设现在已经有一个dfa[ ][ ]数组来记录匹配失败的时候模式指针应该回退多远。 <br>
+在查找时，dfa[txt.charAt( i )[ j ]是在比较了txt.charAt( i )和pat.charAt( j )后应该和下一个文本串字符txt.charAt( i+1 )比较的模式串的字符。</p>
+<p>那么KMP算法的大致框架就是</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">search</span><span style="color:#f92672">(</span>String txt<span style="color:#f92672">)</span> 
+    <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//假设已经有一个dfa[ ][ ]数组，且dfa[txt.charAt(i)[j]给出下一个模式串中应该比较的字符
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> m <span style="color:#f92672">=</span> pat<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> txt<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">int</span> i<span style="color:#f92672">,</span> j<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n <span style="color:#f92672">&amp;&amp;</span> j <span style="color:#f92672">&lt;</span> m<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            j <span style="color:#f92672">=</span> dfa<span style="color:#f92672">[</span>txt<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)][</span>j<span style="color:#f92672">];</span>  <span style="color:#75715e">//根据dfa来进行下一次比较
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>j <span style="color:#f92672">==</span> m<span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> i <span style="color:#f92672">-</span> m<span style="color:#f92672">;</span>    
+        <span style="color:#66d9ef">return</span> n<span style="color:#f92672">;</span>                    
+    <span style="color:#f92672">}</span>
+
+</code></pre></div><h2 id="引入状态机">引入状态机</h2>
+<p>假设已经有dfa数组了，当i和j所指向的字符匹配失败时，模式可能匹配的下一个位置应该从i-dfa[ txt.charAt( i ) ][ j ]处开始。当匹配时，只需要将j设为dfa[ txt.charAt( i ) ][ j ]并将i加1，即比较下一个字符。</p>
+<p>我们可以认为 pat 的匹配就是状态的转移。⽐如当 pat = &ldquo;ABABC&rdquo;：</p>
+<p><img src="/chapter5/5.3.9.png" alt=""></p>
+<p>如上图，圆圈内的数字就是状态，状态 0 是起始状态，状态5（ pat.length ）是终⽌状态。开始匹配时 pat 处于起始状态，⼀旦转移到终⽌状态，就说明在 txt 中找到了 pat 。⽐如说当前处于状态 2，就说明字符 &ldquo;AB&rdquo; 被匹配。 <br>
+另外，处于不同状态时， pat 状态转移的⾏为也不同。⽐如说假设现在匹配到了状态 4，如果遇到字符 A 就应该转移到状态 3，遇到字符 C 就应该转移到状态 5，如果遇到字符 B 就应该转移到状态 0。  <br>
+还可能遇到其他字符，⽐如 Z，但是显然应该转移到起始状态 0，因为 pat 中根本都没有字符 Z。对于字母表中没有的字符，都应该移动到起始状态。（当然可以自己重新实现一个字母表，只含有所有出现的字符，然而意义不大）</p>
+<h2 id="计算dfa--">★计算dfa[ ][ ]</h2>
+<p>那么现在的问题都归结到如何计算dfa这个数组了，有了这个数组就可以完全按照这个数组进行匹配了。</p>
+<p><em><strong>dfa的构造只与pat有关</strong></em></p>
+<p>这也就是说，给定了模式串就能唯一确定一个dfa，然后利用这个dfa可以去任意模式串进行查找。</p>
+<p>那么现在的KMP算法大致变为</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">KMP</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> String pat<span style="color:#f92672">;</span>        <span style="color:#75715e">// 模式串
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">KMP</span><span style="color:#f92672">(</span>String pat<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">pat</span> <span style="color:#f92672">=</span> pat<span style="color:#f92672">;</span>
+
+        <span style="color:#75715e">// 构造dfa[][]
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span> 
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">search</span><span style="color:#f92672">(</span>String txt<span style="color:#f92672">)</span> 
+    <span style="color:#f92672">{}</span>  <span style="color:#75715e">//上文的search方法，在txt中进行搜索
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</code></pre></div><p>要确定状态转移的⾏为，得明确两个变量，⼀个是当前的匹配状态，另⼀个是遇到的字符；  <br>
+如果遇到的字符 c 和 pat[j] 匹配的话，状态就应该向前推进⼀个，也就是说 next = j + 1 . <br>
+如果字符 c 和 pat[j] 不匹配的话，状态就要回退（或者原地不动）</p>
+<p>那么，如何得知在哪个状态重启呢？ <br>
+我们用一个变量X来记录，<em><strong>重启状态X和当前状态具有相同的前缀。</strong></em></p>
+<p><img src="/chapter5/5.3.8.png" alt=""></p>
+<p>如图，状态4的重启状态X就是2，因为它们有相同的前缀&quot;A B&rdquo;。如果在状态4遇到的下一个字符是&rsquo;C&rsquo;,那么它会转移到状态5，否则会转移到状态X，即状态2。到了状态2，如果下一个字符是&rsquo;A&rsquo;,那么2又会到状态3，这样总的来看在状态4遇到了非&rsquo;C&rsquo;的字符&rsquo;A&rsquo;直接转移到3。如果到了状态2，且下一个字符是&rsquo;B&rsquo;，由于2的下一个字符只有是&rsquo;A&rsquo;才能前进，所有又会退回到X的重启状态X&rsquo;，即总的来看直接退回到状态0. <br>
+当然，对其他任意不在模式中的字符都会直接到状态0.</p>
+<p>X 是先初始化为 0，然后随着 j 的前进⽽不断更新的。更新 X 其实和 search 函数中更新状态 j 的过程是⾮常相似的。其中的原理⾮常微妙，注意代码中 for 循环的变量初始值，可以这样理解： <br>
+后者是在 txt 中匹配 pat ，前者是在 pat 中匹配 pat[1..end] ，状态
+X 总是落后状态 j ⼀个状态，与 j 具有最⻓的相同前缀。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">KMP</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> R<span style="color:#f92672">;</span>       <span style="color:#75715e">// 字母表的大小
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> dfa<span style="color:#f92672">;</span>       <span style="color:#75715e">// 预处理实现的dfa数组
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">private</span> String pat<span style="color:#f92672">;</span>        <span style="color:#75715e">// or the pattern string
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">KMP</span><span style="color:#f92672">(</span>String pat<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">R</span> <span style="color:#f92672">=</span> 256<span style="color:#f92672">;</span>   <span style="color:#75715e">//默认的256位的ASCII码
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">pat</span> <span style="color:#f92672">=</span> pat<span style="color:#f92672">;</span>
+
+        <span style="color:#75715e">// 构造dfa数组
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> m <span style="color:#f92672">=</span> pat<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span>
+        dfa <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>R<span style="color:#f92672">][</span>m<span style="color:#f92672">];</span> 
+        dfa<span style="color:#f92672">[</span>pat<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)][</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> 
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> j <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> m<span style="color:#f92672">;</span> j<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> c <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> c <span style="color:#f92672">&lt;</span> R<span style="color:#f92672">;</span> c<span style="color:#f92672">++)</span> 
+                dfa<span style="color:#f92672">[</span>c<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> dfa<span style="color:#f92672">[</span>c<span style="color:#f92672">][</span>x<span style="color:#f92672">];</span>     <span style="color:#75715e">// 匹配失败的情况，返回到X状态
+</span><span style="color:#75715e"></span>            dfa<span style="color:#f92672">[</span>pat<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>j<span style="color:#f92672">)][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> j<span style="color:#f92672">+</span>1<span style="color:#f92672">;</span>   <span style="color:#75715e">// 匹配成功，状态到下一个
+</span><span style="color:#75715e"></span>            x <span style="color:#f92672">=</span> dfa<span style="color:#f92672">[</span>pat<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>j<span style="color:#f92672">)][</span>x<span style="color:#f92672">];</span>     <span style="color:#75715e">// 更新X状态 
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span> 
+    <span style="color:#f92672">}</span> 
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">search</span><span style="color:#f92672">(</span>String txt<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+        <span style="color:#75715e">// 利用dfa进行查找
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> m <span style="color:#f92672">=</span> pat<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> txt<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">int</span> i<span style="color:#f92672">,</span> j<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n <span style="color:#f92672">&amp;&amp;</span> j <span style="color:#f92672">&lt;</span> m<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            j <span style="color:#f92672">=</span> dfa<span style="color:#f92672">[</span>txt<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)][</span>j<span style="color:#f92672">];</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>j <span style="color:#f92672">==</span> m<span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> i <span style="color:#f92672">-</span> m<span style="color:#f92672">;</span>    <span style="color:#75715e">// found
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> n<span style="color:#f92672">;</span>                    <span style="color:#75715e">// not found
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</code></pre></div><h2 id="分析-1">分析</h2>
+<p>对于长度为M的模式串和长度为N的文本串，KMP算法比较次数为O(M+N).</p>
+<p>其中对于字母表大小为R，预处理构造dfa所需时间为O(MR),空间也为O(MR).</p>
+<hr>
+<h1 id="boyer-moore算法">Boyer-Moore算法</h1>
+<p>如果 <em>从右向左</em> 扫描模式字符串并将它和文本匹配，那么可能非常快。例如：查找模式串B A A B B A A 时，如果匹配了第7和第6个字符但是第5个字符处匹配失败了，那么马上就可以将模式右移7个位置并继续检查文本中的第14个字符。因为部分匹配到X A A而X 不是B，而这3个连续的字符在模式中是唯一的。</p>
+<p>如果模式结尾部分的字符也出现在了模式的其他位置，那么也需要一个和KMP算法一样的记录重启位置的数组。</p>
+<p>如图：  <br>
+<img src="/chapter5/5.3.4.jpg" alt=""></p>
+<p>首先比较模式串的E和文本中下标为5的N，不匹配。而N也出现在了模式串中，所以会将模式串右移5个位置，将文本的N和模式串的N对齐。然后再从右往左比较。此时模式串的最右侧的E和文本中第10的索引的S不匹配且S不在模式串中，所以可以直接将模式串右移动M个位置。此时模式的最后字符E和文本的索引16的E匹配，而模式的倒数第二个L与索引15的N不匹配。和第一次一样，模式串右移4个位置。最后从索引20开始从右向左比较。最终发现匹配了。</p>
+<h2 id="预处理">预处理</h2>
+<p>使用数组right[ ]记录字母表中每个字符在模式中 <em>出现的最靠右的地方</em>(若模式串不含有该字符就返回-1)。通过这个数组可以知道匹配失败时，模式串要右移多少。  <br>
+预处理先将right[ R (R为字母表大小)]全部置为-1，然后对0到M-1的j，将right[ pat.charAt( j ) ]设为j。</p>
+<p><img src="/chapter5/5.3.5.jpg" alt=""></p>
+<h2 id="查找过程">查找过程</h2>
+<p>预处理中计算了right[ ]后，用一个文本指针i在文本串从左向右移动，一个模式指针j在模式中从右向左移动。如果从M-1到0的所有j，txt.charAt( i+j )都和pat.charAt( j )相等，那么就找到了一个匹配的地方，否则，匹配失败。  <br>
+对于匹配失败，有三种情况：</p>
+<ul>
+<li>如果失败的字符不在模式串中( right[ pat.charAt( j ) ] == -1 )，就将模式串右移j+1个位置(即i加j+1)。</li>
+<li>如果失败的字符在模式串中，就可以使用right<input disabled="" type="checkbox"> 使得该字符和它在模式字符串中出现的最右位置相匹配。</li>
+<li>如果right<input disabled="" type="checkbox"> 不能使i增大，那么直接将i自加1，来保证模式串向右移动。</li>
+</ul>
+<p>（约定某个字符不在模式串中返回-1是为了将前两种情况合并，都将i增大 j-right[ txt.charAt ( i+j ) ] ）</p>
+<p><img src="/chapter5/5.3.6.jpg" alt="">
+<img src="/chapter5/5.3.7.jpg" alt=""></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BoyerMoore</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> right<span style="color:#f92672">;</span>    
+
+    <span style="color:#66d9ef">private</span> String pat<span style="color:#f92672">;</span>      <span style="color:#75715e">// or as a string
+</span><span style="color:#75715e"></span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">BoyerMoore</span><span style="color:#f92672">(</span>String pat<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">pat</span> <span style="color:#f92672">=</span> pat<span style="color:#f92672">;</span>
+
+        right <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>R<span style="color:#f92672">];</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> c <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> c <span style="color:#f92672">&lt;</span> R<span style="color:#f92672">;</span> c<span style="color:#f92672">++)</span>
+            right<span style="color:#f92672">[</span>c<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>      <span style="color:#75715e">//初始化为-1
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> pat<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span> j<span style="color:#f92672">++)</span>
+            right<span style="color:#f92672">[</span>pat<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>j<span style="color:#f92672">)]</span> <span style="color:#f92672">=</span> j<span style="color:#f92672">;</span>   <span style="color:#75715e">//每次访问pat.charAt(j)并更新right中对应的值
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">search</span><span style="color:#f92672">(</span>String txt<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> m <span style="color:#f92672">=</span> pat<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> txt<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">int</span> skip<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;=</span> n <span style="color:#f92672">-</span> m<span style="color:#f92672">;</span> i <span style="color:#f92672">+=</span> skip<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            skip <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> m<span style="color:#f92672">-</span>1<span style="color:#f92672">;</span> j <span style="color:#f92672">&gt;=</span> 0<span style="color:#f92672">;</span> j<span style="color:#f92672">--)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>pat<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>j<span style="color:#f92672">)</span> <span style="color:#f92672">!=</span> txt<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">+</span>j<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+                    skip <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>1<span style="color:#f92672">,</span> j <span style="color:#f92672">-</span> right<span style="color:#f92672">[</span>txt<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">+</span>j<span style="color:#f92672">)]);</span> <span style="color:#75715e">//将3种情况合并
+</span><span style="color:#75715e"></span>                    <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>skip <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> i<span style="color:#f92672">;</span>    <span style="color:#75715e">// found
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span> n<span style="color:#f92672">;</span>                       <span style="color:#75715e">// not found
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+
+
+</code></pre></div><h2 id="分析-2">分析</h2>
+<p>一般情况下，对应长度为N的文本串和长度为M的模式串，Booyer-Moore算法需要O(N/M)次比较。</p>
+<p>完整的Boyer-Moore算法在预处理中处理了模式串与自身不匹配的情况(和KMP类似)并保证了最坏情况复杂度为O(N)。  而上述实现的算法最坏情况下复杂度为O(NM)</p>
+<hr>
+<h1 id="rabin-karp算法">Rabin-Karp算法</h1>
+<p>我们可以用一个散列函数计算出模式字符串的散列函数值，然后用相同的散列函数计算文本中所有可能的M个字符的子字符串散列值并找一样的。如果找到了一个散列值和模式串相同的子字符串，在继续验证是否匹配。  <br>
+这样是可行的，但是直接计算散列值会涉及字符串的每个字符，成本比暴力算法还要高。</p>
+<p>而Rabin-Karp算法能够实现线性复杂度是因为它能够通过预处理在 <em>常数时间</em> 算出M个字符的子字符串的散列值。</p>
+<h2 id="散列函数">散列函数</h2>
+<p>对于长度为M的字符串，它对应着一个R进制的M位数。我们可以用 <em>除留余数法</em> ：将该数除以Q并取余(Q是散列表大小)，那么就能将R进制的M位数转化为一个0到Q-1之间的int值。如下图：</p>
+<p><img src="/chapter5/5.3.10.jpg" alt=""></p>
+<p>对于5位的数值可以这样，但是若模式串长度M位100或者1000就很难这样了。</p>
+<h2 id="关键思想">关键思想</h2>
+<p>如何高效的，在常数时间计算文本中i+1位置的子字符串散列值是Rabin-Karp算法的核心思想。</p>
+<p><img src="/chapter5/5.3.11.jpg" alt=""></p>
+<p><img src="/chapter5/5.3.12.jpg" alt=""></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RabinKarp</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> String pat<span style="color:#f92672">;</span>      
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">long</span> patHash<span style="color:#f92672">;</span>    <span style="color:#75715e">// 模式串的散列值
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> m<span style="color:#f92672">;</span>           <span style="color:#75715e">// 模式串的长度
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">long</span> q<span style="color:#f92672">;</span>          <span style="color:#75715e">// a large prime, small enough to avoid long overflow
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> R<span style="color:#f92672">;</span>           <span style="color:#75715e">//字母表的大小，即基数
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">long</span> RM<span style="color:#f92672">;</span>         <span style="color:#75715e">// R^(M-1) % Q
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">RabinKarp</span><span style="color:#f92672">(</span>String pat<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">pat</span> <span style="color:#f92672">=</span> pat<span style="color:#f92672">;</span>     
+        R <span style="color:#f92672">=</span> 256<span style="color:#f92672">;</span>
+        m <span style="color:#f92672">=</span> pat<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span>
+        q <span style="color:#f92672">=</span> longRandomPrime<span style="color:#f92672">();</span>
+
+        <span style="color:#75715e">// precompute R^(m-1) % q for use in removing leading digit
+</span><span style="color:#75715e"></span>        RM <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;=</span> m<span style="color:#f92672">-</span>1<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span>
+            RM <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>R <span style="color:#f92672">*</span> RM<span style="color:#f92672">)</span> <span style="color:#f92672">%</span> q<span style="color:#f92672">;</span>
+        patHash <span style="color:#f92672">=</span> hash<span style="color:#f92672">(</span>pat<span style="color:#f92672">,</span> m<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span> 
+ 
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">long</span> <span style="color:#a6e22e">hash</span><span style="color:#f92672">(</span>String key<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> m<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> 
+        <span style="color:#66d9ef">long</span> h <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> 
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> m<span style="color:#f92672">;</span> j<span style="color:#f92672">++)</span> 
+            h <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>R <span style="color:#f92672">*</span> h <span style="color:#f92672">+</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>j<span style="color:#f92672">))</span> <span style="color:#f92672">%</span> q<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> h<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">check</span><span style="color:#f92672">(</span>String txt<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> i<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> m<span style="color:#f92672">;</span> j<span style="color:#f92672">++)</span> 
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>pat<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>j<span style="color:#f92672">)</span> <span style="color:#f92672">!=</span> txt<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i <span style="color:#f92672">+</span> j<span style="color:#f92672">))</span> 
+                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span> 
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">search</span><span style="color:#f92672">(</span>String txt<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> txt<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span> 
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">&lt;</span> m<span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> n<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">long</span> txtHash <span style="color:#f92672">=</span> hash<span style="color:#f92672">(</span>txt<span style="color:#f92672">,</span> m<span style="color:#f92672">);</span> 
+
+        <span style="color:#75715e">// check for match at offset 0
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>patHash <span style="color:#f92672">==</span> txtHash<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> check<span style="color:#f92672">(</span>txt<span style="color:#f92672">,</span> 0<span style="color:#f92672">))</span>
+            <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+
+        <span style="color:#75715e">// check for hash match; if hash match, check for exact match
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> m<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">// Remove leading digit, add trailing digit, check for match. 
+</span><span style="color:#75715e"></span>            txtHash <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>txtHash <span style="color:#f92672">+</span> q <span style="color:#f92672">-</span> RM<span style="color:#f92672">*</span>txt<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">-</span>m<span style="color:#f92672">)</span> <span style="color:#f92672">%</span> q<span style="color:#f92672">)</span> <span style="color:#f92672">%</span> q<span style="color:#f92672">;</span> 
+            txtHash <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>txtHash<span style="color:#f92672">*</span>R <span style="color:#f92672">+</span> txt<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">))</span> <span style="color:#f92672">%</span> q<span style="color:#f92672">;</span> 
+
+            <span style="color:#75715e">// match
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">int</span> offset <span style="color:#f92672">=</span> i <span style="color:#f92672">-</span> m <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>patHash <span style="color:#f92672">==</span> txtHash<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> check<span style="color:#f92672">(</span>txt<span style="color:#f92672">,</span> offset<span style="color:#f92672">))</span>
+                <span style="color:#66d9ef">return</span> offset<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#75715e">// no match
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> n<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><hr>
+<h1 id="总结">总结</h1>
+<p><img src="/chapter5/5.3.13.jpg" alt=""></p>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

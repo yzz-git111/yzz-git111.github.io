@@ -5,10 +5,40 @@
     <link>https://yzz-git111.github.io/</link>
     <description>Recent content on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 12 Dec 2020 14:29:52 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 15 Dec 2020 15:33:17 +0800</lastBuildDate>
     
 	<atom:link href="https://yzz-git111.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>数据压缩</title>
+      <link>https://yzz-git111.github.io/post/%E6%95%B0%E6%8D%AE%E5%8E%8B%E7%BC%A9/</link>
+      <pubDate>Tue, 15 Dec 2020 15:33:17 +0800</pubDate>
+      
+      <guid>https://yzz-git111.github.io/post/%E6%95%B0%E6%8D%AE%E5%8E%8B%E7%BC%A9/</guid>
+      <description>引例 假设输出一个日期 12/31/1999，需要多少位？
+  将年月日按照整数形式输出。那么12,32,1999共三个整数，而Java中一个int型占4字节即32位，所以总的要3*32 = 96位。
+  将每个数字和分隔符按照字符输出。那么有10个字符（&amp;lsquo;1&amp;rsquo; , &amp;lsquo;2&amp;rsquo; , &amp;lsquo;/&amp;rsquo; , &amp;lsquo;3&amp;rsquo; , &amp;lsquo;1&amp;rsquo; , &amp;lsquo;/&amp;rsquo; &amp;hellip;&amp;hellip;），而Java一个字符占8位，所以全部输出需要8*10 = 80位。
+  年月日都是小整数，可以用Java中2B即16位的short类型输出，那么全部输出要3*16 = 48位
+  进一步的，Java中的char占1B即8位，可以表示0到63的整数。那么可以让12和31用char类型输出。1999用short输出。这样总的就需要8+8+16 = 32位。
+  如果更加充分的压缩，即按照一位一位的输出，那么12需要4位(2^4=16),31需要5位(2^5=32),1999需要12位(书上这样写的，那为什么不是11位？)。总的来说就是4+5+12 = 21位。
+但是实际上占24位，因为文件必须以8位(1字节)为单位，所以缺少的会自动补齐。
+  这也就是数据压缩，利用更少的存储空间存储更多的信息。
+ 理论前提 现代计算机的所有文件都是以二进制的形式存储在磁盘上。我们进行数据压缩能够将一个比特流（表示比特的序列）B 转化为压缩后的版本C(B).同时也能通过展开把C(B)转化为B。
+若用|B|表示比特流的比特的数量的话，数据压缩的目标就是使得|C(B)|/|B|最小，即使得压缩后比特流的大小与压缩前的比值尽可能小。这个比值就是压缩率。压缩率越小越好。
+若B&amp;ndash;&amp;gt; C(B) &amp;ndash;&amp;gt; B的比特流都一样，即压缩和展开后的比特流完全一样，这种模型就是无损压缩模型，不会丢失任何数据。我们研究的都是基于无损压缩的。 而对于一些音视频，有损压缩也是可以接收的。
+二进制转储 如何检查比特流或者字节流的内容呢？ 可以利用下面的方法将标准输入中的比特按照0和1的形式打印出来。
+public class BinaryDump { private BinaryDump() { } public static void main(String[] args) { int bitsPerLine = 16; if (args.</description>
+    </item>
+    
+    <item>
+      <title>Java输入输出流</title>
+      <link>https://yzz-git111.github.io/post/java%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E6%B5%81/</link>
+      <pubDate>Mon, 14 Dec 2020 18:34:59 +0800</pubDate>
+      
+      <guid>https://yzz-git111.github.io/post/java%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E6%B5%81/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>子字符串查找</title>

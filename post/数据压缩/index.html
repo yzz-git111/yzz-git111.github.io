@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>数据压缩 // </title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.74.3" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="yzz帅的一匹" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://yzz-git111.github.io/css/main.min.88e7083eff65effb7485b6e6f38d10afbec25093a6fac42d734ce9024d3defbd.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="数据压缩"/>
+<meta name="twitter:description" content="引例 假设输出一个日期 12/31/1999，需要多少位？
+  将年月日按照整数形式输出。那么12,32,1999共三个整数，而Java中一个int型占4字节即32位，所以总的要3*32 = 96位。
+  将每个数字和分隔符按照字符输出。那么有10个字符（&lsquo;1&rsquo; , &lsquo;2&rsquo; , &lsquo;/&rsquo; , &lsquo;3&rsquo; , &lsquo;1&rsquo; , &lsquo;/&rsquo; &hellip;&hellip;），而Java一个字符占8位，所以全部输出需要8*10 = 80位。
+  年月日都是小整数，可以用Java中2B即16位的short类型输出，那么全部输出要3*16 = 48位
+  进一步的，Java中的char占1B即8位，可以表示0到63的整数。那么可以让12和31用char类型输出。1999用short输出。这样总的就需要8&#43;8&#43;16 = 32位。
+  如果更加充分的压缩，即按照一位一位的输出，那么12需要4位(2^4=16),31需要5位(2^5=32),1999需要12位(书上这样写的，那为什么不是11位？)。总的来说就是4&#43;5&#43;12 = 21位。
+但是实际上占24位，因为文件必须以8位(1字节)为单位，所以缺少的会自动补齐。
+  这也就是数据压缩，利用更少的存储空间存储更多的信息。
+ 理论前提 现代计算机的所有文件都是以二进制的形式存储在磁盘上。我们进行数据压缩能够将一个比特流（表示比特的序列）B 转化为压缩后的版本C(B).同时也能通过展开把C(B)转化为B。
+若用|B|表示比特流的比特的数量的话，数据压缩的目标就是使得|C(B)|/|B|最小，即使得压缩后比特流的大小与压缩前的比值尽可能小。这个比值就是压缩率。压缩率越小越好。
+若B&ndash;&gt; C(B) &ndash;&gt; B的比特流都一样，即压缩和展开后的比特流完全一样，这种模型就是无损压缩模型，不会丢失任何数据。我们研究的都是基于无损压缩的。 而对于一些音视频，有损压缩也是可以接收的。
+二进制转储 如何检查比特流或者字节流的内容呢？ 可以利用下面的方法将标准输入中的比特按照0和1的形式打印出来。
+public class BinaryDump { private BinaryDump() { } public static void main(String[] args) { int bitsPerLine = 16; if (args."/>
+
+    <meta property="og:title" content="数据压缩" />
+<meta property="og:description" content="引例 假设输出一个日期 12/31/1999，需要多少位？
+  将年月日按照整数形式输出。那么12,32,1999共三个整数，而Java中一个int型占4字节即32位，所以总的要3*32 = 96位。
+  将每个数字和分隔符按照字符输出。那么有10个字符（&lsquo;1&rsquo; , &lsquo;2&rsquo; , &lsquo;/&rsquo; , &lsquo;3&rsquo; , &lsquo;1&rsquo; , &lsquo;/&rsquo; &hellip;&hellip;），而Java一个字符占8位，所以全部输出需要8*10 = 80位。
+  年月日都是小整数，可以用Java中2B即16位的short类型输出，那么全部输出要3*16 = 48位
+  进一步的，Java中的char占1B即8位，可以表示0到63的整数。那么可以让12和31用char类型输出。1999用short输出。这样总的就需要8&#43;8&#43;16 = 32位。
+  如果更加充分的压缩，即按照一位一位的输出，那么12需要4位(2^4=16),31需要5位(2^5=32),1999需要12位(书上这样写的，那为什么不是11位？)。总的来说就是4&#43;5&#43;12 = 21位。
+但是实际上占24位，因为文件必须以8位(1字节)为单位，所以缺少的会自动补齐。
+  这也就是数据压缩，利用更少的存储空间存储更多的信息。
+ 理论前提 现代计算机的所有文件都是以二进制的形式存储在磁盘上。我们进行数据压缩能够将一个比特流（表示比特的序列）B 转化为压缩后的版本C(B).同时也能通过展开把C(B)转化为B。
+若用|B|表示比特流的比特的数量的话，数据压缩的目标就是使得|C(B)|/|B|最小，即使得压缩后比特流的大小与压缩前的比值尽可能小。这个比值就是压缩率。压缩率越小越好。
+若B&ndash;&gt; C(B) &ndash;&gt; B的比特流都一样，即压缩和展开后的比特流完全一样，这种模型就是无损压缩模型，不会丢失任何数据。我们研究的都是基于无损压缩的。 而对于一些音视频，有损压缩也是可以接收的。
+二进制转储 如何检查比特流或者字节流的内容呢？ 可以利用下面的方法将标准输入中的比特按照0和1的形式打印出来。
+public class BinaryDump { private BinaryDump() { } public static void main(String[] args) { int bitsPerLine = 16; if (args." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yzz-git111.github.io/post/%E6%95%B0%E6%8D%AE%E5%8E%8B%E7%BC%A9/" />
+<meta property="article:published_time" content="2020-12-15T15:33:17+08:00" />
+<meta property="article:modified_time" content="2020-12-15T15:33:17+08:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://yzz-git111.github.io/"><img class="app-header-avatar" src="/avatar.jpeg" alt="yzz帅的一匹" /></a>
+      <h1></h1>
+      <p>yzz也想变成学霸</p>
+      <div class="app-header-social">
+        
+          <a target="_blank" href="https://github.com/yzz-git111" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg></a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">数据压缩</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Dec 15, 2020
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          1 min read
+        </div></div>
+    </header>
+    <div class="post-content">
+      <h1 id="引例">引例</h1>
+<p>假设输出一个日期 12/31/1999，需要多少位？</p>
+<ul>
+<li>
+<p>将年月日按照整数形式输出。那么12,32,1999共三个整数，而Java中一个int型占4字节即32位，所以总的要3*32 = 96位。</p>
+</li>
+<li>
+<p>将每个数字和分隔符按照字符输出。那么有10个字符（&lsquo;1&rsquo; , &lsquo;2&rsquo; , &lsquo;/&rsquo; , &lsquo;3&rsquo; , &lsquo;1&rsquo; , &lsquo;/&rsquo; &hellip;&hellip;），而Java一个字符占8位，所以全部输出需要8*10 = 80位。</p>
+</li>
+<li>
+<p>年月日都是小整数，可以用Java中2B即16位的short类型输出，那么全部输出要3*16 = 48位</p>
+</li>
+<li>
+<p>进一步的，Java中的char占1B即8位，可以表示0到63的整数。那么可以让12和31用char类型输出。1999用short输出。这样总的就需要8+8+16 = 32位。</p>
+</li>
+<li>
+<p>如果更加充分的压缩，即按照一位一位的输出，那么12需要4位(2^4=16),31需要5位(2^5=32),1999需要12位(书上这样写的，那为什么不是11位？)。总的来说就是4+5+12 = 21位。<br>
+但是实际上占24位，因为文件必须以8位(1字节)为单位，所以缺少的会自动补齐。</p>
+</li>
+</ul>
+<p><img src="/chapter5/5.5.1.jpg" alt=""></p>
+<p>这也就是数据压缩，利用更少的存储空间存储更多的信息。</p>
+<hr>
+<h1 id="理论前提">理论前提</h1>
+<p>现代计算机的所有文件都是以二进制的形式存储在磁盘上。我们进行数据压缩能够将一个比特流（表示比特的序列）B 转化为压缩后的版本C(B).同时也能通过展开把C(B)转化为B。</p>
+<p>若用|B|表示比特流的比特的数量的话，数据压缩的目标就是使得|C(B)|/|B|最小，即使得压缩后比特流的大小与压缩前的比值尽可能小。这个比值就是压缩率。压缩率越小越好。</p>
+<p>若B&ndash;&gt; C(B) &ndash;&gt; B的比特流都一样，即压缩和展开后的比特流完全一样，这种模型就是无损压缩模型，不会丢失任何数据。我们研究的都是基于无损压缩的。 <br>
+而对于一些音视频，有损压缩也是可以接收的。</p>
+<h2 id="二进制转储">二进制转储</h2>
+<p>如何检查比特流或者字节流的内容呢？ <br>
+可以利用下面的方法将标准输入中的比特按照0和1的形式打印出来。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BinaryDump</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">BinaryDump</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span> <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+        <span style="color:#66d9ef">int</span> bitsPerLine <span style="color:#f92672">=</span> 16<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>args<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            bitsPerLine <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">parseInt</span><span style="color:#f92672">(</span>args<span style="color:#f92672">[</span>0<span style="color:#f92672">]);</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#66d9ef">int</span> count<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> <span style="color:#f92672">!</span>BinaryStdIn<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">();</span> count<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>bitsPerLine <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                BinaryStdIn<span style="color:#f92672">.</span><span style="color:#a6e22e">readBoolean</span><span style="color:#f92672">();</span>
+                <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">!=</span> 0 <span style="color:#f92672">&amp;&amp;</span> count <span style="color:#f92672">%</span> bitsPerLine <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> StdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">();</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>BinaryStdIn<span style="color:#f92672">.</span><span style="color:#a6e22e">readBoolean</span><span style="color:#f92672">())</span> StdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">print</span><span style="color:#f92672">(</span>1<span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">else</span>                           StdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">print</span><span style="color:#f92672">(</span>0<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>bitsPerLine <span style="color:#f92672">!=</span> 0<span style="color:#f92672">)</span> StdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">();</span>
+        StdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>count <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; bits&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p><img src="/chapter5/5.5.2.jpg" alt=""></p>
+<h2 id="局限">局限</h2>
+<ul>
+<li>不存在一个能够压缩任意比特流的算法。</li>
+</ul>
+<p>证明：反证：假设存在一个能够将任意比特流压缩的算法，那么最终能够将任意比特流压缩到长度无限接近于0.显然是荒谬的。</p>
+<ul>
+<li>且我们也不可能找到最佳的压缩算法。</li>
+</ul>
+<h2 id="特点">特点</h2>
+<p>由于上面局限的存在，无损压缩算法必须结合实际的比特流，利用被压缩的数据流的已知结构。利用不同的算法就可以解决不同结构的比特流，如：</p>
+<ul>
+<li>
+<p>小规模的字母表 &mdash; 第一个算法（也不知道啥名字）</p>
+</li>
+<li>
+<p>较长的连续相同的位或者字符 &mdash; 游程编码</p>
+</li>
+<li>
+<p>频繁使用的字符 &mdash; 哈夫曼编码</p>
+</li>
+<li>
+<p>较长的连续重复的位或者字符 &mdash; LZW压缩算法</p>
+</li>
+</ul>
+<hr>
+<h1 id="定长码">定长码</h1>
+<p>给定一个情景：对基因组编码，生物学家用A，C，T，G来表示DNA中的四种碱基。这四种碱基按照各种顺序排列组成了不同的基因。例如对于下面的一个基因排列：   <br>
+ATAGATGCATAGCGCATAGCTAGATGTGCTAGC <br>
+如果使用标准的8位 1字节来表示一个字符，那么将需要8*35 = 280位。</p>
+<p>而基因简单的一个性质：只有4种不同的字符组成。而重新对这4个字符可以只用2位来表示。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">compress</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">// 小型字母表 只有ACTG四个字符
+</span><span style="color:#75715e"></span>        Alphabet DNA <span style="color:#f92672">=</span> Alphabet<span style="color:#f92672">.</span><span style="color:#a6e22e">DNA</span><span style="color:#f92672">;</span>
+        String s <span style="color:#f92672">=</span> BinaryStdIn<span style="color:#f92672">.</span><span style="color:#a6e22e">readString</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span> <span style="color:#75715e">// n为字母表的大小
+</span><span style="color:#75715e"></span>        BinaryStdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>n<span style="color:#f92672">);</span>
+
+        <span style="color:#75715e">// Write two-bit code for char.
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> d <span style="color:#f92672">=</span> DNA<span style="color:#f92672">.</span><span style="color:#a6e22e">toIndex</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">));</span>
+            BinaryStdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>d<span style="color:#f92672">,</span> 2<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+        BinaryStdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><hr>
+<h1 id="游程编码">游程编码</h1>
+<hr>
+<h1 id="哈夫曼编码">哈夫曼编码</h1>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

@@ -37,7 +37,17 @@ public class BinaryDump { private BinaryDump() { } public static void main(Strin
       <pubDate>Mon, 14 Dec 2020 18:34:59 +0800</pubDate>
       
       <guid>https://yzz-git111.github.io/post/java%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E6%B5%81/</guid>
-      <description></description>
+      <description>简介 我们的各种数据都是以文件的形式存储的，而文件又是以二进制的形式存储在磁盘上。为了访问这些文件，我们就需要利用输入/输出流。例如System.out.println();就是一个输出流，而它是标准的输出流，将内容输出到显示器上。
+IO流（输入/输入流）： 输入流能够将从其他文件中读取数据；而输出流能够将数据写到其他文件中。这样来理解：输入输出都是相对于正在运行的程序的。从其他文件读取数据，对于程序来说就是数据输入进来了；向其他文件写数据，对于程序来说就是把数据输出到文件中。 换句话说，输入流就是 &amp;ldquo;读&amp;rdquo;，输出流就是 &amp;ldquo;写&amp;rdquo;。
+java.io包中有大量的流类。而所有的输入流都是抽象类InputStream(字节输入流)或者抽象类Reader(字符输入流)的子类；所有的输出流都是抽象类OutputStream(字节输出流)或者抽象类Write(字符输出流)的子类。
+ File类 若我们需要获取磁盘上文件的有关信息或者创建新的文件，就需要File类。File类的对象主要用来获取文件本身的一些信息，不涉及对文件的读写操作。
+1.构造方法 File的构造方法有很多，以一个最常用的方法为例：
+public File(String pathname) 那么创建一个File类的对象就需要这样：
+File file = new File(&amp;#34;testFile.txt&amp;#34;); 其中传递的pathname可以是绝对路径，也可以是相对路径。
+但是请注意，File类的对象是已经存在的文件的对象，在给路径的时候给出完整的路径。若一个文件不存在则需要调用public boolean createNewFile() throws IOException方法创建。 File类创建的对象可以对此对象的文件(已存在)进行很多的操作。
+2.创建与删除文件 public boolean createNewFile() throws IOException 如果文件已经存在，则返回false；否则创建并返回true。
+public boolean delete() 当且仅当文件被成功删除返回true，否则返回false。
+3.常用方法 public String getName() //获取文件的名字 file.getName(); public boolean canRead() //判断文件是否可读 file.canRead(); 文件的属性 public boolean canWrite() //判断文件是否可写 file.canWrite(); 文件的属性 public boolean exists() //判断文件是否存在 public long length() //获取文件的长度(单位是字节) public String getCanonicalPath() throws IOException //获取文件的绝对路径 public String getParent() //获取文件的父目录  目录 如果File对象是一个目录，那么它可以调用下列方法</description>
     </item>
     
     <item>

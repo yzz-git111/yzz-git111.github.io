@@ -12,10 +12,30 @@
     
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Java输入输出流"/>
-<meta name="twitter:description" content=""/>
+<meta name="twitter:description" content="简介 我们的各种数据都是以文件的形式存储的，而文件又是以二进制的形式存储在磁盘上。为了访问这些文件，我们就需要利用输入/输出流。例如System.out.println();就是一个输出流，而它是标准的输出流，将内容输出到显示器上。
+IO流（输入/输入流）： 输入流能够将从其他文件中读取数据；而输出流能够将数据写到其他文件中。这样来理解：输入输出都是相对于正在运行的程序的。从其他文件读取数据，对于程序来说就是数据输入进来了；向其他文件写数据，对于程序来说就是把数据输出到文件中。 换句话说，输入流就是 &ldquo;读&rdquo;，输出流就是 &ldquo;写&rdquo;。
+java.io包中有大量的流类。而所有的输入流都是抽象类InputStream(字节输入流)或者抽象类Reader(字符输入流)的子类；所有的输出流都是抽象类OutputStream(字节输出流)或者抽象类Write(字符输出流)的子类。
+ File类 若我们需要获取磁盘上文件的有关信息或者创建新的文件，就需要File类。File类的对象主要用来获取文件本身的一些信息，不涉及对文件的读写操作。
+1.构造方法 File的构造方法有很多，以一个最常用的方法为例：
+public File(String pathname) 那么创建一个File类的对象就需要这样：
+File file = new File(&#34;testFile.txt&#34;); 其中传递的pathname可以是绝对路径，也可以是相对路径。
+但是请注意，File类的对象是已经存在的文件的对象，在给路径的时候给出完整的路径。若一个文件不存在则需要调用public boolean createNewFile() throws IOException方法创建。 File类创建的对象可以对此对象的文件(已存在)进行很多的操作。
+2.创建与删除文件 public boolean createNewFile() throws IOException 如果文件已经存在，则返回false；否则创建并返回true。
+public boolean delete() 当且仅当文件被成功删除返回true，否则返回false。
+3.常用方法 public String getName() //获取文件的名字 file.getName(); public boolean canRead() //判断文件是否可读 file.canRead(); 文件的属性 public boolean canWrite() //判断文件是否可写 file.canWrite(); 文件的属性 public boolean exists() //判断文件是否存在 public long length() //获取文件的长度(单位是字节) public String getCanonicalPath() throws IOException //获取文件的绝对路径 public String getParent() //获取文件的父目录  目录 如果File对象是一个目录，那么它可以调用下列方法"/>
 
     <meta property="og:title" content="Java输入输出流" />
-<meta property="og:description" content="" />
+<meta property="og:description" content="简介 我们的各种数据都是以文件的形式存储的，而文件又是以二进制的形式存储在磁盘上。为了访问这些文件，我们就需要利用输入/输出流。例如System.out.println();就是一个输出流，而它是标准的输出流，将内容输出到显示器上。
+IO流（输入/输入流）： 输入流能够将从其他文件中读取数据；而输出流能够将数据写到其他文件中。这样来理解：输入输出都是相对于正在运行的程序的。从其他文件读取数据，对于程序来说就是数据输入进来了；向其他文件写数据，对于程序来说就是把数据输出到文件中。 换句话说，输入流就是 &ldquo;读&rdquo;，输出流就是 &ldquo;写&rdquo;。
+java.io包中有大量的流类。而所有的输入流都是抽象类InputStream(字节输入流)或者抽象类Reader(字符输入流)的子类；所有的输出流都是抽象类OutputStream(字节输出流)或者抽象类Write(字符输出流)的子类。
+ File类 若我们需要获取磁盘上文件的有关信息或者创建新的文件，就需要File类。File类的对象主要用来获取文件本身的一些信息，不涉及对文件的读写操作。
+1.构造方法 File的构造方法有很多，以一个最常用的方法为例：
+public File(String pathname) 那么创建一个File类的对象就需要这样：
+File file = new File(&#34;testFile.txt&#34;); 其中传递的pathname可以是绝对路径，也可以是相对路径。
+但是请注意，File类的对象是已经存在的文件的对象，在给路径的时候给出完整的路径。若一个文件不存在则需要调用public boolean createNewFile() throws IOException方法创建。 File类创建的对象可以对此对象的文件(已存在)进行很多的操作。
+2.创建与删除文件 public boolean createNewFile() throws IOException 如果文件已经存在，则返回false；否则创建并返回true。
+public boolean delete() 当且仅当文件被成功删除返回true，否则返回false。
+3.常用方法 public String getName() //获取文件的名字 file.getName(); public boolean canRead() //判断文件是否可读 file.canRead(); 文件的属性 public boolean canWrite() //判断文件是否可写 file.canWrite(); 文件的属性 public boolean exists() //判断文件是否存在 public long length() //获取文件的长度(单位是字节) public String getCanonicalPath() throws IOException //获取文件的绝对路径 public String getParent() //获取文件的父目录  目录 如果File对象是一个目录，那么它可以调用下列方法" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://yzz-git111.github.io/post/java%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E6%B5%81/" />
 <meta property="article:published_time" content="2020-12-14T18:34:59+08:00" />
@@ -55,11 +75,477 @@
   <title>clock</title>
   <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
 </svg>
-          0 min read
+          6 min read
         </div></div>
     </header>
     <div class="post-content">
-      
+      <h1 id="简介">简介</h1>
+<p>我们的各种数据都是以文件的形式存储的，而文件又是以二进制的形式存储在磁盘上。为了访问这些文件，我们就需要利用输入/输出流。例如System.out.println();就是一个输出流，而它是标准的输出流，将内容输出到显示器上。</p>
+<p>IO流（输入/输入流）： <br>
+输入流能够将从其他文件中读取数据；而输出流能够将数据写到其他文件中。这样来理解：输入输出都是相对于正在运行的程序的。从其他文件读取数据，对于程序来说就是数据输入进来了；向其他文件写数据，对于程序来说就是把数据输出到文件中。 <br>
+换句话说，输入流就是 &ldquo;读&rdquo;，输出流就是 &ldquo;写&rdquo;。</p>
+<p>java.io包中有大量的流类。而所有的输入流都是抽象类InputStream(字节输入流)或者抽象类Reader(字符输入流)的子类；所有的输出流都是抽象类OutputStream(字节输出流)或者抽象类Write(字符输出流)的子类。</p>
+<hr>
+<h1 id="file类">File类</h1>
+<p>若我们需要获取磁盘上文件的有关信息或者创建新的文件，就需要File类。File类的对象主要用来获取文件本身的一些信息，不涉及对文件的读写操作。</p>
+<h2 id="1构造方法">1.构造方法</h2>
+<p>File的构造方法有很多，以一个最常用的方法为例：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">File</span><span style="color:#f92672">(</span>String pathname<span style="color:#f92672">)</span>
+</code></pre></div><p>那么创建一个File类的对象就需要这样：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">File file <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> File<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;testFile.txt&#34;</span><span style="color:#f92672">);</span>
+</code></pre></div><p>其中传递的pathname可以是绝对路径，也可以是相对路径。</p>
+<p>但是请注意，File类的对象是已经存在的文件的对象，在给路径的时候给出完整的路径。若一个文件不存在则需要调用public boolean createNewFile() throws IOException方法创建。  <br>
+File类创建的对象可以对此对象的文件(已存在)进行很多的操作。</p>
+<h2 id="2创建与删除文件">2.创建与删除文件</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">createNewFile</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">throws</span> IOException
+</code></pre></div><p>如果文件已经存在，则返回false；否则创建并返回true。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">delete</span><span style="color:#f92672">()</span>
+</code></pre></div><p>当且仅当文件被成功删除返回true，否则返回false。</p>
+<h2 id="3常用方法">3.常用方法</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">getName</span><span style="color:#f92672">()</span> <span style="color:#75715e">//获取文件的名字  file.getName();
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">canRead</span><span style="color:#f92672">()</span>    <span style="color:#75715e">//判断文件是否可读  file.canRead(); 文件的属性
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">canWrite</span><span style="color:#f92672">()</span>    <span style="color:#75715e">//判断文件是否可写  file.canWrite(); 文件的属性
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">exists</span><span style="color:#f92672">()</span>     <span style="color:#75715e">//判断文件是否存在
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">long</span> <span style="color:#a6e22e">length</span><span style="color:#f92672">()</span>        <span style="color:#75715e">//获取文件的长度(单位是字节)
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">getCanonicalPath</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">throws</span> IOException <span style="color:#75715e">//获取文件的绝对路径
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">getParent</span><span style="color:#f92672">()</span>   <span style="color:#75715e">//获取文件的父目录
+</span><span style="color:#75715e"></span>
+</code></pre></div><h2 id="目录">目录</h2>
+<p>如果File对象是一个目录，那么它可以调用下列方法</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">mkdir</span><span style="color:#f92672">()</span>  <span style="color:#75715e">//创建一个目录
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">public</span> String<span style="color:#f92672">[]</span> <span style="color:#a6e22e">list</span><span style="color:#f92672">()</span>  <span style="color:#75715e">//以字符串形式返回目录下的所有文件
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> File<span style="color:#f92672">[]</span> <span style="color:#a6e22e">listFiles</span><span style="color:#f92672">()</span>   <span style="color:#75715e">//以 File对象形式 返回目录下的所有文件
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">//返回目录下指定类型的文件 如.java .txt文件
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> File<span style="color:#f92672">[]</span> <span style="color:#a6e22e">listFiles</span><span style="color:#f92672">(</span>FilenameFilter filter<span style="color:#f92672">)</span>
+<span style="color:#66d9ef">public</span> File<span style="color:#f92672">[]</span> <span style="color:#a6e22e">listFiles</span><span style="color:#f92672">(</span>FileFilter filter<span style="color:#f92672">)</span>
+</code></pre></div><hr>
+<h1 id="文件-字节-输入流">文件 字节 输入流</h1>
+<p>如果对文件读取要求比较简单，可以用FileInputStream类(文件字节输入流)，该类是InputStream类的子类，以字节为单位读取文件，该类的实例方法都是从InputStream继承来的。</p>
+<h2 id="步骤">步骤</h2>
+<p>使用输入流通常包括4个基本步骤：</p>
+<ul>
+<li>设定输入流的源</li>
+<li>创建指向源的输入流</li>
+<li>让输入流读取源中的数据</li>
+<li>关闭输入流</li>
+</ul>
+<h2 id="1构造方法-创建指向文件的输入流">1.构造方法 创建指向文件的输入流</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">FileInputStream</span><span style="color:#f92672">(</span>String name<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> FileNotFoundException    <span style="color:#75715e">//用文件名创建流
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">FileInputStream</span><span style="color:#f92672">(</span>File file<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> FileNotFoundException      <span style="color:#75715e">//用File对象创建流
+</span></code></pre></div><p>程序必须在try-catch块的try块部分创建输入流，在catch块部分检测并处理这个IOException异常。</p>
+<p>例如：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">try</span><span style="color:#f92672">{</span>
+        File file <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> File<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;testFile.txt&#34;</span><span style="color:#f92672">);</span>
+        FileInputStream stream <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> FileInputStream<span style="color:#f92672">(</span>file<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span><span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException e<span style="color:#f92672">){</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+<span style="color:#75715e">// 或者
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">try</span><span style="color:#f92672">{</span>
+        FileInputStream stream <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> FileInputStream<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;testFile.txt&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span><span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException e<span style="color:#f92672">){</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+        
+</code></pre></div><h2 id="2使用输入流读取字节">2.使用输入流读取字节</h2>
+<p>调用read()方法顺序读取文件，只要不关闭流，每次都顺序的读取剩余内容，直到达到文件末尾或者输入流被关闭。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">read</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">throws</span> IOException    <span style="color:#75715e">//读取单个字节 返回字节值(0~255) 未读出字节就返回-1
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">read</span><span style="color:#f92672">(</span><span style="color:#66d9ef">byte</span> b<span style="color:#f92672">[])</span> <span style="color:#66d9ef">throws</span> IOException    <span style="color:#75715e">//从源中读取b.length()个字节到字节数组b[]中。达到文件末尾就返回-1
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">native</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">readBytes</span><span style="color:#f92672">(</span><span style="color:#66d9ef">byte</span> b<span style="color:#f92672">[],</span> <span style="color:#66d9ef">int</span> off<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> len<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException <span style="color:#75715e">//从源中读取b.length()个字节到b[]中，参数off指定从b的某个位置开始存放
+</span></code></pre></div><h2 id="3关闭流">3.关闭流</h2>
+<p>输入流都提供了关闭方法close().虽然程序结束会自动关闭所有的流，但是显示地关闭所有打开的流是一个好习惯。如果没有关闭被打开的流，可以出现不允许另一个程序操作这些流的资源。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">int</span> n<span style="color:#f92672">=-</span>1<span style="color:#f92672">;</span>   <span style="color:#75715e">//到达结束的标志
+</span><span style="color:#75715e"></span>    File file <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> File<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;D:\\JAVA_CODE\\JavaSE\\src\\IOStream\\testFile.txt&#34;</span><span style="color:#f92672">);</span>
+    System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>file<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">());</span>
+    <span style="color:#66d9ef">byte</span><span style="color:#f92672">[]</span> a<span style="color:#f92672">=</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">byte</span><span style="color:#f92672">[</span>100<span style="color:#f92672">];</span> <span style="color:#75715e">// 缓冲区100 满了就传递
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">try</span><span style="color:#f92672">{</span>
+        FileInputStream stream <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> FileInputStream<span style="color:#f92672">(</span>file<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">while</span><span style="color:#f92672">((</span>n<span style="color:#f92672">=</span>stream<span style="color:#f92672">.</span><span style="color:#a6e22e">read</span><span style="color:#f92672">(</span>a<span style="color:#f92672">,</span>0<span style="color:#f92672">,</span>100<span style="color:#f92672">))</span> <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span>   <span style="color:#75715e">// 当读到文件结束  返回-1
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">{</span>
+            String s <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> String<span style="color:#f92672">(</span>a<span style="color:#f92672">,</span>0<span style="color:#f92672">,</span>n<span style="color:#f92672">);</span>
+            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>s<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+        stream<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span> <span style="color:#75715e">//关闭流
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span><span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException e<span style="color:#f92672">){</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><hr>
+<h1 id="文件-字节-输出流">文件 字节 输出流</h1>
+<p>FileOutputStream类（文件字节输出流），它是OutputStream类的子类（以字节为单位向文件写入内容），该类的实例方法都是从OutputStream类继承来的。</p>
+<h2 id="步骤-1">步骤</h2>
+<ul>
+<li>给出输出流的目的地</li>
+<li>创建指向目的地的输出流</li>
+<li>让输出流把数据写入到目的地</li>
+<li>关闭输出流</li>
+</ul>
+<h2 id="1构造方法-创建指向文件的输出流">1.构造方法 创建指向文件的输出流</h2>
+<p>和文件字节输出流的方法类似：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">FileOutputStream</span><span style="color:#f92672">(</span>File file<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> FileNotFoundException 
+<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">FileOutputStream</span><span style="color:#f92672">(</span>String name<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> FileNotFoundException
+</code></pre></div><p>除此之外还有两种构造方法:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">FileOutputStream</span><span style="color:#f92672">(</span>String name<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span> append<span style="color:#f92672">)</span>
+<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">FileOutputStream</span><span style="color:#f92672">(</span>File file<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span> append<span style="color:#f92672">)</span>
+</code></pre></div><p>如果参数append取值是true，输出流不会把文件内容清空然后再写入新的内容，而是从文件的末尾开始向文件写入数据。如果append取值是false，会先把文件清空然后写入。</p>
+<h2 id="2使用输出流写字节">2.使用输出流写字节</h2>
+<p>调用父类继承的write方法顺序地写入文件。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">write</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> b<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException <span style="color:#75715e">//向目的地写入单个字节
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">write</span><span style="color:#f92672">(</span><span style="color:#66d9ef">byte</span> b<span style="color:#f92672">[])</span> <span style="color:#66d9ef">throws</span> IOException  <span style="color:#75715e">//向目的地写入一个字节数组
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">write</span><span style="color:#f92672">(</span><span style="color:#66d9ef">byte</span> b<span style="color:#f92672">[],</span> <span style="color:#66d9ef">int</span> off<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> len<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException    <span style="color:#75715e">//给定字节数组中起始于偏移量off处取len个字节写到目的地
+</span></code></pre></div><h2 id="3关闭流-1">3.关闭流</h2>
+<p>在操作系统把程序写到输出流上的那些字节保存到磁盘上之前，有时被放在内存缓冲区中，通过调用close()方法，可以保证操作系统把流缓冲区的内容写到目的地，即关闭输出流可以把该流所用的缓冲区的内容洗掉。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">byte</span><span style="color:#f92672">[]</span> a <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;新年快乐&#34;</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getBytes</span><span style="color:#f92672">();</span>   <span style="color:#75715e">//获得字节数组才能 write()
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">byte</span><span style="color:#f92672">[]</span> b <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Happy New Year&#34;</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getBytes</span><span style="color:#f92672">();</span>
+    File file <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> File<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;D:\\JAVA_CODE\\JavaSE\\src\\IOStream\\testFile.txt&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">try</span><span style="color:#f92672">{</span>
+        FileOutputStream stream <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> FileOutputStream<span style="color:#f92672">(</span>file<span style="color:#f92672">);</span>   
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>file<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">()+</span><span style="color:#e6db74">&#34;的大小：&#34;</span><span style="color:#f92672">+</span>file<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()+</span><span style="color:#e6db74">&#34;字节&#34;</span><span style="color:#f92672">);</span>
+
+        stream<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>a<span style="color:#f92672">);</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>file<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">()+</span><span style="color:#e6db74">&#34;的大小：&#34;</span><span style="color:#f92672">+</span>file<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()+</span><span style="color:#e6db74">&#34;字节&#34;</span><span style="color:#f92672">);</span>
+
+        stream<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>b<span style="color:#f92672">);</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>file<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">()+</span><span style="color:#e6db74">&#34;的大小：&#34;</span><span style="color:#f92672">+</span>file<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()+</span><span style="color:#e6db74">&#34;字节&#34;</span><span style="color:#f92672">);</span>
+
+        stream<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>     <span style="color:#75715e">//切记关闭
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span><span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException e<span style="color:#f92672">){</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+</code></pre></div><hr>
+<h1 id="文件-字符-输入输出流">文件 字符 输入、输出流</h1>
+<p>文件字节输入、输出流的read和write方法使用字节数组读写数据，即以字节为单位处理数据。因此，字节流不能很好地操作Unicode字符。 <br>
+例如，一个汉字在文件中占2个字节，如果使用字节流，读取不当会出现乱码。</p>
+<p>FileReader、FileWrite字符流分别是Reader和Writer的子类。 <br>
+字符输入流和输出流的read和write方法使用字符数组读写数据，即以字符为基本单位处理数据。</p>
+<p>其内容于字节输入输出流类似，例如构造方法：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">FileReader</span><span style="color:#f92672">(</span>String fileName<span style="color:#f92672">)</span>
+<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">FileReader</span><span style="color:#f92672">(</span>File file<span style="color:#f92672">)</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">FileWriter</span><span style="color:#f92672">(</span>String fileName<span style="color:#f92672">)</span>
+<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">FileWriter</span><span style="color:#f92672">(</span>String fileName<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span> append<span style="color:#f92672">)</span>
+<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">FileWriter</span><span style="color:#f92672">(</span>File file<span style="color:#f92672">)</span>
+<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">FileWriter</span><span style="color:#f92672">(</span>File file<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span> append<span style="color:#f92672">)</span>
+</code></pre></div><hr>
+<h1 id="缓冲流">缓冲流</h1>
+<p>BufferedReader类创建的对象称为缓冲输入流。  <br>
+BufferedWriter类创建的对象称为缓冲输出流。  <br>
+缓冲流的存在是为了增强读写文件的能力。比如我们需要每次读取文件的一行，使用FileReader(Reader类，按字符为基本单位读取)很难完成（因为我们不知道一行有多少字符）。那我们引入BufferedReader和BufferedWriter缓冲类可以实现。</p>
+<p>BufferedReader和BufferedWriter二者的源和目的地必须是 字符输入/输出流。</p>
+<h2 id="构造方法">构造方法</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">BufferedReader</span><span style="color:#f92672">(</span>Reader in<span style="color:#f92672">)</span>
+<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">BufferedWriter</span><span style="color:#f92672">(</span>Writer out<span style="color:#f92672">)</span>
+</code></pre></div><p>构造方法需要丢入一个Reader/Writer类对象，或者是继承了这两个类的子类(上转型对象)。</p>
+<h2 id="bufferedreader实例">BufferedReader实例</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">File file <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> File<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;D:\\JAVA_CODE\\JavaSE\\src\\IOStream\\testFile.txt&#34;</span><span style="color:#f92672">);</span>
+<span style="color:#66d9ef">try</span><span style="color:#f92672">{</span>
+    FileReader fileReader <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> FileReader<span style="color:#f92672">(</span>file<span style="color:#f92672">);</span>
+    BufferedReader bufferedReader <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BufferedReader<span style="color:#f92672">(</span>fileReader<span style="color:#f92672">);</span>
+    String strLine<span style="color:#f92672">=</span><span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">while</span><span style="color:#f92672">((</span>strLine <span style="color:#f92672">=</span> bufferedReader<span style="color:#f92672">.</span><span style="color:#a6e22e">readLine</span><span style="color:#f92672">())!=</span><span style="color:#66d9ef">null</span><span style="color:#f92672">){</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>strLine<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    bufferedReader<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+<span style="color:#f92672">}</span><span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException e<span style="color:#f92672">){</span>
+    System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><ol>
+<li>
+<p>实例中向BufferedReader类传递一个Reader的子类&ndash;FileReader类的对象来创建一个BufferedReader类的对象。</p>
+</li>
+<li>
+<p>调用readLine()方法读取一行。若没有则返回null；否则返回这一行的字符串。</p>
+</li>
+<li>
+<p>记得关闭流。</p>
+</li>
+</ol>
+<h2 id="bufferwriter实例">BufferWriter实例</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">try</span><span style="color:#f92672">{</span>
+    FileWriter fileWriter <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> FileWriter<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;D:\\JAVA_CODE\\JavaSE\\src\\IOStream\\testFile.txt&#34;</span><span style="color:#f92672">);</span>
+    BufferedWriter bufferedWriter <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BufferedWriter<span style="color:#f92672">(</span>fileWriter<span style="color:#f92672">);</span>
+
+    bufferedWriter<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;新年快乐Happy New Year ====444&#34;</span><span style="color:#f92672">);</span>
+
+    bufferedWriter<span style="color:#f92672">.</span><span style="color:#a6e22e">newLine</span><span style="color:#f92672">();</span>
+
+    String s <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;新年快乐Happy New Year ====555&#34;</span><span style="color:#f92672">;</span>
+    bufferedWriter<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>s<span style="color:#f92672">,</span>0<span style="color:#f92672">,</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">());</span>
+
+    bufferedWriter<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+<span style="color:#f92672">}</span><span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException e<span style="color:#f92672">){</span>
+    System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><ol>
+<li>
+<p>实例中向BufferedWriter类传递一个Writer的子类&ndash;FileWriter类的对象来创建一个BufferedWriter类的对象。</p>
+</li>
+<li>
+<p>调用write()方法写入字符串。</p>
+</li>
+<li>
+<p>调用newLine()可以向文件写入一个回行符。即另起一行。</p>
+</li>
+</ol>
+<p>可以把BufferReader流和BufferWriter流称为上层流，把它们所指向的字符流(Reader和Write对象或者它们子类的对象)称为底层流。   <br>
+Java采用缓存技术将上层流和底层流连接。底层字符输入流首先将数据读入缓存，BufferReader流再从缓存读取数据；BufferedWriter流将数据写入缓存，底层字符输出流不断地将缓存中的数据写入到目的地。</p>
+<p>当BufferWriter流调用flush()刷新缓存或调用close()方法关闭时，即使缓存没有溢出，底层流也会立刻将缓存内容写入到目的地。</p>
+<p>关闭输出流要首先关闭缓冲输出流，然后关闭缓冲输出流指向的流。即先关闭上层流再关闭底层流。在写代码时只需要关闭上层流，那底层流会自动关闭。</p>
+<hr>
+<h1 id="随机流">随机流</h1>
+<p>RandomAccessFile类创建的流称为随机流。RandomAccessFile既不是InputStream的子类，也不是OutputStream类的子类。但是RandomAccessFile流既可以作为流的源，也可以作为流的目的地。即对一个文件进行读写操作时，创建一个指向该文件的随即流即可。</p>
+<h2 id="构造方法-1">构造方法</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RandomAccessFile</span> <span style="color:#66d9ef">implements</span> DataOutput<span style="color:#f92672">,</span> DataInput<span style="color:#f92672">,</span> Closeable
+
+<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">RandomAccessFile</span><span style="color:#f92672">(</span>String name<span style="color:#f92672">,</span> String mode<span style="color:#f92672">)</span>   <span style="color:#75715e">//name确定一个文件名   mode取r(只读)或则rw(可读写)，决定创建的流对文件的访问控制
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">RandomAccessFile</span><span style="color:#f92672">(</span>File file<span style="color:#f92672">,</span> String mode<span style="color:#f92672">)</span>     <span style="color:#75715e">//用file对象构造  mode也是表示对文件的访问权限
+</span></code></pre></div><p>RandomAccessFile流指向文件时，不会先清空文件内容再写入。</p>
+<p>RandomAccessFile类有一个方法seek(long a)用来定位RandomAccessFIle流的读写位置，参数a确定读写位置距离文件开头的字节个数。  <br>
+getFilePointer()方法获取流的当前读写位置。</p>
+<hr>
+<h1 id="总结">总结</h1>
+<p>InputStream类是字节输入流的抽象类，是所有字节输入流的父类。</p>
+<p><img src="/picture/InputStream.png" alt=""></p>
+<p>输出流OutputStream类是字节输入流的抽象类，是输出字节流的所有类的父类。</p>
+<p><img src="/picture/OutputStream.png" alt=""></p>
+<p>java中的字符是Unicode编码的，是双字节的。InputStream是用来处理字节的，在处理字符文本时很不方便。Java为字符文本的输入提供了专门的一套类Reader。Reader类是字符输入流的抽象类，所有字符输入流的实现都是它的子类。</p>
+<p><img src="/picture/Reader.png" alt=""></p>
+<p>Writer类是字符输出流的抽象类，所有字符输出类的实现都是它的子类。</p>
+<p><img src="/picture/Writer.png" alt=""></p>
+<hr>
+<h1 id="附注算法四binarystdin和binarystdout">附注：《算法四》BinaryStdIn和BinaryStdOut</h1>
+<p>《算法四》在第五章“字符串”中讨论到了数据压缩，其中需要读取和写入比特，即比特流。而Java自带的IO类最小只支持字节流(FileInputStream和FileOutputStream)。 <br>
+书中利用了缓冲流BufferedInputStream和BufferedOutputStream来实现比特流的输入输出。缓冲流的输入输出都要经过缓冲区。</p>
+<h2 id="binarystdin-比特输入流">BinaryStdIn 比特输入流</h2>
+<p>类的属性，都被修饰为类属性，且文件结束的标志&rdquo;-1&quot;被标志为final修饰的EOF。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BinaryStdIn</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> EOF <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>      <span style="color:#75715e">// 文件的结束标志
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> BufferedInputStream in<span style="color:#f92672">;</span>  <span style="color:#75715e">// 缓冲输入流
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> buffer<span style="color:#f92672">;</span>              <span style="color:#75715e">//  一个字节（8bit）的缓冲区
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> n<span style="color:#f92672">;</span>                   <span style="color:#75715e">// 缓冲区剩余的比特个数
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">boolean</span> isInitialized<span style="color:#f92672">;</span>   <span style="color:#75715e">// 第一次被访问吗？
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">initialize</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        in <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BufferedInputStream<span style="color:#f92672">(</span>System<span style="color:#f92672">.</span><span style="color:#a6e22e">in</span><span style="color:#f92672">);</span>    <span style="color:#75715e">//标准输入（键盘输入）
+</span><span style="color:#75715e"></span>        buffer <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> 
+        n <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>      <span style="color:#75715e">// 缓冲区现在0个比特
+</span><span style="color:#75715e"></span>        fillBuffer<span style="color:#f92672">();</span>
+        isInitialized <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>  <span style="color:#75715e">//调用了initialize()方法就将标志位置为true
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">fillBuffer</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+        buffer <span style="color:#f92672">=</span> in<span style="color:#f92672">.</span><span style="color:#a6e22e">read</span><span style="color:#f92672">();</span> <span style="color:#75715e">//调用缓冲输入流BufferedInputStream填满缓冲区
+</span><span style="color:#75715e"></span>        n <span style="color:#f92672">=</span> 8<span style="color:#f92672">;</span>      <span style="color:#75715e">//剩余字符8
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;EOF&#34;</span><span style="color:#f92672">);</span>
+        buffer <span style="color:#f92672">=</span> EOF<span style="color:#f92672">;</span>
+        n <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>   <span style="color:#75715e">// 缓冲区是否空？
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>isInitialized<span style="color:#f92672">)</span> initialize<span style="color:#f92672">();</span>
+    <span style="color:#66d9ef">return</span> buffer <span style="color:#f92672">==</span> EOF<span style="color:#f92672">;</span>           <span style="color:#75715e">// 缓冲区是否为空  是否到了结束标志位
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</code></pre></div><p>☆ 读取下一位</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">readBoolean</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>   <span style="color:#75715e">//读取一位数据并返回一个Boolean值
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isEmpty<span style="color:#f92672">())</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> NoSuchElementException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Reading from empty input stream&#34;</span><span style="color:#f92672">);</span>
+        n<span style="color:#f92672">--;</span>    <span style="color:#75715e">//缓冲区个数自减1
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">boolean</span> bit <span style="color:#f92672">=</span> <span style="color:#f92672">((</span>buffer <span style="color:#f92672">&gt;&gt;</span> n<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">==</span> 1<span style="color:#f92672">;</span> <span style="color:#75715e">//缓冲区右移n位并和1相与
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> fillBuffer<span style="color:#f92672">();</span>   <span style="color:#75715e">//用文件的下一个字节填入缓冲区进行读取
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> bit<span style="color:#f92672">;</span> <span style="color:#75715e">//返回一个boolean值
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</code></pre></div><p>重点：如何实现每次只读取一位？ <br>
+举例：</p>
+<pre><code>    初始时n=8，缓冲区内容为 1001 1111。    
+    n--     此时n为7
+    buffer &gt;&gt; n    (右移7位，高位补0)===&gt;  0000 0001  
+    &amp; 1   (移位后的数据和1相与)===&gt;   0000 0001 &amp; 0000 0001 = 1 
+    得到1  即第7位是1
+    通过这样的方法来获得下一位的数据
+</code></pre>
+<p>注意：移位不改变变量本身的大小。获取了第一个1后，缓冲区的内容还是1001 1111。只不过通过n来显式的记录缓冲区剩余比特的大小。</p>
+<p>☆ 读取下一个字节（8位）并返回一个char值（对应于8位的ASCII码）</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">char</span> <span style="color:#a6e22e">readChar</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isEmpty<span style="color:#f92672">())</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> NoSuchElementException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Reading from empty input stream&#34;</span><span style="color:#f92672">);</span>
+
+        <span style="color:#75715e">// 缓冲区满的情况
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">==</span> 8<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> buffer<span style="color:#f92672">;</span> <span style="color:#75715e">//用x记录缓冲区内容
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">//缓冲区最多1111 1111 而int占32位，足以表示
+</span><span style="color:#75715e"></span>            fillBuffer<span style="color:#f92672">();</span>   <span style="color:#75715e">//接着缓冲
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">//x 和 1111 1111 进行按位与操作 。 然后强转位char进行返回
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">char</span><span style="color:#f92672">)</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">&amp;</span> 0xff<span style="color:#f92672">);</span>   
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#75715e">// 将当前缓冲区的后n位与新缓冲区的前8-n位相结合
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> buffer<span style="color:#f92672">;</span>
+        x <span style="color:#f92672">&lt;&lt;=</span> <span style="color:#f92672">(</span>8 <span style="color:#f92672">-</span> n<span style="color:#f92672">);</span>  <span style="color:#75715e">//左移8-n 低位0补全
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> oldN <span style="color:#f92672">=</span> n<span style="color:#f92672">;</span>
+        fillBuffer<span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isEmpty<span style="color:#f92672">())</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> NoSuchElementException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Reading from empty input stream&#34;</span><span style="color:#f92672">);</span>
+        n <span style="color:#f92672">=</span> oldN<span style="color:#f92672">;</span>
+        x <span style="color:#f92672">|=</span> <span style="color:#f92672">(</span>buffer <span style="color:#f92672">&gt;&gt;&gt;</span> n<span style="color:#f92672">);</span>    <span style="color:#75715e">// &gt;&gt;&gt;表示逻辑右移/无符号右移 并按位或
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">char</span><span style="color:#f92672">)</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">&amp;</span> 0xff<span style="color:#f92672">);</span>
+        <span style="color:#75715e">// 如果n = 8，则以上代码对最后一个字符不太有效
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// 因为缓冲区将为-1，所以对齐字节有一种特殊情况
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</code></pre></div><p>返回的char即在ASCII表中索引对应的字符。</p>
+<p>读取r(1-16)位数据并返回一个char值（对应于Unicode的字符）</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">char</span> <span style="color:#a6e22e">readChar</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> r<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>r <span style="color:#f92672">&lt;</span> 1 <span style="color:#f92672">||</span> r <span style="color:#f92672">&gt;</span> 16<span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Illegal value of r = &#34;</span> <span style="color:#f92672">+</span> r<span style="color:#f92672">);</span>
+
+        <span style="color:#75715e">// optimize r = 8 case
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>r <span style="color:#f92672">==</span> 8<span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> readChar<span style="color:#f92672">();</span>
+
+        <span style="color:#66d9ef">char</span> x <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> r<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            x <span style="color:#f92672">&lt;&lt;=</span> 1<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">boolean</span> bit <span style="color:#f92672">=</span> readBoolean<span style="color:#f92672">();</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>bit<span style="color:#f92672">)</span> x <span style="color:#f92672">|=</span> 1<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span> x<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>readShort(),readInt(),readLong(),readDouble(),readByte()等方法都可以调用readChar()和readChar(int r)来解决。比如：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#75715e">/*
+</span><span style="color:#75715e">    从标准输入读取下一个32位，并作为32位int返回。
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">readInt</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 4<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>   <span style="color:#75715e">//调用4次readChar  4*8==32
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">char</span> c <span style="color:#f92672">=</span> readChar<span style="color:#f92672">();</span>
+            x <span style="color:#f92672">&lt;&lt;=</span> 8<span style="color:#f92672">;</span>
+            x <span style="color:#f92672">|=</span> c<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span> x<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>关闭流</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">close</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>isInitialized<span style="color:#f92672">)</span> initialize<span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+            in<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span> <span style="color:#75715e">//关闭输入流
+</span><span style="color:#75715e"></span>            isInitialized <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>  <span style="color:#75715e">//标志位置false
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException ioe<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalStateException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Could not close BinaryStdIn&#34;</span><span style="color:#f92672">,</span> ioe<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+</code></pre></div><h2 id="binarystdout比特输出流">BinaryStdOut比特输出流</h2>
+<p>大部分内容和输入流类似。只不过调用的是缓冲输出流。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BinaryStdOut</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> BufferedOutputStream out<span style="color:#f92672">;</span>  <span style="color:#75715e">// 系统的缓冲输出流 (standard output)
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> buffer<span style="color:#f92672">;</span>                <span style="color:#75715e">// 8位的缓冲区
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> n<span style="color:#f92672">;</span>                     <span style="color:#75715e">// 缓冲区剩余的位
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">boolean</span> isInitialized<span style="color:#f92672">;</span>    
+
+    <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">BinaryStdOut</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span> <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">initialize</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BufferedOutputStream<span style="color:#f92672">(</span>System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">);</span>
+        buffer <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> 
+        n <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>  <span style="color:#75715e">//初始时缓冲区0位。
+</span><span style="color:#75715e"></span>        isInitialized <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#75715e">/*
+</span><span style="color:#75715e">    将指定的位写入标准输出。
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">writeBit</span><span style="color:#f92672">(</span><span style="color:#66d9ef">boolean</span> bit<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>isInitialized<span style="color:#f92672">)</span> initialize<span style="color:#f92672">();</span>
+
+        <span style="color:#75715e">// add bit to buffer
+</span><span style="color:#75715e"></span>        buffer <span style="color:#f92672">&lt;&lt;=</span> 1<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>bit<span style="color:#f92672">)</span> buffer <span style="color:#f92672">|=</span> 1<span style="color:#f92672">;</span>
+
+        <span style="color:#75715e">// if buffer is full (8 bits), write out as a single byte
+</span><span style="color:#75715e"></span>        n<span style="color:#f92672">++;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">==</span> 8<span style="color:#f92672">)</span> clearBuffer<span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">/*
+</span><span style="color:#75715e">    将8位字节写入标准输出。
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">writeByte</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> x<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>isInitialized<span style="color:#f92672">)</span> initialize<span style="color:#f92672">();</span>
+
+        <span style="color:#66d9ef">assert</span> x <span style="color:#f92672">&gt;=</span> 0 <span style="color:#f92672">&amp;&amp;</span> x <span style="color:#f92672">&lt;</span> 256<span style="color:#f92672">;</span>
+
+        <span style="color:#75715e">// optimized if byte-aligned
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+                out<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>x<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#75715e">// otherwise write one bit at a time
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 8<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">boolean</span> bit <span style="color:#f92672">=</span> <span style="color:#f92672">((</span>x <span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#f92672">(</span>8 <span style="color:#f92672">-</span> i <span style="color:#f92672">-</span> 1<span style="color:#f92672">))</span> <span style="color:#f92672">&amp;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">==</span> 1<span style="color:#f92672">;</span>
+            writeBit<span style="color:#f92672">(</span>bit<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+     <span style="color:#75715e">/*
+</span><span style="color:#75715e">     将32位int写入标准输出。
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">write</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> x<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        writeByte<span style="color:#f92672">((</span>x <span style="color:#f92672">&gt;&gt;&gt;</span> 24<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span> 0xff<span style="color:#f92672">);</span>
+        writeByte<span style="color:#f92672">((</span>x <span style="color:#f92672">&gt;&gt;&gt;</span> 16<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span> 0xff<span style="color:#f92672">);</span>
+        writeByte<span style="color:#f92672">((</span>x <span style="color:#f92672">&gt;&gt;&gt;</span>  8<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span> 0xff<span style="color:#f92672">);</span>
+        writeByte<span style="color:#f92672">((</span>x <span style="color:#f92672">&gt;&gt;&gt;</span>  0<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span> 0xff<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>特殊的：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#75715e">//将缓冲区中的所有剩余位写到标准输出，立即填充
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">clearBuffer</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>isInitialized<span style="color:#f92672">)</span> initialize<span style="color:#f92672">();</span>
+
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> buffer <span style="color:#f92672">&lt;&lt;=</span> <span style="color:#f92672">(</span>8 <span style="color:#f92672">-</span> n<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+            out<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>buffer<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+        n <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+        buffer <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">//刷新标准输出，如果到目前为止已写入的位数不是8的倍数，立即填充。
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">flush</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        clearBuffer<span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+            out<span style="color:#f92672">.</span><span style="color:#a6e22e">flush</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">//冲洗并关闭标准输出。关闭标准输出后，您将无法再向其写入位。
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">close</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        flush<span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+            out<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+            isInitialized <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>书中实现的比特流实际也是和字节流相关，只不过通过移位和按位与/或等操作实现了取某一位的功能，还是很值得学习的。</p>
+
     </div>
     <div class="post-footer">
       

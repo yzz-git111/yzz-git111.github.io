@@ -23,8 +23,10 @@
  理论前提 现代计算机的所有文件都是以二进制的形式存储在磁盘上。我们进行数据压缩能够将一个比特流（表示比特的序列）B 转化为压缩后的版本C(B).同时也能通过展开把C(B)转化为B。
 若用|B|表示比特流的比特的数量的话，数据压缩的目标就是使得|C(B)|/|B|最小，即使得压缩后比特流的大小与压缩前的比值尽可能小。这个比值就是压缩率。压缩率越小越好。
 若B&ndash;&gt; C(B) &ndash;&gt; B的比特流都一样，即压缩和展开后的比特流完全一样，这种模型就是无损压缩模型，不会丢失任何数据。我们研究的都是基于无损压缩的。 而对于一些音视频，有损压缩也是可以接收的。
-二进制转储 如何检查比特流或者字节流的内容呢？ 可以利用下面的方法将标准输入中的比特按照0和1的形式打印出来。
-public class BinaryDump { private BinaryDump() { } public static void main(String[] args) { int bitsPerLine = 16; if (args."/>
+由于要利用到文件的每一位/每一字节的数据，所以需要利用Java的IO流，前一篇文章《Java输入输入输出流》介绍了IO流和《算法四》实现的比特流。
+二进制转储 如何检查比特流或者字节流的内容呢？
+可以利用下面的方法将标准输入中的比特按照0和1的形式打印出来。
+public class BinaryDump { private BinaryDump() { } public static void main(String[] args) { BinaryIn binaryIn = new BinaryIn(&#34;abra."/>
 
     <meta property="og:title" content="数据压缩" />
 <meta property="og:description" content="引例 假设输出一个日期 12/31/1999，需要多少位？
@@ -38,8 +40,10 @@ public class BinaryDump { private BinaryDump() { } public static void main(Strin
  理论前提 现代计算机的所有文件都是以二进制的形式存储在磁盘上。我们进行数据压缩能够将一个比特流（表示比特的序列）B 转化为压缩后的版本C(B).同时也能通过展开把C(B)转化为B。
 若用|B|表示比特流的比特的数量的话，数据压缩的目标就是使得|C(B)|/|B|最小，即使得压缩后比特流的大小与压缩前的比值尽可能小。这个比值就是压缩率。压缩率越小越好。
 若B&ndash;&gt; C(B) &ndash;&gt; B的比特流都一样，即压缩和展开后的比特流完全一样，这种模型就是无损压缩模型，不会丢失任何数据。我们研究的都是基于无损压缩的。 而对于一些音视频，有损压缩也是可以接收的。
-二进制转储 如何检查比特流或者字节流的内容呢？ 可以利用下面的方法将标准输入中的比特按照0和1的形式打印出来。
-public class BinaryDump { private BinaryDump() { } public static void main(String[] args) { int bitsPerLine = 16; if (args." />
+由于要利用到文件的每一位/每一字节的数据，所以需要利用Java的IO流，前一篇文章《Java输入输入输出流》介绍了IO流和《算法四》实现的比特流。
+二进制转储 如何检查比特流或者字节流的内容呢？
+可以利用下面的方法将标准输入中的比特按照0和1的形式打印出来。
+public class BinaryDump { private BinaryDump() { } public static void main(String[] args) { BinaryIn binaryIn = new BinaryIn(&#34;abra." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://yzz-git111.github.io/post/%E6%95%B0%E6%8D%AE%E5%8E%8B%E7%BC%A9/" />
 <meta property="article:published_time" content="2020-12-15T15:33:17+08:00" />
@@ -111,35 +115,34 @@ public class BinaryDump { private BinaryDump() { } public static void main(Strin
 <p>若用|B|表示比特流的比特的数量的话，数据压缩的目标就是使得|C(B)|/|B|最小，即使得压缩后比特流的大小与压缩前的比值尽可能小。这个比值就是压缩率。压缩率越小越好。</p>
 <p>若B&ndash;&gt; C(B) &ndash;&gt; B的比特流都一样，即压缩和展开后的比特流完全一样，这种模型就是无损压缩模型，不会丢失任何数据。我们研究的都是基于无损压缩的。 <br>
 而对于一些音视频，有损压缩也是可以接收的。</p>
+<p>由于要利用到文件的每一位/每一字节的数据，所以需要利用Java的IO流，前一篇文章《Java输入输入输出流》介绍了IO流和《算法四》实现的比特流。</p>
 <h2 id="二进制转储">二进制转储</h2>
-<p>如何检查比特流或者字节流的内容呢？ <br>
-可以利用下面的方法将标准输入中的比特按照0和1的形式打印出来。</p>
+<p>如何检查比特流或者字节流的内容呢？</p>
+<p>可以利用下面的方法将标准输入中的比特按照0和1的形式打印出来。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BinaryDump</span> <span style="color:#f92672">{</span>
 
     <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">BinaryDump</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span> <span style="color:#f92672">}</span>
 
     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-        <span style="color:#66d9ef">int</span> bitsPerLine <span style="color:#f92672">=</span> 16<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>args<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            bitsPerLine <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">parseInt</span><span style="color:#f92672">(</span>args<span style="color:#f92672">[</span>0<span style="color:#f92672">]);</span>
-        <span style="color:#f92672">}</span>
-
+        BinaryIn binaryIn <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BinaryIn<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;abra.txt&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">int</span> bitsPerLine <span style="color:#f92672">=</span> 16<span style="color:#f92672">;</span>   <span style="color:#75715e">//每行输出16位
+</span><span style="color:#75715e"></span>
         <span style="color:#66d9ef">int</span> count<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> <span style="color:#f92672">!</span>BinaryStdIn<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">();</span> count<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>bitsPerLine <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                BinaryStdIn<span style="color:#f92672">.</span><span style="color:#a6e22e">readBoolean</span><span style="color:#f92672">();</span>
-                <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">!=</span> 0 <span style="color:#f92672">&amp;&amp;</span> count <span style="color:#f92672">%</span> bitsPerLine <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> StdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">();</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>BinaryStdIn<span style="color:#f92672">.</span><span style="color:#a6e22e">readBoolean</span><span style="color:#f92672">())</span> StdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">print</span><span style="color:#f92672">(</span>1<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> <span style="color:#f92672">!</span>binaryIn<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">();</span> count<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">!=</span> 0 <span style="color:#f92672">&amp;&amp;</span> count <span style="color:#f92672">%</span> bitsPerLine <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> StdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">();</span>
+            <span style="color:#75715e">//读取下一个位,会返回一个boolean值 由此来输出0或1
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>binaryIn<span style="color:#f92672">.</span><span style="color:#a6e22e">readBoolean</span><span style="color:#f92672">())</span> StdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">print</span><span style="color:#f92672">(</span>1<span style="color:#f92672">);</span>    
             <span style="color:#66d9ef">else</span>                           StdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">print</span><span style="color:#f92672">(</span>0<span style="color:#f92672">);</span>
         <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>bitsPerLine <span style="color:#f92672">!=</span> 0<span style="color:#f92672">)</span> StdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">();</span>
+
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">();</span>
         StdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>count <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; bits&#34;</span><span style="color:#f92672">);</span>
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><p><img src="/chapter5/5.5.2.jpg" alt=""></p>
+<p>如上图：将待压缩的写入文件abra.txt中。这里用的是BinaryIn而不用BinaryStdIn。BinaryStdIn是标准比特输入流，通过键盘读取数据。而BinaryIn输入流可以读取文件。测试时发现总是输入完成按回车输出 00001010 .然后 ctrl+D才能结束输入返回 102bits.</p>
 <h2 id="局限">局限</h2>
 <ul>
 <li>不存在一个能够压缩任意比特流的算法。</li>
@@ -169,7 +172,8 @@ public class BinaryDump { private BinaryDump() { } public static void main(Strin
 <p>给定一个情景：对基因组编码，生物学家用A，C，T，G来表示DNA中的四种碱基。这四种碱基按照各种顺序排列组成了不同的基因。例如对于下面的一个基因排列：   <br>
 ATAGATGCATAGCGCATAGCTAGATGTGCTAGC <br>
 如果使用标准的8位 1字节来表示一个字符，那么将需要8*35 = 280位。</p>
-<p>而基因简单的一个性质：只有4种不同的字符组成。而重新对这4个字符可以只用2位来表示。</p>
+<p>而基因简单的一个性质：只有4种不同的字符组成。而重新对这4个字符可以只用2位来表示。<br>
+比如用00表示A，01表示C，10表示T，11表示G。那么只需要2*35 = 70位。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">compress</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
         <span style="color:#75715e">// 小型字母表 只有ACTG四个字符
 </span><span style="color:#75715e"></span>        Alphabet DNA <span style="color:#f92672">=</span> Alphabet<span style="color:#f92672">.</span><span style="color:#a6e22e">DNA</span><span style="color:#f92672">;</span>

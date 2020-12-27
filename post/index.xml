@@ -27,8 +27,10 @@
  理论前提 现代计算机的所有文件都是以二进制的形式存储在磁盘上。我们进行数据压缩能够将一个比特流（表示比特的序列）B 转化为压缩后的版本C(B).同时也能通过展开把C(B)转化为B。
 若用|B|表示比特流的比特的数量的话，数据压缩的目标就是使得|C(B)|/|B|最小，即使得压缩后比特流的大小与压缩前的比值尽可能小。这个比值就是压缩率。压缩率越小越好。
 若B&amp;ndash;&amp;gt; C(B) &amp;ndash;&amp;gt; B的比特流都一样，即压缩和展开后的比特流完全一样，这种模型就是无损压缩模型，不会丢失任何数据。我们研究的都是基于无损压缩的。 而对于一些音视频，有损压缩也是可以接收的。
-二进制转储 如何检查比特流或者字节流的内容呢？ 可以利用下面的方法将标准输入中的比特按照0和1的形式打印出来。
-public class BinaryDump { private BinaryDump() { } public static void main(String[] args) { int bitsPerLine = 16; if (args.</description>
+由于要利用到文件的每一位/每一字节的数据，所以需要利用Java的IO流，前一篇文章《Java输入输入输出流》介绍了IO流和《算法四》实现的比特流。
+二进制转储 如何检查比特流或者字节流的内容呢？
+可以利用下面的方法将标准输入中的比特按照0和1的形式打印出来。
+public class BinaryDump { private BinaryDump() { } public static void main(String[] args) { BinaryIn binaryIn = new BinaryIn(&amp;#34;abra.</description>
     </item>
     
     <item>

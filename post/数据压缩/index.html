@@ -83,7 +83,7 @@ public class BinaryDump { private BinaryDump() { } public static void main(Strin
   <title>clock</title>
   <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
 </svg>
-          1 min read
+          5 min read
         </div></div>
     </header>
     <div class="post-content">
@@ -141,8 +141,11 @@ public class BinaryDump { private BinaryDump() { } public static void main(Strin
         StdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>count <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; bits&#34;</span><span style="color:#f92672">);</span>
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
-</code></pre></div><p><img src="/chapter5/5.5.2.jpg" alt=""></p>
-<p>如上图：将待压缩的写入文件abra.txt中。这里用的是BinaryIn而不用BinaryStdIn。BinaryStdIn是标准比特输入流，通过键盘读取数据。而BinaryIn输入流可以读取文件。测试时发现总是输入完成按回车输出 00001010 .然后 ctrl+D才能结束输入返回 102bits.</p>
+</code></pre></div><p>因为文件在系统中的存储是不可见的，所以不能直接输出出来。且计算机都是以01的二进制进行存储，我们用int型的01模拟内部存储然后输出出来。</p>
+<p>这里用的是BinaryIn，而BinaryIn的实质是BufferedInputStream。用BufferedInputStream的readBoolean()方法每次读取存储在系统中文件的一个位(不可见但是readBoolean方法可以读取)，然后返回一个布尔值，根据这个布尔值然后手动地输出整数，从而显示出这个文件的比特流/字节流。</p>
+<p><img src="/chapter5/5.5.2.jpg" alt=""></p>
+<p>如上图：将待压缩的写入文件abra.txt中。这里我用的是BinaryIn而不用BinaryStdIn。BinaryStdIn是标准比特输入流，通过键盘读取数据。而BinaryIn输入流可以读取文件。<br>
+用BinaryStdIn测试时发现输入完成按回车后还会将回车的ASCII码值&ndash; 00001010 输出.然后 ctrl+D才能结束输入返回 104bits.</p>
 <h2 id="局限">局限</h2>
 <ul>
 <li>不存在一个能够压缩任意比特流的算法。</li>
@@ -155,7 +158,7 @@ public class BinaryDump { private BinaryDump() { } public static void main(Strin
 <p>由于上面局限的存在，无损压缩算法必须结合实际的比特流，利用被压缩的数据流的已知结构。利用不同的算法就可以解决不同结构的比特流，如：</p>
 <ul>
 <li>
-<p>小规模的字母表 &mdash; 第一个算法（也不知道啥名字）</p>
+<p>小规模的字母表 &mdash; 定长编码</p>
 </li>
 <li>
 <p>较长的连续相同的位或者字符 &mdash; 游程编码</p>
@@ -167,31 +170,394 @@ public class BinaryDump { private BinaryDump() { } public static void main(Strin
 <p>较长的连续重复的位或者字符 &mdash; LZW压缩算法</p>
 </li>
 </ul>
+<h2 id="约定">约定</h2>
+<p>我没有按照书上的从System.In中标准输入，而是将待压缩的文件，压缩后的文件，由压缩后的文件展开后的文件都用一个独立的文件存储。</p>
+<p>用三个文件的原因是在实验中我发现压缩后的文件不可以不可以直接读取，是一串乱码(比特流)，而我们可以使用BinaryDump来将比特流转化为可见的字符。且为了检验压缩的对不对，我可以将初始文件和由压缩的文件展开后的文件进行对比。</p>
 <hr>
 <h1 id="定长码">定长码</h1>
 <p>给定一个情景：对基因组编码，生物学家用A，C，T，G来表示DNA中的四种碱基。这四种碱基按照各种顺序排列组成了不同的基因。例如对于下面的一个基因排列：   <br>
 ATAGATGCATAGCGCATAGCTAGATGTGCTAGC <br>
-如果使用标准的8位 1字节来表示一个字符，那么将需要8*35 = 280位。</p>
+如果使用标准的8位 1字节来表示一个字符，那么将需要8*33 = 264位。</p>
 <p>而基因简单的一个性质：只有4种不同的字符组成。而重新对这4个字符可以只用2位来表示。<br>
-比如用00表示A，01表示C，10表示T，11表示G。那么只需要2*35 = 70位。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">compress</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-        <span style="color:#75715e">// 小型字母表 只有ACTG四个字符
-</span><span style="color:#75715e"></span>        Alphabet DNA <span style="color:#f92672">=</span> Alphabet<span style="color:#f92672">.</span><span style="color:#a6e22e">DNA</span><span style="color:#f92672">;</span>
-        String s <span style="color:#f92672">=</span> BinaryStdIn<span style="color:#f92672">.</span><span style="color:#a6e22e">readString</span><span style="color:#f92672">();</span>
-        <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span> <span style="color:#75715e">// n为字母表的大小
-</span><span style="color:#75715e"></span>        BinaryStdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>n<span style="color:#f92672">);</span>
-
-        <span style="color:#75715e">// Write two-bit code for char.
+比如用00表示A，01表示C，10表示G，11表示T。那么只需要2*33 = 66位。</p>
+<h2 id="压缩">压缩</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">compress</span><span style="color:#f92672">(</span>String OutFile<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        Alphabet DNA <span style="color:#f92672">=</span> Alphabet<span style="color:#f92672">.</span><span style="color:#a6e22e">DNA</span><span style="color:#f92672">;</span>
+        BinaryOut binaryOut <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BinaryOut<span style="color:#f92672">(</span>OutFile<span style="color:#f92672">);</span>   <span style="color:#75715e">//将压缩后的东西写在OutFile文件中
+</span><span style="color:#75715e"></span>
+        String s <span style="color:#f92672">=</span> binaryIn<span style="color:#f92672">.</span><span style="color:#a6e22e">readString</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span>
+        binaryOut<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>n<span style="color:#f92672">);</span>  <span style="color:#75715e">//要被压缩的字符的个数 即字符串的长度
+</span><span style="color:#75715e"></span>
+        <span style="color:#75715e">// DNA.lgR()表示用01二进制码表示DNA这个字母表需要多少位  
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// 2^2 &gt;= 4 所以在这里只需要两位
 </span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">int</span> d <span style="color:#f92672">=</span> DNA<span style="color:#f92672">.</span><span style="color:#a6e22e">toIndex</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">));</span>
-            BinaryStdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>d<span style="color:#f92672">,</span> 2<span style="color:#f92672">);</span>
-        <span style="color:#f92672">}</span>
-        BinaryStdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
-    <span style="color:#f92672">}</span>
-</code></pre></div><hr>
+            <span style="color:#66d9ef">int</span> d <span style="color:#f92672">=</span> DNA<span style="color:#f92672">.</span><span style="color:#a6e22e">toIndex</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">));</span>   <span style="color:#75715e">//获取在字母表中的下标
+</span><span style="color:#75715e"></span>            binaryOut<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>d<span style="color:#f92672">,</span>DNA<span style="color:#f92672">.</span><span style="color:#a6e22e">lgR</span><span style="color:#f92672">());</span>   <span style="color:#75715e">//将新的编码写到文件中
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+
+        binaryOut<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>  <span style="color:#75715e">//一定要关闭输出流
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</code></pre></div><p>几个注意点：</p>
+<ul>
+<li>
+<p>压缩后的文件存储到新的文件中是直接读不了的(是乱码)。需要通过展开才能展现出原来的文件内容。</p>
+</li>
+<li>
+<p>为了读取压缩后的比特流，可以将上面的BinaryDump封装成一个类，调用其方法即可。</p>
+</li>
+<li>
+<p>一定要记得close输出流，否则文件中没有内容的。</p>
+</li>
+<li>
+<p>就拿这个为例，有33个字符，一个字符由8位压缩至2位。但是BinaryIn的BufferedInputStream流的缓冲区的大小是1个字节8位的，所以最后本来应该只剩一个C&ndash;01，但是缓冲区填满了8位，所以还会输出 00 00 00。</p>
+</li>
+</ul>
+<h2 id="展开">展开</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">expand</span><span style="color:#f92672">(</span>String CompressedFilePath<span style="color:#f92672">,</span>String ExpandedFilePath<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//CompressedFilePath -- 压缩的文件，即要被展开的文件
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//ExpandedFilePath  -- 展开后的文件写入的地方
+</span><span style="color:#75715e"></span>        Alphabet DNA <span style="color:#f92672">=</span> Alphabet<span style="color:#f92672">.</span><span style="color:#a6e22e">DNA</span><span style="color:#f92672">;</span>
+        BinaryOut binaryOut <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BinaryOut<span style="color:#f92672">(</span>ExpandedFilePath<span style="color:#f92672">);</span>
+        BinaryIn binaryIn <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BinaryIn<span style="color:#f92672">(</span>CompressedFilePath<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> binaryIn<span style="color:#f92672">.</span><span style="color:#a6e22e">readInt</span><span style="color:#f92672">();</span>
+        <span style="color:#75715e">// 读取两位 写一个字符
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">char</span> c <span style="color:#f92672">=</span> binaryIn<span style="color:#f92672">.</span><span style="color:#a6e22e">readChar</span><span style="color:#f92672">(</span>2<span style="color:#f92672">);</span>
+            binaryOut<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>DNA<span style="color:#f92672">.</span><span style="color:#a6e22e">toChar</span><span style="color:#f92672">(</span>c<span style="color:#f92672">),</span> 8<span style="color:#f92672">);</span>  <span style="color:#75715e">//一个字符8位
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        binaryOut<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>  <span style="color:#75715e">//一定要关闭流
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+
+<span style="color:#75715e">//展开后的字符串即为一开始的字符串
+</span></code></pre></div><p>待压缩的原始文件:</p>
+<p><img src="/chapter5/5.5.3.png" alt=""></p>
+<p>压缩后的文件:</p>
+<p><img src="/chapter5/5.5.4.png" alt=""></p>
+<p>由压缩后的文件展开后的文件:</p>
+<p><img src="/chapter5/5.5.5.png" alt=""></p>
+<p>这种定长的编码适用于比较小的字母表，就以4个字符的字母表为例，单独表示一个字符需要8位，用01编码代替只需要2位，再加上需要存储一个字符的个数&ndash;32位的int。  <br>
+假设待压缩的字符个数为n，那么原来的文件大小为8n个比特。压缩后文件大小为2n+32个比特，那么压缩率近似为25%。</p>
+<p>若字母表过大，那么需要定长编码的位数可能比直接存储需要的位数还要大，这肯定不行的啦。</p>
+<hr>
 <h1 id="游程编码">游程编码</h1>
+<p>回到2进制存储的本身，比特流中最简单的冗余形式就是一长串相同重复的比特。举个例子，我们通常会用10个0来代替 0000000000.又好比用乘法来代替若干个相同的数相加。</p>
+<p>再举个例子，0000000000000001111111000000011111111111  <br>
+字符串包括15个0，7个1，7个0，11个1，且0和1都是交替出现的。那么我们只需要记录重复出现的个数，即将上面的字符串表示为15，7，7，11.而表示这四个数只需要4个二进制位，即上述可以表示为 1111 0111 0111 1011.  <br>
+压缩率达到16/40 = 40%</p>
+<p>这种游程编码需要解决如下几个问题：</p>
+<ol>
+<li>应该用多少比特记录游程的长度? （n位最多表示长度为2^n-1）</li>
+<li>当某个游程长度大于能够记录的最大长度时怎么办? （游程长度大于2^n时）</li>
+<li>当游程长度所需的比特数小于记录长度的比特数时怎么办?  （可能出现游程只是1个1，记录游程长度需要n位，直接记录只要1位的情况）</li>
+</ol>
+<p>主要的解决方案如下：</p>
+<ul>
+<li>问题1：使用8位编码，则游程长度应该在0~255之间。</li>
+<li>问题2：若某个游程长度大于255时假设其中有一个长度为0的游程，以此来保证长度均小于256.</li>
+<li>问题3：统一的将较短的游程也进行编码，虽然这样可能会使得输出变长。</li>
+</ul>
+<h2 id="展开-1">展开</h2>
+<p>对于游程编码而言，展开相对容易。我们规定以连续的0作为开头。需要作的就是在压缩后的文件中读取一个游程的长度，然后按照长度打印0或者1.<br>
+如何记录当前的游程是0还是1呢？ 可以用一个标志位flag来标识，初始时设定flag为false以标识当前游程为0。每读取一个游程长度后都将其取反即可。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RunLength</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> R    <span style="color:#f92672">=</span> 256<span style="color:#f92672">;</span>    <span style="color:#75715e">//游程长度的最大值
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> LG_R <span style="color:#f92672">=</span> 8<span style="color:#f92672">;</span>  <span style="color:#75715e">//用8位来标识游程的长度
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">RunLength</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span> <span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">expand</span><span style="color:#f92672">(</span>String RLInFile<span style="color:#f92672">,</span> String RLOutFile<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">//RLInFile 是压缩后的文件  RLOutFile是展开后的文件(应该和源文件一样)
+</span><span style="color:#75715e"></span>        BinaryIn binaryIn <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BinaryIn<span style="color:#f92672">(</span>RLInFile<span style="color:#f92672">);</span> <span style="color:#75715e">//读取压缩后的文件
+</span><span style="color:#75715e"></span>        BinaryOut binaryOut <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BinaryOut<span style="color:#f92672">(</span>RLOutFile<span style="color:#f92672">);</span> <span style="color:#75715e">//展开后的数据写到规定要写入后的文件
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">boolean</span> b <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>  <span style="color:#75715e">//初始值标志位位flase  表示0
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>binaryIn<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> run <span style="color:#f92672">=</span> binaryIn<span style="color:#f92672">.</span><span style="color:#a6e22e">readInt</span><span style="color:#f92672">(</span>LG_R<span style="color:#f92672">);</span>   <span style="color:#75715e">//读取一个长度 因为规定的用LG_R位来标识一个游程的长度
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> run<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span>
+                binaryOut<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>b<span style="color:#f92672">);</span> <span style="color:#75715e">//一位一位的写  写run次
+</span><span style="color:#75715e"></span>            b <span style="color:#f92672">=</span> <span style="color:#f92672">!</span>b<span style="color:#f92672">;</span> <span style="color:#75715e">//写完后取反
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        binaryOut<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>  <span style="color:#75715e">//记得close()
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="压缩-1">压缩</h2>
+<p>压缩需要的就是根据所有的比特然后将他们用长度来表示。那么就需要一个计数器计算每个游程的长度，当一个游程结束就需要计数器归零。</p>
+<p>压缩需要几个步骤：</p>
+<ul>
+<li>读取一个比特</li>
+<li>如果他和上一个比特不一样，则写入当前的计数值并将计数器归零；</li>
+<li>如果他和上一个比特相同且计数器已经达到最大值，则写入计数值，再写入一个0的计数值（即假想在某个长度超过255的游程在256处有一个长度为0的游程。由于长度为0，所以展开时并不影响，且保证了长度最多为255的约定.只是这个0需要记录下来）然后将计数器归零。(标志位不需要变化)</li>
+<li>增加计数器的值。</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"> <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">compress</span><span style="color:#f92672">(</span>String RLFile<span style="color:#f92672">,</span> String RLOutFile<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+     <span style="color:#75715e">//RLFile为压缩后的文件    RLOutFile为由压缩后的文件展开后的文件 
+</span><span style="color:#75715e"></span>        BinaryIn binaryIn <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BinaryIn<span style="color:#f92672">(</span>RLFile<span style="color:#f92672">);</span>
+        BinaryOut binaryOut <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BinaryOut<span style="color:#f92672">(</span>RLOutFile<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">char</span> run <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>   <span style="color:#75715e">//char正好8位
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">boolean</span> old <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>    <span style="color:#75715e">//约定0开始
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>binaryIn<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">boolean</span> b <span style="color:#f92672">=</span> binaryIn<span style="color:#f92672">.</span><span style="color:#a6e22e">readBoolean</span><span style="color:#f92672">();</span> <span style="color:#75715e">//每次读取一位
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>b <span style="color:#f92672">!=</span> old<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">//如果和上一个比特不同
+</span><span style="color:#75715e"></span>                binaryOut<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>run<span style="color:#f92672">,</span> LG_R<span style="color:#f92672">);</span> <span style="color:#75715e">//则将上一个游程长度记录
+</span><span style="color:#75715e"></span>                run <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>    <span style="color:#75715e">//计数器归零
+</span><span style="color:#75715e"></span>                old <span style="color:#f92672">=</span> <span style="color:#f92672">!</span>old<span style="color:#f92672">;</span> <span style="color:#75715e">//标志位取反
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>  <span style="color:#75715e">//否则这个比特和上一个比特一样
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>run <span style="color:#f92672">==</span> R<span style="color:#f92672">-</span>1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>   <span style="color:#75715e">//如果达到最大值255
+</span><span style="color:#75715e"></span>                    binaryOut<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>run<span style="color:#f92672">,</span> LG_R<span style="color:#f92672">);</span> <span style="color:#75715e">//写入游程的长度255
+</span><span style="color:#75715e"></span>                    run <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>    <span style="color:#75715e">//假设有一个长度为0的游程
+</span><span style="color:#75715e"></span>                    binaryOut<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>run<span style="color:#f92672">,</span> LG_R<span style="color:#f92672">);</span> <span style="color:#75715e">//继续往下读  注意：标志位没变，因为上一个游程还没结束，字符还需要保持一致
+</span><span style="color:#75715e"></span>                <span style="color:#f92672">}</span>
+                run<span style="color:#f92672">++;</span>  <span style="color:#75715e">//计数器自加(计数器的值不管怎样都需要自加  所以上面处理的是标志位和长度超过最大值的情况)
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+        binaryOut<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>run<span style="color:#f92672">,</span> LG_R<span style="color:#f92672">);</span>
+        binaryOut<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>待压缩的原始文件:</p>
+<p><img src="/chapter5/5.5.6.png" alt=""></p>
+<p>压缩后的文件:</p>
+<p><img src="/chapter5/5.5.7.png" alt=""></p>
+<p>由压缩后的文件展开后的文件:</p>
+<p><img src="/chapter5/5.5.8.png" alt=""></p>
 <hr>
 <h1 id="哈夫曼编码">哈夫曼编码</h1>
+<h2 id="主要思想">主要思想</h2>
+<p>放弃文本文件普通保存方式(用7位或8位的二进制数表示每一个字符)，<em><strong>而用较少的比特表示出现频率较高的字符，用较多的比特表示出现频率较低的字符</strong></em></p>
+<h2 id="前缀码">前缀码</h2>
+<p>前缀码:任何一个字符的编码都不能是其他字符编码的前缀。<br>
+哈夫曼编码就是一种前缀码。</p>
+<p>举一个例子：设A的编码为0，B的编码为1，R为00，C为01，D为10，!为11.那么A B R A C A D A C R A ! 编码就是0 1 00 0 01 0 10 0 1 00 0 1表明上只需要17位就可以表示原来的12*8=96位。但是两个编码直接必须要用分隔符分开，否则会变成 0100001010010001.这样的话分隔会有很多种理解。加上分隔符之后就是17+11=28位。 <br>
+如果是前缀码则不需要用分隔符区分，因为它的解释只有唯一的一种。 <br>
+重新编码 A为0，B为1111，C为110，D为100，R为1110，!为101，那么变为011111110011001000111111100101，只有一种解码的方法。</p>
+<p><em><strong>哈夫曼树就是寻找最优的前缀码</strong></em></p>
+<h2 id="数据结构">数据结构</h2>
+<p>哈夫曼树作为前缀码，要保证任何一个字符的编码都不能是其他字符编码的前缀。利用二叉树的特性，因为叶子结点是终端结点而没有子节点了，所以从根到叶子结点的路径不可能是其他任意一个叶子结点的子路径。正好对应于前缀码的特性。同时根到叶子的路径就是某个编码。而我们规定从某个结点左链接标为0。(算法四书中对应于第五章的单词查找树)</p>
+<p><img src="/chapter5/5.5.9.jpg" alt=""></p>
+<p>单词查找树的结点:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Node</span> <span style="color:#66d9ef">implements</span> Comparable<span style="color:#f92672">&lt;</span>Node<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">char</span> ch<span style="color:#f92672">;</span>  <span style="color:#75715e">//叶子结点中需要被编码的字符，内部节点不会使用该变量
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> freq<span style="color:#f92672">;</span> <span style="color:#75715e">//展开过程不会使用该变量 用于构造树
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> Node left<span style="color:#f92672">,</span> right<span style="color:#f92672">;</span> <span style="color:#75715e">//两个指针
+</span><span style="color:#75715e"></span>
+        Node<span style="color:#f92672">(</span><span style="color:#66d9ef">char</span> ch<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> freq<span style="color:#f92672">,</span> Node left<span style="color:#f92672">,</span> Node right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">ch</span>    <span style="color:#f92672">=</span> ch<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">freq</span>  <span style="color:#f92672">=</span> freq<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">left</span>  <span style="color:#f92672">=</span> left<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span> right<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#75715e">// 判断是否是叶子结点
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isLeaf</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">assert</span> <span style="color:#f92672">((</span>left <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>right <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">))</span> <span style="color:#f92672">||</span> <span style="color:#f92672">((</span>left <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>right <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">));</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>right <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#75715e">// 比较，基于freq变量  构造树时需要
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>Node that<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">freq</span> <span style="color:#f92672">-</span> that<span style="color:#f92672">.</span><span style="color:#a6e22e">freq</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><h2 id="主要步骤">主要步骤</h2>
+<p>产生前缀码:</p>
+<ul>
+<li>构造一棵编码单词查找树；  //buildTrie()</li>
+<li>将该树以字节流的形式写入输出以供展开时使用；  //writeTrie()</li>
+<li>使用该树将比特流编码。    //buildCode()</li>
+</ul>
+<p>压缩：</p>
+<ul>
+<li>读取输入</li>
+<li>将输入中的每个char字符出现的频率绘制成表格    //int[] freq = new int[R];</li>
+<li>根据频率构造相应的哈夫曼树    //buildTrie()</li>
+<li>构造编译表，将输入中的每个char值和一个比特字符串相关联    //buildCode()</li>
+<li>将哈夫曼树编码为比特字符串并写入输出流    //writeTrie()</li>
+<li>将单词总数编码为比特字符串并写入输出流    //BinaryStdOut.write(input.length)</li>
+<li>使用编译表翻译每个输入字符。  //compress()</li>
+</ul>
+<p>展开时:</p>
+<ul>
+<li>读取单词查找树(保存在比特流开头)；    //readTrie()</li>
+<li>读取需要解码的字符数量；          //int length = BinaryStdIn.readInt();</li>
+<li>使用该树将比特流解码。        //expand()</li>
+</ul>
+<p>那么我们首先需要根据输入来构造一棵哈夫曼树，有了哈夫曼树后根据哈夫曼树进行对应字符的编码，然后根据编码压缩和展开文件。</p>
+<h2 id="哈夫曼树的构造">哈夫曼树的构造</h2>
+<p>压缩和展开都需要依靠哈夫曼树。而哈夫曼的构造有一个很巧妙的算法：</p>
+<ul>
+<li>
+<p>首先统计每个字符出现的频率，并创建一片由许多只有一个(叶子)结点的树组成的森林。每棵树都表示输入流的一个字符，每个结点的freq变量的值都记录它出现的频率。</p>
+</li>
+<li>
+<p>然后进行构造：找到两个频率最小的结点，然后创建一个以二者为子结点的新结点(新结点的频率为两个子结点的频率之和)。</p>
+</li>
+<li>
+<p>不断重复第二步的构造，直到森林变成一棵树。</p>
+</li>
+</ul>
+<p>注意点：</p>
+<ol>
+<li>为了得到每个字符出现的频率，我们首先需要遍历一次整个输入流。而构造时又需要遍历一次。</li>
+<li>构造过程需要找到频率最小的两个结点，若采用遍历的方法则复杂度很高。采用优先队列则很方便。</li>
+<li>最终所有结点会构成一棵最后的哈夫曼树，且哈夫曼树的每个非叶子结点的频率值等于它的两个子结点的频率之和。根结点的频率值等于所有字符数量之和。 <br>
+频率越低的结点离根结点越远。</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> Node <span style="color:#a6e22e">buildTrie</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> freq<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">// 传递一个记录所有频率的数组  也就是说第一遍遍历的结果传递进来
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// 初始化优先队列 和 由所有的叶子结点组成的森林
+</span><span style="color:#75715e"></span>        MinPQ<span style="color:#f92672">&lt;</span>Node<span style="color:#f92672">&gt;</span> pq <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> MinPQ<span style="color:#f92672">&lt;</span>Node<span style="color:#f92672">&gt;();</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">char</span> c <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> c <span style="color:#f92672">&lt;</span> R<span style="color:#f92672">;</span> c<span style="color:#f92672">++)</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>freq<span style="color:#f92672">[</span>c<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span>
+                pq<span style="color:#f92672">.</span><span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Node<span style="color:#f92672">(</span>c<span style="color:#f92672">,</span> freq<span style="color:#f92672">[</span>c<span style="color:#f92672">],</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">));</span>
+
+        <span style="color:#75715e">// 每次合并两个频率最小的结点 直到森林变成一棵树
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>pq<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">&gt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            Node left  <span style="color:#f92672">=</span> pq<span style="color:#f92672">.</span><span style="color:#a6e22e">delMin</span><span style="color:#f92672">();</span>
+            Node right <span style="color:#f92672">=</span> pq<span style="color:#f92672">.</span><span style="color:#a6e22e">delMin</span><span style="color:#f92672">();</span>
+            Node parent <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Node<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;\0&#39;</span><span style="color:#f92672">,</span> left<span style="color:#f92672">.</span><span style="color:#a6e22e">freq</span> <span style="color:#f92672">+</span> right<span style="color:#f92672">.</span><span style="color:#a6e22e">freq</span><span style="color:#f92672">,</span> left<span style="color:#f92672">,</span> right<span style="color:#f92672">);</span>  <span style="color:#75715e">// 非叶子和根结点的char不存放 用&#39;\0&#39;表示
+</span><span style="color:#75715e"></span>            pq<span style="color:#f92672">.</span><span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span>parent<span style="color:#f92672">);</span>  <span style="color:#75715e">//把合并后的结点插入到优先队列里
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span> pq<span style="color:#f92672">.</span><span style="color:#a6e22e">delMin</span><span style="color:#f92672">();</span> <span style="color:#75715e">//返回哈夫曼树的根结点
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</code></pre></div><p>以输入为 it was the best of times it was the worst of times 构造哈夫曼树为例(空格也算作一个字符)</p>
+<p><img src="/chapter5/5.5.10.jpg" alt=""></p>
+<h2 id="压缩-2">压缩</h2>
+<p>为了压缩需要知道每个字符对应的编码，而这样的编码是由哈夫曼树所唯一确定的(规定每个结点的左链接为0，右链接为1).所以先由哈夫曼树生成哈夫曼编码(这里将他们用一个符号表进行存储)，然后再进行压缩。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">compress</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">// 将输入的字符串转化为char数组
+</span><span style="color:#75715e"></span>        String s <span style="color:#f92672">=</span> BinaryStdIn<span style="color:#f92672">.</span><span style="color:#a6e22e">readString</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">char</span><span style="color:#f92672">[]</span> input <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">toCharArray</span><span style="color:#f92672">();</span>
+
+        <span style="color:#75715e">// 第一步遍历统计每个字符出现的频率
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> freq <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>R<span style="color:#f92672">];</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> input<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span>
+            freq<span style="color:#f92672">[</span>input<span style="color:#f92672">[</span>i<span style="color:#f92672">]]++;</span>
+
+        <span style="color:#75715e">// 调用构造哈夫曼树的方法  并返回根结点
+</span><span style="color:#75715e"></span>        Node root <span style="color:#f92672">=</span> buildTrie<span style="color:#f92672">(</span>freq<span style="color:#f92672">);</span>
+
+        <span style="color:#75715e">// 用哈夫曼树生成对应的编码表
+</span><span style="color:#75715e"></span>        String<span style="color:#f92672">[]</span> st <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> String<span style="color:#f92672">[</span>R<span style="color:#f92672">];</span>
+        buildCode<span style="color:#f92672">(</span>st<span style="color:#f92672">,</span> root<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">);</span>
+
+        <span style="color:#75715e">// 写入哈夫曼树 为了展开 ,下面介绍
+</span><span style="color:#75715e"></span>        writeTrie<span style="color:#f92672">(</span>root<span style="color:#f92672">);</span>
+
+        <span style="color:#75715e">// 写入初始的未压缩的文件的字符的数量
+</span><span style="color:#75715e"></span>        BinaryStdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>input<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">);</span>
+
+        <span style="color:#75715e">// 用哈夫曼编码(哈夫曼树对应的编码)给输入的字符编码
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> input<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">//遍历n个字符
+</span><span style="color:#75715e"></span>
+            String code <span style="color:#f92672">=</span> st<span style="color:#f92672">[</span>input<span style="color:#f92672">[</span>i<span style="color:#f92672">]];</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> code<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span> j<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+                <span style="color:#75715e">//每个字符对应不同的编码 将编码一位位的写入
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>code<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>j<span style="color:#f92672">)</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;0&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    BinaryStdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span><span style="color:#66d9ef">false</span><span style="color:#f92672">);</span>
+                <span style="color:#f92672">}</span>
+                <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>code<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>j<span style="color:#f92672">)</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;1&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    BinaryStdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+                <span style="color:#f92672">}</span>
+                <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalStateException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Illegal state&#34;</span><span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+
+        BinaryStdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>而其中根据哈夫曼树生成对应的哈夫曼编码十分容易，因为规定了每个非叶子结点的左链接位编码0，右链接编码1.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">buildCode</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> st<span style="color:#f92672">,</span> Node x<span style="color:#f92672">,</span> String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">isLeaf</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>  
+            <span style="color:#75715e">// 递归的对非叶子结点进行对应的哈夫曼编码
+</span><span style="color:#75715e"></span>            buildCode<span style="color:#f92672">(</span>st<span style="color:#f92672">,</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">,</span>  s <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;0&#39;</span><span style="color:#f92672">);</span>    <span style="color:#75715e">//左链接编码 0 
+</span><span style="color:#75715e"></span>            buildCode<span style="color:#f92672">(</span>st<span style="color:#f92672">,</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">,</span> s <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;1&#39;</span><span style="color:#f92672">);</span>    <span style="color:#75715e">//右链接编码 1
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            st<span style="color:#f92672">[</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">ch</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> s<span style="color:#f92672">;</span>            <span style="color:#75715e">//达到了一个叶子结点的话 就将这个叶子结点的字符的编码记录在哈夫曼编码的数据结构--符号表中。
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p><img src="/chapter5/5.5.13.jpg" alt=""></p>
+<h2 id="展开-2">展开</h2>
+<p>为了展开被压缩的比特流，我们需要哈夫曼树，或者说是哈夫曼树对应的编码(那个符号表)。那么在压缩的时候就需要把哈夫曼树写入到压缩的比特流最前面，展开时需要读取。话句话说，压缩的比特流一定需要包含这个哈夫曼树。</p>
+<p>如何写入和读取一棵哈夫曼树呢？ <br>
+因为哈夫曼树本质就是一棵二叉树，那么我们可以利用二叉树的先序遍历写入这个二叉树。</p>
+<p>写入哈夫曼树：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">writeTrie</span><span style="color:#f92672">(</span>Node x<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">isLeaf</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            BinaryStdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>   <span style="color:#75715e">//叶子结点  写入比特1
+</span><span style="color:#75715e"></span>            BinaryStdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">ch</span><span style="color:#f92672">,</span> 8<span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        BinaryStdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span><span style="color:#66d9ef">false</span><span style="color:#f92672">);</span> <span style="color:#75715e">//内部结点 写入比特0
+</span><span style="color:#75715e"></span>        writeTrie<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">);</span>  <span style="color:#75715e">//前序遍历的顺序   根  左   右
+</span><span style="color:#75715e"></span>        writeTrie<span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>writeTrie方法实现了按照前序遍历写入哈夫曼树：当它访问的是一个内部结点时，它会写入以一个比特0；当访问的是叶子结点时，写入一个比特1，紧接着写入该叶子结点中字符的8位ASCII编码。</p>
+<p><img src="/chapter5/5.5.12.jpg" alt=""></p>
+<p>读取哈夫曼树：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> Node <span style="color:#a6e22e">readTrie</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">boolean</span> isLeaf <span style="color:#f92672">=</span> BinaryStdIn<span style="color:#f92672">.</span><span style="color:#a6e22e">readBoolean</span><span style="color:#f92672">();</span> <span style="color:#75715e">//读取一个位来判断类型
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isLeaf<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>   <span style="color:#75715e">//是叶子结点
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Node<span style="color:#f92672">(</span>BinaryStdIn<span style="color:#f92672">.</span><span style="color:#a6e22e">readChar</span><span style="color:#f92672">(),</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>  <span style="color:#75715e">//不是叶子结点
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Node<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;\0&#39;</span><span style="color:#f92672">,</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">,</span> readTrie<span style="color:#f92672">(),</span> readTrie<span style="color:#f92672">());</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>readTrie方法实现了从压缩的比特流中读取并重新构造哈夫曼树：首先读取一个比特得到当前结点的类型(是否叶子结点)，如果是叶子结点(比特为1)，则读取字符的8位编码并创建一个叶子结点，如果不是叶子结点(比特为0)，则创建一个内部结点并递归地继续构造左右子树。</p>
+<p>展开：</p>
+<p>先从压缩的比特流中读取了哈夫曼树，有了哈夫曼树后，根据比特流的输入从根结点开始向下移动：读取一个比特，如果是0则移动到左子树，如果是1则移动到右子树。当遇到叶子结点后，输出该结点的字符并重新回到根结点。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">expand</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+
+        <span style="color:#75715e">// 从压缩的比特流中读取哈夫曼树
+</span><span style="color:#75715e"></span>        Node root <span style="color:#f92672">=</span> readTrie<span style="color:#f92672">();</span>
+
+        <span style="color:#75715e">// 从压缩的比特流中读取需要展开的字符的个数
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> length <span style="color:#f92672">=</span> BinaryStdIn<span style="color:#f92672">.</span><span style="color:#a6e22e">readInt</span><span style="color:#f92672">();</span>
+
+        <span style="color:#75715e">// 使用哈夫曼树展开
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> length<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            Node x <span style="color:#f92672">=</span> root<span style="color:#f92672">;</span>  <span style="color:#75715e">//每次都从根结点开始
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">isLeaf</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">boolean</span> bit <span style="color:#f92672">=</span> BinaryStdIn<span style="color:#f92672">.</span><span style="color:#a6e22e">readBoolean</span><span style="color:#f92672">();</span>    <span style="color:#75715e">//读取一个比特
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>bit<span style="color:#f92672">)</span> x <span style="color:#f92672">=</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">;</span>   
+                <span style="color:#66d9ef">else</span>     x <span style="color:#f92672">=</span> x<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            BinaryStdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>x<span style="color:#f92672">.</span><span style="color:#a6e22e">ch</span><span style="color:#f92672">,</span> 8<span style="color:#f92672">);</span>    <span style="color:#75715e">//遇到叶子结点就输出字符并返回到根结点
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        BinaryStdOut<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>   <span style="color:#75715e">//关闭流
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</code></pre></div><h2 id="分析">分析</h2>
+<ol>
+<li><em><strong>哈夫曼编码是最优的前缀码</strong></em>。</li>
+</ol>
+<p>若引入 加权外部路径长度：所有叶子结点的权重(频率)和深度之积的和。那么哈夫曼编码是所有前缀编码中加权外部路径长度最小的。</p>
+<p>都是因为哈夫曼树的特点：高频率的字符比低频率的字符离根结点更近，所以高频率的字符索要的比特更少。</p>
+<ol start="2">
+<li>
+<p>若有若干结点的权重相同，那么构造出来的哈夫曼树可能不一样，哈夫曼编码也因此不一样，但是它们都是最优的解。</p>
+</li>
+<li>
+<p>哈夫曼算法需要维护一个哈夫曼树，所以在压缩时需要将这个树(编译表)一起写入。在展开是也需要先读取这棵树，然后根据规则来展开。所以树的存储也占用了一定的空间。</p>
+</li>
+</ol>
+<hr>
+<h1 id="总结">总结</h1>
+<ul>
+<li>
+<p>定长编码适用于字母表大小较小的情况下。 <br>
+想象成对于128个数字而言我们需要将它们标记为0000000 ~ 1111111来唯一标识一个数字。而如果只是某4个数字的反复出现，我们可以对这几个数字重新编码，即新设立一个字母表，然后只需要2为就可以唯一标识这四个数字(00 01 10 11)</p>
+</li>
+<li>
+<p>游程编码适用于大量重复长游程的情况。 <br>
+想象成我们将用100个0来替代000……00。且由于计算机是二进制存储，我们并不需要记录是0还是1，只需要记录连续出现的游程的长度。同样的，对于游程的字符不止0和1的情况，需要额外记录当前游程的字符是什么。<br>
+对于大量短游程的情况，游程编码表现的很差。</p>
+</li>
+<li>
+<p>哈夫曼编码对于各种的文件都有效果，也使用于定长编码的字母表较小的情况和游程编码的大量重复长游程的情况。 <br>
+以ACGT的字母表为例，使用哈夫曼编码也是2位编码。因为4种字符出现的频率基本相同，所以哈夫曼树是平衡的，每个字符分配到的都是2位的编码。</p>
+</li>
+</ul>
 
     </div>
     <div class="post-footer">
